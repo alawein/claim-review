@@ -4,14 +4,14 @@ Actor: Codex, AI-assisted. Original synthetic non-client refund passage/claims,
 no external participants, timed study, production use or adoption. Source hash:
 959596123ba3f4d152094e378321651174328175fbecbb64dc8e9715661ec22a.
 
-Baseline manual sheet: read123-character passage; record four claim/verdict/
-rationale entries. First rule supported at[0,44); all-refunds-five-days partial
-at[45,86), because usually does not mean all; expedited processing claim contradicted
-at[87,123); bonus claim unverifiable at[0,123), absence does not establish falsity.
+Baseline manual sheet: read 123-character passage; record four claim/verdict/
+rationale entries. First rule supported at [0,44); all-refunds-five-days partial
+at [45,86), because usually does not mean all; expedited processing claim contradicted
+at [87,123); bonus claim unverifiable at [0,123), absence does not establish falsity.
 These synthetic editorial expectations were fixed before implementation.
 
 Actual browser flow: import packet, choose each claim, enter offsets/verdict/
-rationale/reviewer, save4 reviews, export and reimport. Expected/observed verdicts,
+rationale/reviewer, save 4 reviews, export and reimport. Expected/observed verdicts,
 spans and rationales match exactly; actual packet in examples/reviewed.json.
 Corrupt source import failed while retaining existing reviews. No integrity false
 alarm against the specified task; semantic judgments remain self-reported.

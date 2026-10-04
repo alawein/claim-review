@@ -3,42 +3,85 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Browser-only human citation review with exact spans, hash-checked sources and portable review history."
+    />
+    <meta name="theme-color" content="#f5f4ef" />
     <title>Claim review</title>
     <style id="app-style"></style>
   </head>
   <body>
     <main>
+      <a class="skip" href="#review-form">Skip to review form</a>
       <p class="eyebrow">EXACT PASSAGES / EXPLICIT JUDGMENTS</p>
       <h1>Claim review</h1>
       <p>Human citation judgments. Hash checks do not prove truth or authorship.</p>
       <p>Local processing. Export to keep work; closing this page loses unsaved reviews.</p>
       <label for="import">Import packet</label
-      ><input id="import" type="file" accept=".json,application/json" />
+      ><input id="import" name="import" type="file" accept=".json,application/json" />
       <button id="example" type="button">Load synthetic example</button>
-      <p id="status" role="status" aria-live="polite"></p>
+      <button id="builder-toggle" type="button" aria-expanded="false" aria-controls="builder">
+        New packet
+      </button>
+      <p id="status" role="status" aria-live="polite" tabindex="-1"></p>
+      <section id="builder" hidden aria-label="Packet builder">
+        <h2>Build a packet</h2>
+        <p>
+          Type source text and claims here; hashes are computed in this page. Text is stored exactly
+          as shown: pasted CRLF line breaks arrive as LF.
+        </p>
+        <h3>Sources</h3>
+        <div id="builder-sources"></div>
+        <button id="builder-add-source" type="button">Add source</button>
+        <h3>Claims</h3>
+        <div id="builder-claims"></div>
+        <button id="builder-add-claim" type="button">Add claim</button>
+        <p id="builder-status" role="status" aria-live="polite" tabindex="-1"></p>
+        <button id="builder-use" type="button">Use packet</button>
+        <button id="builder-download" type="button">Download packet file</button>
+      </section>
       <form id="review-form">
+        <h2>Review a claim</h2>
         <label for="claim">Claim</label
-        ><select id="claim" required></select>
+        ><select id="claim" name="claim" required></select>
         <p id="claim-text" dir="auto"></p>
         <label for="citation">Citation</label
-        ><select id="citation" required></select>
+        ><select id="citation" name="citation" required></select>
         <label for="source-text">Source text</label
-        ><textarea id="source-text" readonly dir="auto" rows="10"></textarea>
+        ><textarea
+          id="source-text"
+          name="source-text"
+          readonly
+          dir="auto"
+          rows="10"
+          aria-describedby="excerpt"
+        ></textarea>
         <button id="selection" type="button">Use selected span</button>
-        <label for="start">Span start</label><input id="start" type="number" min="0" required />
-        <label for="end">Span end</label><input id="end" type="number" min="1" required />
-        <p>Offsets use UTF-16 code units.</p>
-        <p id="excerpt" dir="auto"></p>
+        <label for="start">Span start</label
+        ><input
+          id="start"
+          name="start"
+          type="number"
+          min="0"
+          required
+          aria-describedby="span-help"
+        />
+        <label for="end">Span end</label
+        ><input id="end" name="end" type="number" min="1" required aria-describedby="span-help" />
+        <p id="span-help">Offsets use UTF-16 code units.</p>
+        <p id="excerpt" dir="auto" aria-live="polite"></p>
         <label for="verdict">Verdict</label
-        ><select id="verdict">
+        ><select id="verdict" name="verdict">
           <option value="supported">Supported</option>
           <option value="partial">Partial</option>
           <option value="contradicted">Contradicted</option>
           <option value="unverifiable">Unverifiable</option>
         </select>
         <label for="rationale">Rationale</label
-        ><textarea id="rationale" maxlength="4000" required></textarea>
-        <label for="reviewer">Reviewer label</label><input id="reviewer" maxlength="200" required />
+        ><textarea id="rationale" name="rationale" maxlength="4000" required></textarea>
+        <label for="reviewer">Reviewer label</label
+        ><input id="reviewer" name="reviewer" maxlength="200" autocomplete="off" required />
         <button type="submit">Save review</button>
       </form>
       <button id="export" type="button">Export packet</button>

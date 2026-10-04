@@ -4,13 +4,18 @@ Record why a specific passage supports, partly supports, contradicts or cannot
 verify a claim. Import frozen source text, select an exact span, enter a rationale
 and export portable human review history. No account, model or server.
 
+![Claim review with the packet builder open over the synthetic example](docs/screenshots/app.png)
+
 ## Use
 
 Open the GitHub Pages app or download the standalone HTML/offline ZIP from this
-repository's Releases. Choose **Load synthetic example** or **Import packet**.
-Choose a claim/citation, select source text with **Use selected span** or enter
-numeric offsets, choose a verdict, write rationale and reviewer label, then save.
-**Export packet** preserves all review history. Reimport that JSON to continue.
+repository's Releases. Start with **New packet** (type sources and claims; hashes are
+computed in the page and pasted CRLF arrives as LF), **Load synthetic example**, or
+**Import packet**. Choose a claim/citation, select source text with **Use selected span**
+or enter numeric offsets, choose a verdict, write rationale and reviewer label, then
+save. **Export packet** preserves all review history. Reimport that JSON to continue.
+The status line turns red and announces errors; leaving with unsaved reviews triggers
+the browser guard.
 
 Closing without export loses reviews. Processing stays in memory: no upload,
 source fetch, telemetry, local storage or background persistence. Reviewer labels
@@ -31,7 +36,7 @@ is unverified. [Contract](docs/contract.md), [evaluation](docs/evaluation.md),
 
 ## Develop
 
-Node22.23.2 (minimum22.12), locked dev-only dependencies:
+Node 22.23.2 (minimum 22.12), locked dev-only dependencies:
 
 ```sh
 npm ci
@@ -41,8 +46,9 @@ npm run test:browser
 ```
 
 Build creates dist/index.html with inline CSS and one classic bundled script.
-`node scripts/serve.mjs` serves only that build at127.0.0.1:4173. No runtime package
+`node scripts/serve.mjs` serves only that build at 127.0.0.1:4173. No runtime package
 or shared-repo dependency. Browser tests include keyboard navigation, exact exports,
+builder create/review/export/reimport, invalid-input recovery, error-role styling,
 invalid-import preservation, inert script text and offline local file operation.
 
 MIT code; original CC0 synthetic AI-assisted non-client examples. Demand, adoption,

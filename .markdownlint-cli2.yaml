@@ -1,4 +1,4 @@
-# Kept small on purpose. The README opens with a picture element and has long link lines.
+# Kept small on purpose. Long link lines are allowed.
 config:
   MD013: false
   MD033:
