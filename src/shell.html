@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Claim review</title>
+    <style id="app-style"></style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">EXACT PASSAGES / EXPLICIT JUDGMENTS</p>
+      <h1>Claim review</h1>
+      <p>Human citation judgments. Hash checks do not prove truth or authorship.</p>
+      <p>Local processing. Export to keep work; closing this page loses unsaved reviews.</p>
+      <label for="import">Import packet</label
+      ><input id="import" type="file" accept=".json,application/json" />
+      <button id="example" type="button">Load synthetic example</button>
+      <p id="status" role="status" aria-live="polite"></p>
+      <form id="review-form">
+        <label for="claim">Claim</label
+        ><select id="claim" required></select>
+        <p id="claim-text" dir="auto"></p>
+        <label for="citation">Citation</label
+        ><select id="citation" required></select>
+        <label for="source-text">Source text</label
+        ><textarea id="source-text" readonly dir="auto" rows="10"></textarea>
+        <button id="selection" type="button">Use selected span</button>
+        <label for="start">Span start</label><input id="start" type="number" min="0" required />
+        <label for="end">Span end</label><input id="end" type="number" min="1" required />
+        <p>Offsets use UTF-16 code units.</p>
+        <p id="excerpt" dir="auto"></p>
+        <label for="verdict">Verdict</label
+        ><select id="verdict">
+          <option value="supported">Supported</option>
+          <option value="partial">Partial</option>
+          <option value="contradicted">Contradicted</option>
+          <option value="unverifiable">Unverifiable</option>
+        </select>
+        <label for="rationale">Rationale</label
+        ><textarea id="rationale" maxlength="4000" required></textarea>
+        <label for="reviewer">Reviewer label</label><input id="reviewer" maxlength="200" required />
+        <button type="submit">Save review</button>
+      </form>
+      <button id="export" type="button">Export packet</button>
+      <h2>Review history</h2>
+      <p>
+        Latest means most recently appended for a claim/citation pair. Stale reviews keep their
+        rationale but cannot quote the changed source.
+      </p>
+      <section aria-label="Review history" id="history"></section>
+    </main>
+    <script id="app-script"></script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "policy-1",
+      "title": "Synthetic refund policy",
+      "text": "Refund requests are accepted within 30 days. Processing usually takes 5 business days. Expedited processing is unavailable.",
+      "sha256": "959596123ba3f4d152094e378321651174328175fbecbb64dc8e9715661ec22a"
+    }
+  ],
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Refund requests are accepted within 30 days.",
+      "citation_ids": ["policy-1"]
+    },
+    {
+      "id": "c2",
+      "text": "All refunds finish within 5 business days.",
+      "citation_ids": ["policy-1"]
+    },
+    {
+      "id": "c3",
+      "text": "Expedited processing is available.",
+      "citation_ids": ["policy-1"]
+    },
+    {
+      "id": "c4",
+      "text": "Refunds include a bonus.",
+      "citation_ids": ["policy-1"]
+    }
+  ],
+  "reviews": []
+}
