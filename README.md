@@ -4,6 +4,8 @@ Record why a specific passage supports, partly supports, contradicts or cannot
 verify a claim. Import frozen source text, select an exact span, enter a rationale
 and export portable human review history. No account, model or server.
 
+![Claim review with the packet builder open over the synthetic example](docs/screenshots/app.png)
+
 ## Use
 
 Open the GitHub Pages app or download the standalone HTML/offline ZIP from this

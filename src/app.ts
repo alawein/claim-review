@@ -35,6 +35,7 @@ function setStatus(ok: boolean, text: string): void {
   status.textContent = text;
   status.classList.toggle("error", !ok);
   status.setAttribute("role", ok ? "status" : "alert");
+  if (!ok) status.focus();
 }
 function setBusy(busy: boolean): void {
   status.setAttribute("aria-busy", String(busy));
@@ -96,7 +97,7 @@ function showHistory(): void {
   );
 }
 function claimLabel(id: string, text: string): string {
-  const short = text.length > 80 ? `${text.slice(0, 77)}...` : text;
+  const short = text.length > 80 ? `${text.slice(0, 77)}…` : text;
   return `${id}: ${short}`;
 }
 function usePacket(next: Packet, note: string): void {
@@ -226,11 +227,11 @@ interface BuilderRow {
 }
 const builderSources = element("builder-sources");
 const builderClaims = element("builder-claims");
-const builderHashes = new Map<string, string>();
 function setBuilderStatus(ok: boolean, text: string): void {
   builderStatus.textContent = text;
   builderStatus.classList.toggle("error", !ok);
   builderStatus.setAttribute("role", ok ? "status" : "alert");
+  if (!ok) builderStatus.focus();
 }
 function builderField(
   parent: HTMLElement,
@@ -244,15 +245,22 @@ function builderField(
 }
 function addSourceRow(): void {
   const group = document.createElement("fieldset");
+  const legend = document.createElement("legend");
+  legend.textContent = `Source ${builderSources.childElementCount + 1}`;
+  group.append(legend);
   const id = document.createElement("input");
-  id.placeholder = "source id";
+  id.placeholder = "policy-1…";
   id.maxLength = 200;
+  id.name = "source-id";
+  id.spellcheck = false;
   const title = document.createElement("input");
-  title.placeholder = "source title";
+  title.placeholder = "Synthetic refund policy…";
   title.maxLength = 1000;
+  title.name = "source-title";
   const text = document.createElement("textarea");
   text.rows = 4;
-  text.placeholder = "exact source text";
+  text.placeholder = "Paste exact source text…";
+  text.name = "source-text";
   builderField(group, "Source id", id);
   builderField(group, "Source title", title);
   builderField(group, "Source text", text);
@@ -262,8 +270,7 @@ function addSourceRow(): void {
   const update = (): void => {
     void sha256(text.value.replace(/\r\n/g, "\n"))
       .then((digest) => {
-        hashLine.textContent = `SHA-256: ${digest.slice(0, 16)}...`;
-        builderHashes.set(group.id, digest);
+        hashLine.textContent = `SHA-256: ${digest.slice(0, 16)}…`;
       })
       .catch(() => {
         hashLine.textContent = "SHA-256 unavailable in this browser context";
@@ -276,14 +283,22 @@ function addSourceRow(): void {
 }
 function addClaimRow(): void {
   const group = document.createElement("fieldset");
+  const legend = document.createElement("legend");
+  legend.textContent = `Claim ${builderClaims.childElementCount + 1}`;
+  group.append(legend);
   const id = document.createElement("input");
-  id.placeholder = "claim id";
+  id.placeholder = "c1…";
   id.maxLength = 200;
+  id.name = "claim-id";
+  id.spellcheck = false;
   const text = document.createElement("input");
-  text.placeholder = "claim text";
+  text.placeholder = "State the claim in one sentence…";
   text.maxLength = 10000;
+  text.name = "claim-text";
   const cite = document.createElement("input");
-  cite.placeholder = "citation source ids, comma separated";
+  cite.placeholder = "policy-1, policy-2…";
+  cite.name = "claim-citations";
+  cite.spellcheck = false;
   builderField(group, "Claim id", id);
   builderField(group, "Claim text", text);
   builderField(group, "Citations", cite);
@@ -362,4 +377,3 @@ element("builder-download").addEventListener("click", () => {
     })
     .catch((error) => setBuilderStatus(false, message(error)));
 });
-void builderHashes;
