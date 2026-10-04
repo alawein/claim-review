@@ -19,7 +19,7 @@ alarm against the specified task; semantic judgments remain self-reported.
 Preparation requires permitted source text, hashes and JSON packet creation. The
 manual sheet is easier for four claims and no import contract. This tool adds
 validated exact spans, visible history and portable export; no measured speed gain.
-[Recogito](https://github.com/recogito/recogito) and
+[Recogito Text Annotator](https://github.com/recogito/text-annotator-js) and
 [Label Studio](https://labelstud.io/guide/) offer broader annotation workflows.
 Recogito's W3C-oriented annotations use different offset conventions; this
 proprietary UTF-16 packet does not claim compatibility. Label Studio adds project/
