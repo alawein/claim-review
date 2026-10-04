@@ -178,10 +178,11 @@ test("standalone offline file imports, reviews, exports and reimports", async ({
   await expect(page.getByLabel("Review history")).toContainText("unverifiable");
 });
 
-test("builder creates, reviews, exports and reimports", async ({ page }, info) => {
+test("builder creates, downloads, reviews, exports and reimports", async ({ page }, info) => {
   await page.goto("./");
   await page.getByRole("button", { name: "New packet" }).click();
   await expect(page.locator("#builder")).toBeVisible();
+  await expect(page.locator("#builder legend").first()).toHaveText("Source 1");
   await page.locator("#builder-sources input").first().fill("policy-1");
   await page.locator("#builder-sources input").nth(1).fill("Synthetic policy");
   await page.locator("#builder-sources textarea").first().fill("Refunds within 30 days.");
@@ -189,8 +190,14 @@ test("builder creates, reviews, exports and reimports", async ({ page }, info) =
   await page.locator("#builder-claims input").first().fill("c1");
   await page.locator("#builder-claims input").nth(1).fill("Refunds within 30 days.");
   await page.locator("#builder-claims input").nth(2).fill("policy-1");
+  const packetFile = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download packet file" }).click();
+  const packetDownload = await packetFile;
+  expect(packetDownload.suggestedFilename()).toBe("packet.json");
+  await expect(page.locator("#builder-status")).toContainText("download requested");
   await page.getByRole("button", { name: "Use packet" }).click();
   await expect(page.locator("#status")).toContainText("Built packet");
+  await expect(page.getByRole("button", { name: "Export packet" })).toBeEnabled();
   await expect(page.getByLabel("Claim", { exact: true })).toContainText("c1: Refunds");
   await page.getByLabel("Span start").fill("0");
   await page.getByLabel("Span end").fill("7");
@@ -206,9 +213,12 @@ test("builder creates, reviews, exports and reimports", async ({ page }, info) =
   await page.getByLabel("Import packet").setInputFiles(path!);
   await expect(page.locator("#status")).toContainText("Imported");
   await expect(page.getByLabel("Review history")).toContainText("Source states the same rule");
+  const downloaded = await packetDownload.path();
+  await page.getByLabel("Import packet").setInputFiles(downloaded!);
+  await expect(page.locator("#status")).toContainText("Imported");
 });
 
-test("builder rejects empty citations and keeps review work", async ({ page }) => {
+test("builder rejects empty citations, confirms once, keeps review work", async ({ page }) => {
   await page.goto("./");
   await importPacket(page);
   await fourReviews(page);
@@ -219,7 +229,10 @@ test("builder rejects empty citations and keeps review work", async ({ page }) =
   await page.locator("#builder-claims input").first().fill("c1");
   await page.locator("#builder-claims input").nth(1).fill("Some claim.");
   await page.getByRole("button", { name: "Use packet" }).click();
+  await expect(page.locator("#builder-status")).toContainText("Unsaved reviews will be replaced");
+  await page.getByRole("button", { name: "Use packet" }).click();
   await expect(page.locator("#builder-status")).toContainText("citation");
+  await expect(page.locator("#builder-status")).toBeFocused();
   await expect(page.getByLabel("Review history")).toContainText("Source states the same rule");
 });
 
@@ -238,8 +251,29 @@ test("import errors use the alert role and same file reselects", async ({ page }
   await expect(status).toContainText("current work kept");
   await expect(status).toHaveAttribute("role", "alert");
   await expect(status).toHaveClass(/error/);
+  await expect(status).toBeFocused();
   await page.getByLabel("Import packet").setInputFiles(payload);
   await expect(status).toContainText("current work kept");
+});
+
+test("beforeunload guard warns with unsaved reviews and not after export", async ({ page }) => {
+  let guards = 0;
+  page.on("dialog", (dialog) => {
+    guards++;
+    void dialog.accept();
+  });
+  await page.goto("./");
+  await importPacket(page);
+  await fourReviews(page);
+  await page.reload();
+  expect(guards).toBe(1);
+  await importPacket(page);
+  await fourReviews(page);
+  const event = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export packet" }).click();
+  await event;
+  await page.reload();
+  expect(guards).toBe(1);
 });
 
 test("small screen reflow and doubled text size", async ({ page }) => {

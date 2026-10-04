@@ -1,64 +1,45 @@
-import { parsePacket, requireValue, type Hash, type Packet } from "./packet";
+import { parsePacket, requireValue, type Claim, type Packet, type Source } from "./packet";
 
-export interface BuilderSource {
-  id: string;
-  title: string;
-  text: string;
-}
-export interface BuilderClaim {
-  id: string;
-  text: string;
-  citation_ids: string[];
-}
 export interface BuilderState {
-  sources: BuilderSource[];
-  claims: BuilderClaim[];
+  sources: { id: string; title: string; text: string }[];
+  claims: Claim[];
 }
 
-export function draftSource(id = "", title = "", text = ""): BuilderSource {
+export function draftSource(id = "", title = "", text = ""): Omit<Source, "sha256"> {
   return { id, title, text };
 }
-export function draftClaim(id = "", text = "", citation_ids: string[] = []): BuilderClaim {
+export function draftClaim(id = "", text = "", citation_ids: string[] = []): Claim {
   return { id, text, citation_ids: [...citation_ids] };
 }
 
-function clean(value: string): string {
-  // Textarea reads normalize CRLF to LF; builder stores exactly what is shown.
+// Textarea reads normalize CRLF to LF; the preview and the built packet must agree.
+export function clean(value: string): string {
   return value.replace(/\r\n/g, "\n");
 }
 
-export async function buildPacket(state: BuilderState, hash: Hash): Promise<Packet> {
-  requireValue(state.sources.length <= 100, "sources: invalid count");
-  requireValue(state.claims.length <= 1000, "claims: invalid count");
+// parsePacket is the sole authority over caps, fields, hashes and citations; the
+// builder only adds the two UX rules the contract leaves open (useful minimum).
+export async function buildPacket(
+  state: BuilderState,
+  hash: (text: string) => Promise<string>,
+): Promise<Packet> {
   requireValue(
     state.sources.length > 0 && state.claims.length > 0,
     "builder: add at least one source and one claim",
   );
-  // Make the tamper window explicit: hash once here, then let parsePacket re-hash
-  // with the same function as the sole authority over caps, fields, and citations.
   const sources = [];
   for (const draft of state.sources) {
-    const source = { id: draft.id, title: draft.title, text: clean(draft.text), sha256: "" };
-    source.sha256 = await hash(source.text);
-    requireValue(
-      (await hash(source.text)) === source.sha256,
-      `source ${source.id || "(untitled)"}: hash mismatch`,
-    );
+    const text = clean(draft.text);
+    const source = { id: draft.id, title: draft.title, text, sha256: await hash(text) };
     sources.push(source);
   }
-  const packet = {
-    schema_version: 1 as const,
-    sources,
-    claims: state.claims.map((claim) => {
-      requireValue(claim.citation_ids.length > 0, "builder: claim needs a citation");
-      return {
-        id: claim.id,
-        text: claim.text,
-        citation_ids: [...claim.citation_ids],
-      };
-    }),
-    reviews: [],
-  };
+  const claims = state.claims.map((claim) => {
+    requireValue(
+      claim.citation_ids.length > 0,
+      `builder: claim ${claim.id || "(unlabeled)"} needs a citation`,
+    );
+    return { id: claim.id, text: claim.text, citation_ids: [...claim.citation_ids] };
+  });
   // parsePacket is the sole authority: exact fields, caps, hashes, citations.
-  return parsePacket(JSON.stringify(packet), hash);
+  return parsePacket(JSON.stringify({ schema_version: 1, sources, claims, reviews: [] }), hash);
 }

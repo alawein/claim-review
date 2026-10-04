@@ -71,6 +71,11 @@ test("collection caps reject oversized builder state", async () => {
     ],
   };
   await expect(buildPacket(manyCites, sha)).rejects.toThrow();
+  const manyClaims: BuilderState = {
+    sources: [draftSource("s", "T", "x")],
+    claims: Array.from({ length: 1001 }, (_, i) => draftClaim(`c${i}`, "t", ["s"])),
+  };
+  await expect(buildPacket(manyClaims, sha)).rejects.toThrow();
 });
 
 test("non-deterministic hash surfaces a mismatch", async () => {

@@ -2,7 +2,7 @@ import { parsePacket, requireValue, type Packet, type Review, type Verdict } fro
 import { sha256 } from "./hash";
 import { appendReview, latestReviews, reviewState } from "./reviews";
 import { validSpan, sourceOffset } from "./spans";
-import { buildPacket, draftClaim, draftSource } from "./builder";
+import { buildPacket, clean, draftClaim } from "./builder";
 import example from "../examples/packet.json";
 
 function element<T extends HTMLElement>(id: string): T {
@@ -16,7 +16,8 @@ function message(error: unknown): string {
 let packet: Packet | null = null,
   generation = 0,
   lastExport = "",
-  dirty = false;
+  busyCount = 0,
+  confirmBuilderUse = false;
 const claimControl = element<HTMLSelectElement>("claim");
 const citationControl = element<HTMLSelectElement>("citation");
 const sourceControl = element<HTMLTextAreaElement>("source-text");
@@ -28,20 +29,41 @@ const importControl = element<HTMLInputElement>("import");
 const builderSection = element("builder");
 const builderToggle = element<HTMLButtonElement>("builder-toggle");
 const builderStatus = element("builder-status");
+const busyControls = [
+  importControl,
+  element<HTMLButtonElement>("example"),
+  element<HTMLButtonElement>("export"),
+  builderToggle,
+];
 function options(control: HTMLSelectElement, rows: { id: string; label: string }[]): void {
   control.replaceChildren(...rows.map((row) => new Option(row.label, row.id)));
 }
+function showOnStatus(node: HTMLElement, ok: boolean, text: string): void {
+  node.textContent = text;
+  node.classList.toggle("error", !ok);
+  node.setAttribute("role", ok ? "status" : "alert");
+  if (!ok) node.focus();
+}
 function setStatus(ok: boolean, text: string): void {
-  status.textContent = text;
-  status.classList.toggle("error", !ok);
-  status.setAttribute("role", ok ? "status" : "alert");
-  if (!ok) status.focus();
+  showOnStatus(status, ok, text);
+}
+function setBusyStatus(ok: boolean, text: string): void {
+  showOnStatus(builderStatus, ok, text);
 }
 function setBusy(busy: boolean): void {
   status.setAttribute("aria-busy", String(busy));
-  for (const id of ["import", "example", "export", "builder-toggle"]) {
-    element(id).toggleAttribute("disabled", busy);
-  }
+  for (const control of busyControls) control.toggleAttribute("disabled", busy);
+}
+function beginBusy(): void {
+  busyCount++;
+  setBusy(true);
+}
+function endBusy(): void {
+  busyCount = Math.max(0, busyCount - 1);
+  if (busyCount === 0) setBusy(false);
+}
+function isDirty(): boolean {
+  return !!packet && JSON.stringify(packet) !== lastExport;
 }
 function source(): Packet["sources"][number] {
   const value = packet?.sources.find((row) => row.id === citationControl.value);
@@ -97,12 +119,12 @@ function showHistory(): void {
   );
 }
 function claimLabel(id: string, text: string): string {
-  const short = text.length > 80 ? `${text.slice(0, 77)}…` : text;
+  const points = Array.from(text);
+  const short = points.length > 80 ? `${points.slice(0, 77).join("")}…` : text;
   return `${id}: ${short}`;
 }
 function usePacket(next: Packet, note: string): void {
   packet = next;
-  dirty = JSON.stringify(packet) !== lastExport;
   options(
     claimControl,
     next.claims.map((row) => ({ id: row.id, label: claimLabel(row.id, row.text) })),
@@ -112,20 +134,14 @@ function usePacket(next: Packet, note: string): void {
   setStatus(true, note);
 }
 async function importText(raw: string, ticket: number): Promise<void> {
-  setBusy(true);
+  beginBusy();
   try {
     const next = await parsePacket(raw, sha256);
     if (ticket !== generation) return;
     usePacket(next, "Imported packet. Export to keep changes.");
   } finally {
-    if (ticket === generation) setBusy(false);
+    endBusy();
   }
-}
-function useFile(raw: string, ticket: number): void {
-  void importText(raw, ticket).catch((error) => {
-    if (ticket === generation)
-      setStatus(false, `Import failed; current work kept: ${message(error)}`);
-  });
 }
 importControl.addEventListener("change", async (event) => {
   const ticket = ++generation;
@@ -136,7 +152,11 @@ importControl.addEventListener("change", async (event) => {
     requireValue(file.size <= 5 * 1024 * 1024, "packet exceeds 5 MiB");
     const bytes = new Uint8Array(await file.arrayBuffer());
     requireValue(!(bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf), "BOM forbidden");
-    useFile(new TextDecoder("utf-8", { fatal: true }).decode(bytes), ticket);
+    const raw = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    await importText(raw, ticket).catch((error) => {
+      if (ticket === generation)
+        setStatus(false, `Import failed; current work kept: ${message(error)}`);
+    });
   } catch (error) {
     if (ticket === generation)
       setStatus(false, `Import failed; current work kept: ${message(error)}`);
@@ -183,7 +203,6 @@ element<HTMLFormElement>("review-form").addEventListener("submit", async (event)
     const next = await parsePacket(JSON.stringify(appendReview(previous, review)), sha256);
     requireValue(ticket === generation && previous === packet, "Session changed; save again");
     packet = next;
-    dirty = true;
     showHistory();
     setStatus(true, "Saved human review in memory. Export to keep it.");
   } catch (error) {
@@ -210,39 +229,14 @@ element("export").addEventListener("click", () => {
   }
   download(raw, "claim-review.json");
   lastExport = raw;
-  dirty = false;
   setStatus(true, "Export requested. Confirm your browser saved the file.");
 });
 globalThis.addEventListener("beforeunload", (event) => {
-  if (dirty) event.preventDefault();
+  if (isDirty()) event.preventDefault();
 });
 
 // Packet builder: creation-only mode alongside import. All validation flows through
 // parsePacket via buildPacket, so builder packets obey the same caps and hashes.
-interface BuilderRow {
-  id: HTMLInputElement;
-  title?: HTMLInputElement;
-  text: HTMLInputElement | HTMLTextAreaElement;
-  cite?: HTMLInputElement;
-}
-const builderSources = element("builder-sources");
-const builderClaims = element("builder-claims");
-function setBuilderStatus(ok: boolean, text: string): void {
-  builderStatus.textContent = text;
-  builderStatus.classList.toggle("error", !ok);
-  builderStatus.setAttribute("role", ok ? "status" : "alert");
-  if (!ok) builderStatus.focus();
-}
-function builderField(
-  parent: HTMLElement,
-  label: string,
-  control: HTMLInputElement | HTMLTextAreaElement,
-): void {
-  const tag = document.createElement("label");
-  tag.textContent = label;
-  tag.append(control);
-  parent.append(tag);
-}
 function addSourceRow(): void {
   const group = document.createElement("fieldset");
   const legend = document.createElement("legend");
@@ -268,7 +262,7 @@ function addSourceRow(): void {
   hashLine.textContent = "SHA-256 appears after typing.";
   group.append(hashLine);
   const update = (): void => {
-    void sha256(text.value.replace(/\r\n/g, "\n"))
+    void sha256(clean(text.value))
       .then((digest) => {
         hashLine.textContent = `SHA-256: ${digest.slice(0, 16)}…`;
       })
@@ -276,7 +270,6 @@ function addSourceRow(): void {
         hashLine.textContent = "SHA-256 unavailable in this browser context";
       });
   };
-  group.id = `builder-source-${builderSources.childElementCount}`;
   text.addEventListener("input", update);
   group.dataset.row = "source";
   builderSources.append(group);
@@ -301,35 +294,45 @@ function addClaimRow(): void {
   cite.spellcheck = false;
   builderField(group, "Claim id", id);
   builderField(group, "Claim text", text);
-  builderField(group, "Citations", cite);
+  builderField(group, "Citations (comma or newline separated)", cite);
   group.dataset.row = "claim";
   builderClaims.append(group);
 }
-function readBuilder(): { sources: BuilderRow[]; claims: BuilderRow[] } {
-  return {
-    sources: Array.from(builderSources.querySelectorAll("[data-row='source']")).map((group) => {
-      const fields = Array.from(group.querySelectorAll("input, textarea"));
-      const [id, title, text] = fields;
-      return {
-        id: id as HTMLInputElement,
-        title: title as HTMLInputElement,
-        text: text as HTMLTextAreaElement,
-      };
-    }),
-    claims: Array.from(builderClaims.querySelectorAll("[data-row='claim']")).map((group) => {
-      const fields = Array.from(group.querySelectorAll("input, textarea"));
-      const [id, text, cite] = fields;
-      return {
-        id: id as HTMLInputElement,
-        text: text as HTMLInputElement,
-        cite: cite as HTMLInputElement,
-      };
-    }),
-  };
+function builderField(
+  parent: HTMLElement,
+  label: string,
+  control: HTMLInputElement | HTMLTextAreaElement,
+): void {
+  const tag = document.createElement("label");
+  tag.textContent = label;
+  tag.append(control);
+  parent.append(tag);
+}
+const builderSources = element("builder-sources");
+const builderClaims = element("builder-claims");
+function fieldIn(group: Element, selector: string): HTMLInputElement | HTMLTextAreaElement {
+  const control = group.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector);
+  requireValue(!!control, "builder row is missing a control");
+  return control;
+}
+function readBuilderSources(): { id: string; title: string; text: string }[] {
+  return Array.from(builderSources.querySelectorAll("[data-row='source']")).map((group) => ({
+    id: fieldIn(group, "[name='source-id']").value,
+    title: fieldIn(group, "[name='source-title']").value,
+    text: fieldIn(group, "[name='source-text']").value,
+  }));
+}
+function readBuilderClaims() {
+  return Array.from(builderClaims.querySelectorAll("[data-row='claim']")).map((group) => ({
+    id: fieldIn(group, "[name='claim-id']").value,
+    text: fieldIn(group, "[name='claim-text']").value,
+    citations: fieldIn(group, "[name='claim-citations']").value,
+  }));
 }
 builderToggle.addEventListener("click", () => {
   const open = builderSection.hidden;
   builderSection.hidden = !open;
+  confirmBuilderUse = false;
   builderToggle.setAttribute("aria-expanded", String(open));
   builderToggle.textContent = open ? "Hide packet builder" : "New packet";
   if (open && !builderSources.childElementCount) {
@@ -340,40 +343,60 @@ builderToggle.addEventListener("click", () => {
 element("builder-add-source").addEventListener("click", addSourceRow);
 element("builder-add-claim").addEventListener("click", addClaimRow);
 async function builderPacket(): Promise<Packet> {
-  const rows = readBuilder();
   return buildPacket(
     {
-      sources: rows.sources.map((row) =>
-        draftSource(row.id.value, row.title!.value, row.text.value),
-      ),
-      claims: rows.claims.map((row) =>
-        draftClaim(
-          row.id.value,
-          (row.text as HTMLInputElement).value,
-          row
-            .cite!.value.split(",")
-            .map((part) => part.trim())
-            .filter((part) => part.length > 0),
-        ),
-      ),
+      sources: readBuilderSources(),
+      claims: readBuilderClaims().map((row) => {
+        const list = row.citations
+          .split(/[\n,]+/)
+          .map((part) => part.trim())
+          .filter((part) => part.length > 0);
+        return draftClaim(row.id, row.text, list);
+      }),
     },
     sha256,
   );
 }
+async function applyBuilderPacket(): Promise<void> {
+  const ticket = generation;
+  beginBusy();
+  try {
+    const next = await builderPacket();
+    if (ticket !== generation) {
+      setBusyStatus(false, "Session changed while building; packet not applied.");
+      return;
+    }
+    generation++;
+    usePacket(next, "Built packet in memory. Save reviews, then export to keep them.");
+    setBusyStatus(true, "Packet ready in the review form.");
+  } catch (error) {
+    setBusyStatus(false, message(error));
+    return;
+  } finally {
+    endBusy();
+  }
+}
 element("builder-use").addEventListener("click", () => {
-  void builderPacket()
-    .then((next) => {
-      generation++;
-      usePacket(next, "Built packet in memory. Save reviews, then export to keep them.");
-      setBuilderStatus(true, "Packet ready in the review form.");
-    })
-    .catch((error) => setBuilderStatus(false, message(error)));
+  if (isDirty() && !confirmBuilderUse) {
+    confirmBuilderUse = true;
+    setBusyStatus(false, "Unsaved reviews will be replaced. Click Use packet again to confirm.");
+    return;
+  }
+  confirmBuilderUse = false;
+  void applyBuilderPacket();
 });
 element("builder-download").addEventListener("click", () => {
+  const ticket = generation;
+  beginBusy();
   void builderPacket()
     .then((next) => {
+      if (ticket !== generation) {
+        setBusyStatus(false, "Session changed while building; file not used.");
+        return;
+      }
       download(JSON.stringify(next), "packet.json");
-      setBuilderStatus(true, "Packet file download requested.");
+      setBusyStatus(true, "Packet file download requested.");
     })
-    .catch((error) => setBuilderStatus(false, message(error)));
+    .catch((error) => setBusyStatus(false, message(error)))
+    .finally(() => endBusy());
 });
