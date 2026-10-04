@@ -51,5 +51,9 @@ or shared-repo dependency. Browser tests include keyboard navigation, exact expo
 builder create/review/export/reimport, invalid-input recovery, error-role styling,
 invalid-import preservation, inert script text and offline local file operation.
 
+For stack naming and structure, follow the
+[shared repository conventions](https://github.com/alawein/.github/blob/main/docs/system/repos.md#stack-conventions)
+alongside this project's local instructions and contract.
+
 MIT code; original CC0 synthetic AI-assisted non-client examples. Demand, adoption,
 production ownership, annotator reliability and semantic accuracy remain unproven.
