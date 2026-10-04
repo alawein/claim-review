@@ -2,9 +2,64 @@ import { expect, test } from "@playwright/test";
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { createHash } from "node:crypto";
 
 const expected = JSON.parse(await readFile("examples/expected.json", "utf8"));
 const input = await readFile("examples/packet.json", "utf8");
+
+test("CRLF selection preserves original source offsets", async ({ page }) => {
+  const p = JSON.parse(input);
+  p.sources[0].text = "first\r\nSECOND";
+  p.sources[0].sha256 = createHash("sha256").update(p.sources[0].text).digest("hex");
+  await page.goto("/");
+  await page.getByLabel("Import packet").setInputFiles({
+    name: "crlf.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(p)),
+  });
+  await expect(page.getByRole("status")).toContainText("Imported");
+  await page
+    .getByLabel("Source text")
+    .evaluate((el: HTMLTextAreaElement) => el.setSelectionRange(6, 12));
+  await page.getByRole("button", { name: "Use selected span" }).press("Enter");
+  await expect(page.getByLabel("Span start")).toHaveValue("7");
+  await expect(page.getByLabel("Span end")).toHaveValue("13");
+  await expect(page.locator("#excerpt")).toHaveText("SECOND");
+});
+
+test("large valid packet exports within import byte bound", async ({ page }) => {
+  const digest = createHash("sha256").update("X").digest("hex");
+  const sources = Array.from({ length: 100 }, (_, i) => ({
+    id: `s${i}`,
+    title: "Synthetic",
+    text: "X",
+    sha256: digest,
+  }));
+  const p = {
+    schema_version: 1,
+    sources,
+    claims: Array.from({ length: 1000 }, (_, i) => ({
+      id: `c${i}`,
+      text: "x".repeat(3800),
+      citation_ids: sources.map((s) => s.id),
+    })),
+    reviews: [],
+  };
+  const raw = JSON.stringify(p);
+  expect(Buffer.byteLength(raw)).toBeLessThanOrEqual(5 * 1024 * 1024);
+  await page.goto("/");
+  await page
+    .getByLabel("Import packet")
+    .setInputFiles({ name: "large.json", mimeType: "application/json", buffer: Buffer.from(raw) });
+  await expect(page.getByRole("status")).toContainText("Imported");
+  const event = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export packet" }).click();
+  const path = await (await event).path();
+  const exported = await readFile(path!);
+  expect(exported.length).toBeLessThanOrEqual(5 * 1024 * 1024);
+  await page.getByLabel("Import packet").setInputFiles(path!);
+  await expect(page.getByRole("status")).toContainText("Imported");
+});
 
 async function importPacket(page: import("@playwright/test").Page) {
   await page.getByLabel("Import packet").setInputFiles({

@@ -15,3 +15,15 @@ export function validSpan(text: string, start: number, end: number): boolean {
     boundary(end)
   );
 }
+
+export function sourceOffset(text: string, displayedOffset: number): number {
+  if (!Number.isSafeInteger(displayedOffset) || displayedOffset < 0)
+    throw new Error("Invalid displayed offset");
+  let original = 0;
+  for (let displayed = 0; displayed < displayedOffset; displayed++) {
+    if (original >= text.length) throw new Error("Displayed offset exceeds source");
+    if (text[original] === "\r" && text[original + 1] === "\n") original++;
+    original++;
+  }
+  return original;
+}

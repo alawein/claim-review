@@ -25,3 +25,7 @@ JSON uses the platform parser; duplicate object keys are not an integrity signal
 and follow JSON.parse's last-key semantics. Use unique fields in authored packets.
 Collection IDs and citations are strictly checked for duplicates. Closing without
 export loses work; outputs can contain confidential text the user supplied.
+
+Textarea selection positions are mapped back to original CRLF UTF-16 offsets;
+source text and its hash remain exact. Export uses compact JSON without a trailing
+newline and checks the exact byte bound, so exported packets can be reimported.

@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { parsePacket, type Review } from "./packet";
 import { sha256 } from "./hash";
-import { validSpan } from "./spans";
+import { validSpan, sourceOffset } from "./spans";
 import { appendReview, latestReviews, reviewState } from "./reviews";
 
 const digest = "a".repeat(64);
@@ -121,4 +121,13 @@ test("BOM and byte limit rejected", async () => {
 test("duplicate review ID rejected", async () => {
   const p = await parsePacket(JSON.stringify(specimen()), hash);
   expect(() => appendReview(appendReview(p, review()), review())).toThrow("duplicate");
+});
+
+test.each([
+  ["first\r\nSECOND", 6, 7],
+  ["first\r\nSECOND", 12, 13],
+  ["a\rb", 2, 2],
+  ["😀\r\nb", 3, 4],
+] as const)("displayed CRLF offsets map to original source", (text, offset, expected) => {
+  expect(sourceOffset(text, offset)).toBe(expected);
 });

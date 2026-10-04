@@ -1,7 +1,7 @@
 import { parsePacket, requireValue, type Packet, type Review, type Verdict } from "./packet";
 import { sha256 } from "./hash";
 import { appendReview, latestReviews, reviewState } from "./reviews";
-import { validSpan } from "./spans";
+import { validSpan, sourceOffset } from "./spans";
 import example from "../examples/packet.json";
 
 function element<T extends HTMLElement>(id: string): T {
@@ -110,8 +110,9 @@ citationControl.addEventListener("change", showSource);
 startControl.addEventListener("input", showExcerpt);
 endControl.addEventListener("input", showExcerpt);
 element("selection").addEventListener("click", () => {
-  startControl.value = String(sourceControl.selectionStart);
-  endControl.value = String(sourceControl.selectionEnd);
+  if (!packet || !citationControl.value) return;
+  startControl.value = String(sourceOffset(source().text, sourceControl.selectionStart));
+  endControl.value = String(sourceOffset(source().text, sourceControl.selectionEnd));
   showExcerpt();
 });
 element<HTMLFormElement>("review-form").addEventListener("submit", async (event) => {
@@ -148,9 +149,12 @@ element("export").addEventListener("click", () => {
     status.textContent = "Import a packet first";
     return;
   }
-  const url = URL.createObjectURL(
-    new Blob([JSON.stringify(packet, null, 2) + "\n"], { type: "application/json" }),
-  );
+  const raw = JSON.stringify(packet);
+  if (new TextEncoder().encode(raw).byteLength > 5 * 1024 * 1024) {
+    status.textContent = "Export exceeds the 5 MiB import limit; export not created.";
+    return;
+  }
+  const url = URL.createObjectURL(new Blob([raw], { type: "application/json" }));
   const link = document.createElement("a");
   link.href = url;
   link.download = "claim-review.json";
