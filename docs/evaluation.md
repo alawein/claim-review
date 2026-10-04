@@ -8,12 +8,13 @@ and byte bounds. Initial model tests failed on missing imports before implementa
 Vitest needed its Vite peer dependency explicitly installed; all runtime dependencies
 remain absent.
 
-Thirty browser cases (ten workflows in Chromium, Firefox and WebKit) exercise four
+Thirty-three browser cases (eleven workflows in Chromium, Firefox and WebKit) exercise four
 actual synthetic judgments, exact export/reimport, no input-driven requests,
-corrupt-import preservation, keyboard navigation, builder create/review/export/reimport,
-builder rejection recovery, error-role alert styling, file reselect, offline standalone
-import/save/export/reimport, 320px reflow, doubled text size, inert script text and stale
-labels.
+corrupt-import preservation, keyboard navigation, builder create/download/review/
+export/reimport, builder rejection recovery with a one-click confirm, error-role alert
+styling with focus, file reselect, the unsaved-work beforeunload guard before and after
+export, offline standalone import/save/export/reimport, 320px reflow, doubled text size,
+inert script text and stale labels.
 The review-history context assertion failed before claim/source/span text was added.
 Initial nested select labels changed with loaded options; separate stable labels
 resolved the locator/label mismatch.

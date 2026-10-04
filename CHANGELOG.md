@@ -4,11 +4,13 @@
 
 - Guided packet builder: add sources and claims in the page, with in-browser SHA-256,
   CRLF-as-LF storage note, parsePacket as sole validator, use-in-review and download paths.
-- Interface hardening: error-styled alert status, import loading state, announced span
-  preview, claim-text dropdown labels, file-input reset, ticket-guarded example loader,
-  unsaved-work guard, and cleaned save/import messages.
-- Builder unit tests plus builder, dirty-guard recovery, error-role, and reselect browser
-  coverage; keyboard path extended through the new controls.
+- Interface hardening: error-styled alert status with focus, import loading state,
+  announced span preview, claim-text dropdown labels, file-input reset, ticket-guarded
+  example loader, unsaved-work guard with a one-click builder confirm, and cleaned
+  save/import messages. A pending-operations counter keeps controls enabled after any
+  async builder/import completion.
+- Review-hardened: surrogate-safe dropdown labels, name-addressed builder rows, shared
+  status styling, and regression tests for the beforeunload guard and packet download.
 
 ## 0.1.0
 

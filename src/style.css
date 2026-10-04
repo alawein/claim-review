@@ -92,7 +92,8 @@ button:disabled {
   outline: 3px solid #0c7669;
   outline-offset: 3px;
 }
-#status {
+#status,
+#builder-status {
   border-left: 4px solid #0c7669;
   padding: 8px 16px;
   background: #e7f1ec;
@@ -102,7 +103,8 @@ button:disabled {
 #builder-status:empty {
   display: none;
 }
-#status.error {
+#status.error,
+#builder-status.error {
   border-left-color: #8f1d1d;
   background: #f9e7e7;
 }
@@ -125,16 +127,6 @@ button:disabled {
 #builder legend {
   font-weight: 650;
   padding: 0 6px;
-}
-#builder-status {
-  border-left: 4px solid #0c7669;
-  padding: 8px 16px;
-  background: #e7f1ec;
-  min-height: 44px;
-}
-#builder-status.error {
-  border-left-color: #8f1d1d;
-  background: #f9e7e7;
 }
 #review-form {
   padding: 20px;
