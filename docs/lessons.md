@@ -13,3 +13,4 @@ Format: `YYYY-MM-DD | area | what happened | rule`
 ## Log
 
 - 2026-10-04 | setup | Repo created from the kit starter | Run the check command once before the first change.
+- 2026-10-04 | builder | New packet UI plus hardening kept packet rules untouched | Route creation through parsePacket and keep rule modules unchanged.

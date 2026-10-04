@@ -111,7 +111,7 @@ test("four judgments export and reimport exactly, without input-driven requests"
   );
   await writeFile(info.outputPath("reviewed-packet.json"), raw);
   await page.getByLabel("Import packet").setInputFiles(path!);
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#status")).toContainText("Imported");
   await expect(page.getByLabel("Review history")).toContainText(
     "absence does not establish falsity",
   );
@@ -122,7 +122,7 @@ test("four judgments export and reimport exactly, without input-driven requests"
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(corrupt)),
   });
-  await expect(page.getByRole("status")).toContainText("current work kept");
+  await expect(page.locator("#status")).toContainText("current work kept");
   await expect(page.getByLabel("Review history")).toContainText("Source states the same rule");
   expect(requests).toEqual([]);
 });
@@ -132,6 +132,8 @@ test("keyboard navigation saves and exports", async ({ page }) => {
   await importPacket(page);
   await page.getByLabel("Import packet").press("Tab");
   await expect(page.getByRole("button", { name: "Load synthetic example" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "New packet" })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByLabel("Claim", { exact: true })).toBeFocused();
   await page.keyboard.press("Tab"); // citation
@@ -174,6 +176,70 @@ test("standalone offline file imports, reviews, exports and reimports", async ({
   await page.getByLabel("Import packet").setInputFiles(saved);
   await expect(page.getByRole("status")).toContainText("Imported");
   await expect(page.getByLabel("Review history")).toContainText("unverifiable");
+});
+
+test("builder creates, reviews, exports and reimports", async ({ page }, info) => {
+  await page.goto("./");
+  await page.getByRole("button", { name: "New packet" }).click();
+  await expect(page.locator("#builder")).toBeVisible();
+  await page.locator("#builder-sources input").first().fill("policy-1");
+  await page.locator("#builder-sources input").nth(1).fill("Synthetic policy");
+  await page.locator("#builder-sources textarea").first().fill("Refunds within 30 days.");
+  await expect(page.locator("#builder-sources")).toContainText("SHA-256:");
+  await page.locator("#builder-claims input").first().fill("c1");
+  await page.locator("#builder-claims input").nth(1).fill("Refunds within 30 days.");
+  await page.locator("#builder-claims input").nth(2).fill("policy-1");
+  await page.getByRole("button", { name: "Use packet" }).click();
+  await expect(page.locator("#status")).toContainText("Built packet");
+  await expect(page.getByLabel("Claim", { exact: true })).toContainText("c1: Refunds");
+  await page.getByLabel("Span start").fill("0");
+  await page.getByLabel("Span end").fill("7");
+  await page.getByLabel("Rationale").fill("Source states the same rule.");
+  await page.getByLabel("Reviewer label").fill("Synthetic exercise");
+  await page.getByRole("button", { name: "Save review" }).press("Enter");
+  await expect(page.locator("#status")).toContainText("Saved");
+  const event = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export packet" }).click();
+  const path = await (await event).path();
+  const raw = await readFile(path!, "utf8");
+  await writeFile(info.outputPath("built-packet.json"), raw);
+  await page.getByLabel("Import packet").setInputFiles(path!);
+  await expect(page.locator("#status")).toContainText("Imported");
+  await expect(page.getByLabel("Review history")).toContainText("Source states the same rule");
+});
+
+test("builder rejects empty citations and keeps review work", async ({ page }) => {
+  await page.goto("./");
+  await importPacket(page);
+  await fourReviews(page);
+  await page.getByRole("button", { name: "New packet" }).click();
+  await page.locator("#builder-sources input").first().fill("s1");
+  await page.locator("#builder-sources input").nth(1).fill("Title");
+  await page.locator("#builder-sources textarea").first().fill("Some text.");
+  await page.locator("#builder-claims input").first().fill("c1");
+  await page.locator("#builder-claims input").nth(1).fill("Some claim.");
+  await page.getByRole("button", { name: "Use packet" }).click();
+  await expect(page.locator("#builder-status")).toContainText("citation");
+  await expect(page.getByLabel("Review history")).toContainText("Source states the same rule");
+});
+
+test("import errors use the alert role and same file reselects", async ({ page }) => {
+  await page.goto("./");
+  await importPacket(page);
+  const corrupt = JSON.parse(input);
+  corrupt.sources[0].text += " Changed";
+  const payload = {
+    name: "bad.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(corrupt)),
+  };
+  await page.getByLabel("Import packet").setInputFiles(payload);
+  const status = page.locator("#status");
+  await expect(status).toContainText("current work kept");
+  await expect(status).toHaveAttribute("role", "alert");
+  await expect(status).toHaveClass(/error/);
+  await page.getByLabel("Import packet").setInputFiles(payload);
+  await expect(status).toContainText("current work kept");
 });
 
 test("small screen reflow and doubled text size", async ({ page }) => {

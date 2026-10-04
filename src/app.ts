@@ -2,6 +2,7 @@ import { parsePacket, requireValue, type Packet, type Review, type Verdict } fro
 import { sha256 } from "./hash";
 import { appendReview, latestReviews, reviewState } from "./reviews";
 import { validSpan, sourceOffset } from "./spans";
+import { buildPacket, draftClaim, draftSource } from "./builder";
 import example from "../examples/packet.json";
 
 function element<T extends HTMLElement>(id: string): T {
@@ -9,8 +10,13 @@ function element<T extends HTMLElement>(id: string): T {
   if (!node) throw new Error(`Missing control ${id}`);
   return node as T;
 }
+function message(error: unknown): string {
+  return String(error).replace(/^Error:\s*/, "");
+}
 let packet: Packet | null = null,
-  generation = 0;
+  generation = 0,
+  lastExport = "",
+  dirty = false;
 const claimControl = element<HTMLSelectElement>("claim");
 const citationControl = element<HTMLSelectElement>("citation");
 const sourceControl = element<HTMLTextAreaElement>("source-text");
@@ -18,8 +24,23 @@ const startControl = element<HTMLInputElement>("start"),
   endControl = element<HTMLInputElement>("end");
 const status = element("status"),
   history = element("history");
+const importControl = element<HTMLInputElement>("import");
+const builderSection = element("builder");
+const builderToggle = element<HTMLButtonElement>("builder-toggle");
+const builderStatus = element("builder-status");
 function options(control: HTMLSelectElement, rows: { id: string; label: string }[]): void {
   control.replaceChildren(...rows.map((row) => new Option(row.label, row.id)));
+}
+function setStatus(ok: boolean, text: string): void {
+  status.textContent = text;
+  status.classList.toggle("error", !ok);
+  status.setAttribute("role", ok ? "status" : "alert");
+}
+function setBusy(busy: boolean): void {
+  status.setAttribute("aria-busy", String(busy));
+  for (const id of ["import", "example", "export", "builder-toggle"]) {
+    element(id).toggleAttribute("disabled", busy);
+  }
 }
 function source(): Packet["sources"][number] {
   const value = packet?.sources.find((row) => row.id === citationControl.value);
@@ -33,7 +54,7 @@ function showExcerpt(): void {
     end = Number(endControl.value);
   element("excerpt").textContent = validSpan(value.text, start, end)
     ? value.text.slice(start, end)
-    : "Select a valid nonempty span";
+    : "Enter a span inside the source text";
 }
 function showSource(): void {
   if (!citationControl.value) {
@@ -74,35 +95,58 @@ function showHistory(): void {
     }),
   );
 }
-async function importText(raw: string, ticket: number): Promise<void> {
-  const next = await parsePacket(raw, sha256);
-  if (ticket !== generation) return;
+function claimLabel(id: string, text: string): string {
+  const short = text.length > 80 ? `${text.slice(0, 77)}...` : text;
+  return `${id}: ${short}`;
+}
+function usePacket(next: Packet, note: string): void {
   packet = next;
+  dirty = JSON.stringify(packet) !== lastExport;
   options(
     claimControl,
-    next.claims.map((row) => ({ id: row.id, label: row.id })),
+    next.claims.map((row) => ({ id: row.id, label: claimLabel(row.id, row.text) })),
   );
   showClaim();
   showHistory();
-  status.textContent = "Imported packet. Export to keep changes.";
+  setStatus(true, note);
 }
-element<HTMLInputElement>("import").addEventListener("change", async (event) => {
+async function importText(raw: string, ticket: number): Promise<void> {
+  setBusy(true);
+  try {
+    const next = await parsePacket(raw, sha256);
+    if (ticket !== generation) return;
+    usePacket(next, "Imported packet. Export to keep changes.");
+  } finally {
+    if (ticket === generation) setBusy(false);
+  }
+}
+function useFile(raw: string, ticket: number): void {
+  void importText(raw, ticket).catch((error) => {
+    if (ticket === generation)
+      setStatus(false, `Import failed; current work kept: ${message(error)}`);
+  });
+}
+importControl.addEventListener("change", async (event) => {
   const ticket = ++generation;
   try {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
     if (!file) return;
     requireValue(file.size <= 5 * 1024 * 1024, "packet exceeds 5 MiB");
     const bytes = new Uint8Array(await file.arrayBuffer());
     requireValue(!(bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf), "BOM forbidden");
-    await importText(new TextDecoder("utf-8", { fatal: true }).decode(bytes), ticket);
+    useFile(new TextDecoder("utf-8", { fatal: true }).decode(bytes), ticket);
   } catch (error) {
     if (ticket === generation)
-      status.textContent = `Import failed; current work kept: ${String(error)}`;
+      setStatus(false, `Import failed; current work kept: ${message(error)}`);
+  } finally {
+    (event.target as HTMLInputElement).value = "";
   }
 });
 element("example").addEventListener("click", () => {
-  void importText(JSON.stringify(example), ++generation).catch((error) => {
-    status.textContent = String(error);
+  const ticket = ++generation;
+  void importText(JSON.stringify(example), ticket).catch((error) => {
+    if (ticket === generation) setStatus(false, `Example failed: ${message(error)}`);
   });
 });
 claimControl.addEventListener("change", showClaim);
@@ -138,27 +182,184 @@ element<HTMLFormElement>("review-form").addEventListener("submit", async (event)
     const next = await parsePacket(JSON.stringify(appendReview(previous, review)), sha256);
     requireValue(ticket === generation && previous === packet, "Session changed; save again");
     packet = next;
+    dirty = true;
     showHistory();
-    status.textContent = "Saved human review in memory. Export to keep it.";
+    setStatus(true, "Saved human review in memory. Export to keep it.");
   } catch (error) {
-    status.textContent = `Review not saved: ${String(error)}`;
+    setStatus(false, `Review not saved: ${message(error)}`);
   }
 });
+function download(raw: string, name: string): void {
+  const url = URL.createObjectURL(new Blob([raw], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 element("export").addEventListener("click", () => {
   if (!packet) {
-    status.textContent = "Import a packet first";
+    setStatus(false, "Import a packet first");
     return;
   }
   const raw = JSON.stringify(packet);
   if (new TextEncoder().encode(raw).byteLength > 5 * 1024 * 1024) {
-    status.textContent = "Export exceeds the 5 MiB import limit; export not created.";
+    setStatus(false, "Export exceeds the 5 MiB import limit; export not created.");
     return;
   }
-  const url = URL.createObjectURL(new Blob([raw], { type: "application/json" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "claim-review.json";
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  status.textContent = "Export requested. Confirm your browser saved the file.";
+  download(raw, "claim-review.json");
+  lastExport = raw;
+  dirty = false;
+  setStatus(true, "Export requested. Confirm your browser saved the file.");
 });
+globalThis.addEventListener("beforeunload", (event) => {
+  if (dirty) event.preventDefault();
+});
+
+// Packet builder: creation-only mode alongside import. All validation flows through
+// parsePacket via buildPacket, so builder packets obey the same caps and hashes.
+interface BuilderRow {
+  id: HTMLInputElement;
+  title?: HTMLInputElement;
+  text: HTMLInputElement | HTMLTextAreaElement;
+  cite?: HTMLInputElement;
+}
+const builderSources = element("builder-sources");
+const builderClaims = element("builder-claims");
+const builderHashes = new Map<string, string>();
+function setBuilderStatus(ok: boolean, text: string): void {
+  builderStatus.textContent = text;
+  builderStatus.classList.toggle("error", !ok);
+  builderStatus.setAttribute("role", ok ? "status" : "alert");
+}
+function builderField(
+  parent: HTMLElement,
+  label: string,
+  control: HTMLInputElement | HTMLTextAreaElement,
+): void {
+  const tag = document.createElement("label");
+  tag.textContent = label;
+  tag.append(control);
+  parent.append(tag);
+}
+function addSourceRow(): void {
+  const group = document.createElement("fieldset");
+  const id = document.createElement("input");
+  id.placeholder = "source id";
+  id.maxLength = 200;
+  const title = document.createElement("input");
+  title.placeholder = "source title";
+  title.maxLength = 1000;
+  const text = document.createElement("textarea");
+  text.rows = 4;
+  text.placeholder = "exact source text";
+  builderField(group, "Source id", id);
+  builderField(group, "Source title", title);
+  builderField(group, "Source text", text);
+  const hashLine = document.createElement("p");
+  hashLine.textContent = "SHA-256 appears after typing.";
+  group.append(hashLine);
+  const update = (): void => {
+    void sha256(text.value.replace(/\r\n/g, "\n"))
+      .then((digest) => {
+        hashLine.textContent = `SHA-256: ${digest.slice(0, 16)}...`;
+        builderHashes.set(group.id, digest);
+      })
+      .catch(() => {
+        hashLine.textContent = "SHA-256 unavailable in this browser context";
+      });
+  };
+  group.id = `builder-source-${builderSources.childElementCount}`;
+  text.addEventListener("input", update);
+  group.dataset.row = "source";
+  builderSources.append(group);
+}
+function addClaimRow(): void {
+  const group = document.createElement("fieldset");
+  const id = document.createElement("input");
+  id.placeholder = "claim id";
+  id.maxLength = 200;
+  const text = document.createElement("input");
+  text.placeholder = "claim text";
+  text.maxLength = 10000;
+  const cite = document.createElement("input");
+  cite.placeholder = "citation source ids, comma separated";
+  builderField(group, "Claim id", id);
+  builderField(group, "Claim text", text);
+  builderField(group, "Citations", cite);
+  group.dataset.row = "claim";
+  builderClaims.append(group);
+}
+function readBuilder(): { sources: BuilderRow[]; claims: BuilderRow[] } {
+  return {
+    sources: Array.from(builderSources.querySelectorAll("[data-row='source']")).map((group) => {
+      const fields = Array.from(group.querySelectorAll("input, textarea"));
+      const [id, title, text] = fields;
+      return {
+        id: id as HTMLInputElement,
+        title: title as HTMLInputElement,
+        text: text as HTMLTextAreaElement,
+      };
+    }),
+    claims: Array.from(builderClaims.querySelectorAll("[data-row='claim']")).map((group) => {
+      const fields = Array.from(group.querySelectorAll("input, textarea"));
+      const [id, text, cite] = fields;
+      return {
+        id: id as HTMLInputElement,
+        text: text as HTMLInputElement,
+        cite: cite as HTMLInputElement,
+      };
+    }),
+  };
+}
+builderToggle.addEventListener("click", () => {
+  const open = builderSection.hidden;
+  builderSection.hidden = !open;
+  builderToggle.setAttribute("aria-expanded", String(open));
+  builderToggle.textContent = open ? "Hide packet builder" : "New packet";
+  if (open && !builderSources.childElementCount) {
+    addSourceRow();
+    addClaimRow();
+  }
+});
+element("builder-add-source").addEventListener("click", addSourceRow);
+element("builder-add-claim").addEventListener("click", addClaimRow);
+async function builderPacket(): Promise<Packet> {
+  const rows = readBuilder();
+  return buildPacket(
+    {
+      sources: rows.sources.map((row) =>
+        draftSource(row.id.value, row.title!.value, row.text.value),
+      ),
+      claims: rows.claims.map((row) =>
+        draftClaim(
+          row.id.value,
+          (row.text as HTMLInputElement).value,
+          row
+            .cite!.value.split(",")
+            .map((part) => part.trim())
+            .filter((part) => part.length > 0),
+        ),
+      ),
+    },
+    sha256,
+  );
+}
+element("builder-use").addEventListener("click", () => {
+  void builderPacket()
+    .then((next) => {
+      generation++;
+      usePacket(next, "Built packet in memory. Save reviews, then export to keep them.");
+      setBuilderStatus(true, "Packet ready in the review form.");
+    })
+    .catch((error) => setBuilderStatus(false, message(error)));
+});
+element("builder-download").addEventListener("click", () => {
+  void builderPacket()
+    .then((next) => {
+      download(JSON.stringify(next), "packet.json");
+      setBuilderStatus(true, "Packet file download requested.");
+    })
+    .catch((error) => setBuilderStatus(false, message(error)));
+});
+void builderHashes;

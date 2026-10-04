@@ -12,7 +12,7 @@ behavior changes. Exact source hashes and UTF-16 spans; judgments are self-repor
 - No adoption, semantic accuracy, credential or production ownership claim.
 - Never manually edit the lock, spend money, expose secrets or bypass a hook.
 
-Owner selected publication(c), October4, for bootstrap, feature and release PRs
+Owner selected publication(c), October 4, for bootstrap, feature and release PRs
 to main; public MIT tool, v0.1.0 GitHub-only standalone HTML/offline ZIP and Pages.
 Push, check, review, merge and deliver within that scope. This permission overrides
 the starter owner-only merge rule. Pages/GitHub-only distribution are approved

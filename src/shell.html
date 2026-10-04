@@ -15,7 +15,26 @@
       <label for="import">Import packet</label
       ><input id="import" type="file" accept=".json,application/json" />
       <button id="example" type="button">Load synthetic example</button>
+      <button id="builder-toggle" type="button" aria-expanded="false" aria-controls="builder">
+        New packet
+      </button>
       <p id="status" role="status" aria-live="polite"></p>
+      <section id="builder" hidden aria-label="Packet builder">
+        <h2>Build a packet</h2>
+        <p>
+          Type source text and claims here; hashes are computed in this page. Text is stored exactly
+          as shown: pasted CRLF line breaks arrive as LF.
+        </p>
+        <h3>Sources</h3>
+        <div id="builder-sources"></div>
+        <button id="builder-add-source" type="button">Add source</button>
+        <h3>Claims</h3>
+        <div id="builder-claims"></div>
+        <button id="builder-add-claim" type="button">Add claim</button>
+        <p id="builder-status" role="status" aria-live="polite"></p>
+        <button id="builder-use" type="button">Use packet</button>
+        <button id="builder-download" type="button">Download packet file</button>
+      </section>
       <form id="review-form">
         <label for="claim">Claim</label
         ><select id="claim" required></select>
@@ -23,12 +42,18 @@
         <label for="citation">Citation</label
         ><select id="citation" required></select>
         <label for="source-text">Source text</label
-        ><textarea id="source-text" readonly dir="auto" rows="10"></textarea>
+        ><textarea
+          id="source-text"
+          readonly
+          dir="auto"
+          rows="10"
+          aria-describedby="excerpt"
+        ></textarea>
         <button id="selection" type="button">Use selected span</button>
         <label for="start">Span start</label><input id="start" type="number" min="0" required />
         <label for="end">Span end</label><input id="end" type="number" min="1" required />
         <p>Offsets use UTF-16 code units.</p>
-        <p id="excerpt" dir="auto"></p>
+        <p id="excerpt" dir="auto" aria-live="polite"></p>
         <label for="verdict">Verdict</label
         ><select id="verdict">
           <option value="supported">Supported</option>
