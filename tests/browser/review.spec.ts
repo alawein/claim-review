@@ -11,7 +11,7 @@ test("CRLF selection preserves original source offsets", async ({ page }) => {
   const p = JSON.parse(input);
   p.sources[0].text = "first\r\nSECOND";
   p.sources[0].sha256 = createHash("sha256").update(p.sources[0].text).digest("hex");
-  await page.goto("/");
+  await page.goto("./");
   await page.getByLabel("Import packet").setInputFiles({
     name: "crlf.json",
     mimeType: "application/json",
@@ -47,7 +47,7 @@ test("large valid packet exports within import byte bound", async ({ page }) => 
   };
   const raw = JSON.stringify(p);
   expect(Buffer.byteLength(raw)).toBeLessThanOrEqual(5 * 1024 * 1024);
-  await page.goto("/");
+  await page.goto("./");
   await page
     .getByLabel("Import packet")
     .setInputFiles({ name: "large.json", mimeType: "application/json", buffer: Buffer.from(raw) });
@@ -86,7 +86,7 @@ async function fourReviews(page: import("@playwright/test").Page) {
 test("four judgments export and reimport exactly, without input-driven requests", async ({
   page,
 }, info) => {
-  await page.goto("/");
+  await page.goto("./");
   const requests: string[] = [];
   await page.route("**/*", (route) => {
     requests.push(route.request().url());
@@ -128,7 +128,7 @@ test("four judgments export and reimport exactly, without input-driven requests"
 });
 
 test("keyboard navigation saves and exports", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("./");
   await importPacket(page);
   await page.getByLabel("Import packet").press("Tab");
   await expect(page.getByRole("button", { name: "Load synthetic example" })).toBeFocused();
@@ -178,7 +178,7 @@ test("standalone offline file imports, reviews, exports and reimports", async ({
 
 test("small screen reflow and doubled text size", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
-  await page.goto("/");
+  await page.goto("./");
   await importPacket(page);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.addStyleTag({ content: "body{font-size:34px}" });
@@ -204,7 +204,7 @@ test("malicious text is inert; stale reviews do not quote changed source", async
       reviewer: "Synthetic",
     },
   ];
-  await page.goto("/");
+  await page.goto("./");
   await page.getByLabel("Import packet").setInputFiles({
     name: "script.json",
     mimeType: "application/json",
