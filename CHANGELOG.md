@@ -1,5 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.1.0
 
-- Local citation review with exact source integrity, spans, human rationale and append history.
+- Browser-only citation review with exact UTF-8 hashes and original UTF-16 spans.
+- Human verdicts/rationales, safe imports, append history and portable exports.
+- CRLF selection mapping and byte-bounded round trips.
+- Standalone offline HTML and GitHub Pages distribution.
