@@ -1,8 +1,14 @@
-# Claim review
+# Claim Review
 
-Record why a specific passage supports, partly supports, contradicts or cannot
-verify a claim. Import frozen source text, select an exact span, enter a rationale
-and export portable human review history. No account, model or server.
+Review claims against exact source passages and export the reasoning.
+
+![Evidence review](assets/label-purpose.svg)
+![TypeScript](assets/label-stack.svg)
+![Offline browser](assets/label-runtime.svg)
+
+Import source text, select a passage, and record whether it supports, partly
+supports, contradicts, or cannot verify a claim. Export the packet to preserve
+your review history. No account, model, or server.
 
 ![Claim review with the packet builder open over the synthetic example](docs/screenshots/app.png)
 
