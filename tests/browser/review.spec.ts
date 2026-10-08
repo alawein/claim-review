@@ -281,7 +281,9 @@ test("small screen reflow and doubled text size", async ({ page }) => {
   await page.goto("./");
   await importPacket(page);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.addStyleTag({ content: "body{font-size:34px}" });
+  // Simulate doubled text through the existing stylesheet, whose hash is allowed.
+  // Adding a new inline style correctly fails under the standalone CSP.
+  await page.evaluate(() => document.styleSheets[0].insertRule("body{font-size:34px}"));
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.getByRole("button", { name: "Export packet" })).toBeVisible();
 });

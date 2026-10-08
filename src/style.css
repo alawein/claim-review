@@ -46,6 +46,13 @@ textarea {
 input[type="number"] {
   font-variant-numeric: tabular-nums;
 }
+input[type="checkbox"] {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
 textarea {
   resize: vertical;
 }

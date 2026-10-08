@@ -1,7 +1,23 @@
-import { assertReview, parseReview, requireValue, type Packet, type Review } from "./packet";
-export function reviewState(packet: Packet, review: Review): "valid" | "stale" {
+import {
+  assertReview,
+  enrichReview,
+  parseReview,
+  requireValue,
+  type Packet,
+  type Review,
+  type LegacyReview,
+} from "./packet";
+export function reviewState(
+  packet: Packet,
+  review: LegacyReview | Review,
+): "valid" | "stale" | "normalization-only stale" {
   const source = packet.sources.find((row) => row.id === review.source_id);
-  return source?.sha256 === review.source_sha256 ? "valid" : "stale";
+  if (source?.sha256 === review.source_sha256) return "valid";
+  return "source_nfc_sha256" in review &&
+    review.source_nfc_sha256 !== null &&
+    source?.nfc_sha256 === review.source_nfc_sha256
+    ? "normalization-only stale"
+    : "stale";
 }
 export function latestReviews(packet: Packet): Review[] {
   const map = new Map<string, Review>();
@@ -9,8 +25,8 @@ export function latestReviews(packet: Packet): Review[] {
     map.set(JSON.stringify([review.claim_id, review.source_id]), review);
   return [...map.values()];
 }
-export function appendReview(packet: Packet, review: Review): Packet {
-  review = parseReview(review);
+export function appendReview(packet: Packet, input: LegacyReview | Review): Packet {
+  const review = enrichReview(packet, parseReview(input));
   assertReview(packet, review);
   requireValue(reviewState(packet, review) === "valid", "cannot save review against stale source");
   requireValue(!packet.reviews.some((row) => row.id === review.id), "duplicate review ID");

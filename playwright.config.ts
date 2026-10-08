@@ -1,6 +1,8 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/browser",
+  workers: 3,
+  timeout: 60000,
   use: { baseURL: process.env.LIVE_URL ?? "http://127.0.0.1:4173", acceptDownloads: true },
   webServer: process.env.LIVE_URL
     ? undefined

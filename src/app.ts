@@ -1,9 +1,11 @@
-import { parsePacket, requireValue, type Packet, type Review, type Verdict } from "./packet";
+import { parsePacket, requireValue, type Packet, type LegacyReview, type Verdict } from "./packet";
 import { sha256 } from "./hash";
 import { appendReview, latestReviews, reviewState } from "./reviews";
 import { validSpan, sourceOffset } from "./spans";
 import { buildPacket, clean, draftClaim } from "./builder";
 import example from "../examples/packet.json";
+import { webAnnotations } from "./annotation";
+import { saveDraft, readDraft, clearDraft } from "./draft";
 
 function element<T extends HTMLElement>(id: string): T {
   const node = document.getElementById(id);
@@ -29,10 +31,14 @@ const importControl = element<HTMLInputElement>("import");
 const builderSection = element("builder");
 const builderToggle = element<HTMLButtonElement>("builder-toggle");
 const builderStatus = element("builder-status");
+const draftSave = element<HTMLInputElement>("draft-save");
+draftSave.checked = false;
 const busyControls = [
   importControl,
   element<HTMLButtonElement>("example"),
   element<HTMLButtonElement>("export"),
+  element<HTMLButtonElement>("export-w3c"),
+  element<HTMLButtonElement>("draft-restore"),
   builderToggle,
 ];
 function options(control: HTMLSelectElement, rows: { id: string; label: string }[]): void {
@@ -132,6 +138,13 @@ function usePacket(next: Packet, note: string): void {
   showClaim();
   showHistory();
   setStatus(true, note);
+  persistDraft();
+}
+function persistDraft(): void {
+  if (draftSave.checked && !saveDraft(packet)) {
+    draftSave.checked = false;
+    setStatus(false, "Device draft storage unavailable; work kept in memory. Export to keep it.");
+  }
 }
 async function importText(raw: string, ticket: number): Promise<void> {
   beginBusy();
@@ -189,7 +202,7 @@ element<HTMLFormElement>("review-form").addEventListener("submit", async (event)
     const selected = source();
     let number = previous.reviews.length + 1;
     while (previous.reviews.some((row) => row.id === `review-${number}`)) number++;
-    const review: Review = {
+    const review: LegacyReview = {
       id: `review-${number}`,
       claim_id: claimControl.value,
       source_id: selected.id,
@@ -205,12 +218,13 @@ element<HTMLFormElement>("review-form").addEventListener("submit", async (event)
     packet = next;
     showHistory();
     setStatus(true, "Saved human review in memory. Export to keep it.");
+    persistDraft();
   } catch (error) {
     setStatus(false, `Review not saved: ${message(error)}`);
   }
 });
-function download(raw: string, name: string): void {
-  const url = URL.createObjectURL(new Blob([raw], { type: "application/json" }));
+function download(raw: string, name: string, type = "application/json"): void {
+  const url = URL.createObjectURL(new Blob([raw], { type }));
   const link = document.createElement("a");
   link.href = url;
   link.download = name;
@@ -230,6 +244,59 @@ element("export").addEventListener("click", () => {
   download(raw, "claim-review.json");
   lastExport = raw;
   setStatus(true, "Export requested. Confirm your browser saved the file.");
+});
+element("export-w3c").addEventListener("click", () => {
+  try {
+    requireValue(!!packet, "Import a packet first");
+    download(
+      JSON.stringify(webAnnotations(packet)),
+      "claim-review-annotations.jsonld",
+      "application/ld+json",
+    );
+    setStatus(
+      true,
+      "W3C export requested. Export the native packet to preserve resumable history.",
+    );
+  } catch (error) {
+    setStatus(false, message(error));
+  }
+});
+draftSave.addEventListener("change", () => {
+  if (draftSave.checked) {
+    if (!saveDraft(packet)) {
+      draftSave.checked = false;
+      setStatus(false, "Device draft storage unavailable; work kept in memory.");
+    } else setStatus(true, "Device draft saving enabled. Export to keep a portable copy.");
+  } else setStatus(true, "Device draft saving off. Clear saved draft to remove the retained copy.");
+});
+element("draft-restore").addEventListener("click", () => {
+  const saved = readDraft();
+  if (!saved.available) {
+    setStatus(false, "Device draft storage unavailable; current work kept.");
+    return;
+  }
+  if (!saved.raw) {
+    setStatus(false, "No saved draft on this device; current work kept.");
+    return;
+  }
+  if (isDirty()) {
+    setStatus(false, "Export current work before restoring a draft.");
+    return;
+  }
+  const ticket = ++generation;
+  void importText(saved.raw, ticket).catch((error) => {
+    if (ticket === generation)
+      setStatus(false, `Draft restore failed; current work kept: ${message(error)}`);
+  });
+});
+element("draft-clear").addEventListener("click", () => {
+  const cleared = clearDraft();
+  setStatus(
+    cleared,
+    cleared
+      ? "Saved draft cleared; current work kept in memory."
+      : "Device draft storage unavailable; current work kept in memory.",
+  );
 });
 globalThis.addEventListener("beforeunload", (event) => {
   if (isDirty()) event.preventDefault();
