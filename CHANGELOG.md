@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.3.2 (publication pending)
+## 0.3.2 (GitHub published; npm authentication pending)
+
+- Canonical run 37828847596 passed 96 unit, 10 Python and 48 browser tests,
+  build and hosted provenance checks; corrected npm path reached ENEEDAUTH.
+  Pages run 37828847613 succeeded at merged revision 6759ad7.
 
 - Resolve the npm publish tarball argument to an absolute local file, avoiding
   npm 12.2.0 GitHub shorthand parsing. Real offline CLI dry-run regression.

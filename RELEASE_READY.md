@@ -9,7 +9,17 @@ commit `876d78580bca07c3ab7f7ae7c6530db9bd1d9b69`. Its immutable
 exist. The npm [workflow](https://github.com/alawein/claim-review/actions/runs/37799350424)
 failed with `ENEEDAUTH`; npm returned 404 for claim-review@0.3.0 on October 8.
 The GitHub assets were built locally and do not establish hosted build provenance.
-Preserve those tags and assets. v0.3.1 GitHub assets are published from the canonical hosted build; its npm attempt failed before authentication with EALLOWGIT. v0.3.2 is the upcoming corrected release.
+Preserve those tags and assets. v0.3.1 GitHub assets are published from the canonical hosted build; its npm attempt failed before authentication with EALLOWGIT.
+
+v0.3.2 is tagged at `6759ad71231f2e1b59ed8b5913ffad6dfd547970` and its
+[GitHub Release](https://github.com/alawein/claim-review/releases/tag/v0.3.2)
+is public. [Canonical run 37828847596](https://github.com/alawein/claim-review/actions/runs/37828847596)
+passed 96 unit tests, 10 Python tests, 48 browser cases, build and hosted
+provenance checks. Its corrected absolute tarball path reached npm authentication
+and failed with `ENEEDAUTH`; npm publication remains unverified.
+[Pages run 37828847613](https://github.com/alawein/claim-review/actions/runs/37828847613)
+succeeded at that revision. Owner CLI authentication remains blocked with E401
+pending human web login/OTP and trusted publisher setup.
 
 The owner authorized remaining compatible improvements, registry setup,
 publication, Pages and non-Dependabot security controls. Credentials remain
@@ -18,8 +28,8 @@ gate. The coordinator owns remote delivery and authenticated registry bootstrap.
 
 ## Build once and distribute the same files
 
-After reviewed v0.3.2 changes merge, push a new annotated `v0.3.2` tag at the
-verified main revision. Never reuse or rewrite v0.3.0 or v0.3.1. `release.yml` runs only
+The immutable `v0.3.2` tag already exists at the verified merged revision.
+Never reuse or rewrite v0.3.0, v0.3.1 or v0.3.2. `release.yml` runs only
 on tags and checks version and main ancestry. Its build job runs checks and
 creates the offline HTML exactly once; `npm pack --ignore-scripts` packages it
 without a second prepack build. Build tools remain development-only.
@@ -56,9 +66,9 @@ anything. A matching registry version is verified without publishing it again.
   registry version was absent on readback. The owner/coordinator must resolve
   first-publication authentication and configure the trusted publisher. Do not
   manufacture credentials or claim successful setup from prepared workflow code.
-- Not yet attempted: v0.3.2 has no new tag/run/publication yet. After merge and
-  verified registry access, the new workflow must execute and its live artifact
-  comparisons must pass before build/registry/GitHub equality is claimed.
+- Attempted with authentication failure: v0.3.2 reached npm with the correct
+  absolute tarball path, then failed with ENEEDAUTH. GitHub build artifacts and
+  hosted provenance are verified; npm byte/provenance equality remains pending.
 
 Trusted publisher: owner `alawein`, repository `claim-review`, workflow
 `release.yml`, environment `npm`. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
@@ -74,9 +84,8 @@ provenance validation rather than a success assertion from presence alone.
 
 ## Pages and security
 
-Pages remains manual-only. The coordinator can run the existing workflow within
-the named authorization, then verify the actual public output. Local build checks
-do not prove Pages deployment. See [security settings](SECURITY_SETTINGS.md).
+Pages remains manual-only. Run 37828847613 succeeded at the v0.3.2 merged
+revision; future deployment changes remain coordinator-owned. See [security settings](SECURITY_SETTINGS.md).
 The entire Dependabot family is excluded; existing report-only npm audits remain.
 
 ## Dated prepublication evidence
