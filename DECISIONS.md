@@ -1,5 +1,29 @@
 # v0.3.0 decisions
 
+## v0.3.1 closeout, October 8, 2026
+
+- Continue the authorized compatible closeout from merged main, preserving the
+  previous feature branch and immutable v0.3.0 release. No runtime schema change.
+- Test the specific `jsonld` 9.0.0 consumer with pinned local W3C context; do not
+  claim universal interoperability or change unchanged product storage/UI paths.
+- Use eight sorted ALCE ASQA answers with original supplied citation passages and
+  scores for an AIS-rubric pilot. Original AIS labels are unavailable and remain
+  null. Manual compound screening and independent collection remain pending.
+- Separate canonical build, OIDC publication and GitHub upload jobs. Retain build
+  assets before publication; GitHub upload can complete after npm failure. Existing
+  version/asset mismatches fail, without clobber or blind republishing.
+- Preserve the observed v0.3.0 npm `ENEEDAUTH` failure and 404 registry readback;
+  registry bootstrap is an access matter handled by the coordinator/owner.
+- The owner excluded every Dependabot feature, while existing report-only npm
+  audits and non-Dependabot controls remain supported.
+- Bound unit workers to three after the new tar/JSON-LD suites reproduced a
+  five-second Unicode property-test timeout under concurrent Windows work.
+  Preserve all seeds, run counts and integrity assertions; these are correctness
+  tests, not five-second performance benchmarks. Browser driver/framebuffer
+  failures are reported separately and do not justify product changes.
+
+## Original v0.3.0 implementation decisions (historical)
+
 The owner requested autonomous continuous implementation with reversible
 ambiguities recorded here. No design approval wait is required for this named
 scope. The finished tool remains an explicit-input, deterministic browser-only

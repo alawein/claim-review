@@ -1,4 +1,4 @@
-# Packet contract, revision 1 (v0.3.0)
+# Packet contract, revision 1 (v0.3.0 and v0.3.1)
 
 [JSON Schema 2020-12](../schema/claim-review-packet.v1.json) covers input packets,
 native exports and history. Its filename is the published contract revision;
@@ -95,8 +95,10 @@ an explicit whole-export error; native export retains that history.
 The [W3C model](https://www.w3.org/TR/annotation-model/#text-quote-selector) requires
 code-point selection and prefers grapheme boundaries. This adapter targets supplied
 plain text only: markup-like strings are literal text rather than HTML to strip.
-Published quote and position examples are tested; external interoperability is
-unverified. JSON-LD export does not clear the unsaved guard because it is not the
+Published quote and position examples and offline `jsonld` 9.0.0 expansion/RDF
+consumption are tested with a pinned local W3C context; see
+[precise interoperability coverage](interoperability.md). Arbitrary annotation
+application support remains unverified. JSON-LD export does not clear the unsaved guard because it is not the
 native resumable packet.
 
 No automatic judge, source retrieval, OCR/PDF extraction, server, accounts or

@@ -1,0 +1,10 @@
+{
+  "description": "CC0 synthetic selector cases, not human evidence",
+  "cases": [
+    { "id": "astral-start", "text": "😀𠮷𝒜é\r\nend", "start": 0, "end": 6 },
+    { "id": "combining-end", "text": "start\r\n😀𠮷𝒜é", "start": 13, "end": 15 },
+    { "id": "repeat-first", "text": "left quote middle quote right", "start": 5, "end": 10 },
+    { "id": "repeat-second", "text": "left quote middle quote right", "start": 18, "end": 23 },
+    { "id": "normalization", "text": "Café 😀", "start": 0, "end": 5, "changed": "Café 😀" }
+  ]
+}

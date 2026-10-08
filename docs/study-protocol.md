@@ -4,6 +4,17 @@ This is an executable study plan, not completed research. No participants,
 annotations, agreement statistics or comparative results are fabricated here.
 Synthetic repository judgments are workflow fixtures, not human gold labels.
 
+## Executable pilot preparation (v0.3.1)
+
+[Pilot tools and fixed rubric](../studies/ais-pilot/README.md) prepare two blinded
+packet sets from a checksum-pinned, supplied ALCE corpus and analyze separate
+reviewer exports with answer clusters, missing labels, abstentions and a separate
+adjudication layer. The upstream corpus supplies authentic automatic scores;
+it does not supply original AIS labels. Those fields stay null until actual AIS
+collection. Upstream human ALCE labels are preserved separately from both the
+four tool verdicts and AIS labels. Compound screening and independent collection
+remain pending. Synthetic tests establish script behavior, not measured agreement.
+
 ## Question and material
 
 Can independent reviewers use the tool to produce reproducible, source-bound

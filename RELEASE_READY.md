@@ -1,95 +1,88 @@
-# v0.3.0 release readiness
+# Release readiness
 
-Prepared locally, not released. This branch permits one draft PR against `main`.
-Merging, tags, GitHub Releases, package publication, Pages deployment, settings,
-and secrets are separate owner gates. No step below was executed in this run.
+## Current state, October 8, 2026
 
-## Merge gate
+v0.3.0 merged through [PR19](https://github.com/alawein/claim-review/pull/19),
+commit `876d78580bca07c3ab7f7ae7c6530db9bd1d9b69`. Its immutable
+[tag](https://github.com/alawein/claim-review/tree/v0.3.0) and
+[GitHub Release](https://github.com/alawein/claim-review/releases/tag/v0.3.0)
+exist. The npm [workflow](https://github.com/alawein/claim-review/actions/runs/37799350424)
+failed with `ENEEDAUTH`; npm returned 404 for claim-review@0.3.0 on October 8.
+The GitHub assets were built locally and do not establish hosted build provenance.
+Preserve those tags and assets. v0.3.1 publication has not yet been attempted.
 
-After explicit merge authorization, mark the draft ready in the PR UI, review
-the exact current head and checks, then use the PR number from this branch:
+The owner authorized remaining compatible improvements, registry setup,
+publication, Pages and non-Dependabot security controls. Credentials remain
+owner-entered. Missing authentication is an access blocker, not a new approval
+gate. The coordinator owns remote delivery and authenticated registry bootstrap.
 
-```powershell
-gh pr ready --repo alawein/claim-review 19
-gh pr checks --repo alawein/claim-review 19
-gh pr merge --repo alawein/claim-review 19 --squash --match-head-commit <APPROVED_HEAD_SHA>
-```
+## Build once and distribute the same files
 
-Do not use `--delete-branch` or `--admin`. Passing checks are not merge permission.
-Pages was made manual-only so a separately approved merge does not deploy.
+After reviewed v0.3.1 changes merge, push a new annotated `v0.3.1` tag at the
+verified main revision. Never reuse or rewrite v0.3.0. `release.yml` runs only
+on tags and checks version and main ancestry. Its build job runs checks and
+creates the offline HTML exactly once; `npm pack --ignore-scripts` packages it
+without a second prepack build. Build tools remain development-only.
 
-## Tag and package publication gates
+`release-assets` contains exactly `claim-review-0.3.1.tgz`, `index.html` and
+`SHA256SUMS`. The verifier checks expected name/version, exact inventory, hashes
+and byte equality between standalone and packaged HTML. Checksums are separate
+from `dist`. All distribution files are retained as an Actions artifact for
+90 days before attestation/publication, including when later npm access fails.
 
-`release.yml` triggers only on a pushed `v*` tag, checks that the tagged commit
-is an ancestor of `origin/main`, and compares the tag to the package version.
-It publishes automatically through a configured trusted publisher. Therefore
-**pushing the tag crosses both the tag gate and the package publication gate**.
-The workflow uses full action commit SHAs, OIDC, and build attestations.
+The exact tarball and standalone HTML receive hosted build attestations. The
+workflow verifies repository, workflow, source commit, tag and hosted-runner
+constraints. Full action SHAs were read back from the upstream tags on October 8.
+Only the release-upload job receives `contents:write`.
 
-Configure the trusted publisher only after the owner authorizes registry setup.
-The workflow filename is `release.yml`, owner `alawein`, repository `claim-review`,
-environment `npm`. No secret is needed by the workflow.
+The npm job downloads those files, verifies inventory, checks whether the exact
+version already exists, and publishes the same tarball through OIDC with npm
+provenance. It downloads registry bytes and compares SHA-256, verifies the hosted
+build attestation and checks npm provenance subject, SHA-512, repository,
+workflow, tag, commit and hosted builder. `npm audit signatures` verifies registry
+signatures and Sigstore provenance cryptographically. Publication does not rebuild.
 
-After merge, registry configuration, and explicit tag plus publish approval:
+The GitHub upload job runs after a successful build even if npm fails. It uploads
+those same files and the checksum inventory, then downloads and compares bytes.
+Existing identical assets are retained; mismatching assets fail without replacing
+anything. A matching registry version is verified without publishing it again.
 
-```powershell
-git fetch origin main
-git tag -a v0.3.0 origin/main -m "chore(release): v0.3.0"
-git push origin refs/tags/v0.3.0
-gh run list --repo alawein/claim-review --workflow release.yml --limit 1
-```
+## Registry access and retry states
 
-Recheck the exact main revision and the absence of an existing tag before tagging.
-Never overwrite a tag. Inspect the finished publishing run and download/check
-the registry artifact before claiming that publication succeeded.
+- Published successfully: download the existing version, compare bytes and verify
+  provenance. Do not publish it again. In this suite outcome-check@0.3.0 has
+  already succeeded; its publication must not be retried blindly.
+- Failed with a verified cause: v0.3.0 claim-review failed with `ENEEDAUTH` and the
+  registry version was absent on readback. The owner/coordinator must resolve
+  first-publication authentication and configure the trusted publisher. Do not
+  manufacture credentials or claim successful setup from prepared workflow code.
+- Not yet attempted: v0.3.1 has no new tag/run/publication yet. After merge and
+  verified registry access, the new workflow must execute and its live artifact
+  comparisons must pass before build/registry/GitHub equality is claimed.
 
-For npm, [trusted publishing](https://docs.npmjs.com/trusted-publishers/)
-requires Node >=22.14 and npm >=11.5.1. The workflow uses Node 22.23.2 and
-installs pinned npm 12.2.0 before checking the CLI version. The package is a distributable standalone browser app, not a
-JavaScript API library. Local `npm pack --dry-run` proves package contents only.
+Trusted publisher: owner `alawein`, repository `claim-review`, workflow
+`release.yml`, environment `npm`. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
+The workflow uses Node 22.23.2 and npm 12.2.0. First-publication bootstrap may be
+needed because npm package settings require an existing package. The human enters
+credentials through the managed flow. Build preparation and pack dry runs prove
+contents, not authentication, provenance or registry publication.
 
-`claim-review` returned HTTP 404 from the npm registry on October 8, 2026.
-That does not reserve the name. npm trusted-publisher configuration lives in
-an existing package's Settings > Trusted Publisher. First publication may
-require a separate authorized maintainer bootstrap because there is no package
-settings page yet. Do not create a token. Resolve first-publication access with
-the owner's existing registry account, then configure the workflow before tags.
-If first publication requires a maintainer bootstrap, this is a separate npm
-publication gate using existing authenticated access, not permission to create
-secrets. Build the approved revision with `npm ci` and `npm pack`; after explicit
-bootstrap approval run `npm publish claim-review-0.3.0.tgz --access public`.
-The later tag workflow supplies trusted publishing and provenance. The local
-bootstrap does not establish GitHub-hosted provenance.
+After an ambiguous publish failure, inspect the destination before retrying.
+Only HTTP 404 authorizes the pipeline's publish path. Access errors fail closed;
+an existing different tarball fails. Even identical existing bytes require
+provenance validation rather than a success assertion from presence alone.
 
-## GitHub Release gate
+## Pages and security
 
-Only after explicit release authorization and verified package publication:
+Pages remains manual-only. The coordinator can run the existing workflow within
+the named authorization, then verify the actual public output. Local build checks
+do not prove Pages deployment. See [security settings](SECURITY_SETTINGS.md).
+The entire Dependabot family is excluded; existing report-only npm audits remain.
 
-```powershell
-gh release create v0.3.0 --repo alawein/claim-review --verify-tag --title "claim-review v0.3.0" --notes-file RELEASE_NOTES.md claim-review-0.3.0.tgz dist/index.html
-```
+## Dated prepublication evidence
 
-Build the approved tagged revision with `npm ci` and `npm pack` to create
-`claim-review-0.3.0.tgz`. Use those files from the approved tagged revision. Check uploaded artifact
-hashes after downloading them. [Release notes](RELEASE_NOTES.md) are prepared
-from the changelog; add the actual published artifact checks after the release.
-
-## Pages deployment gate
-
-The Pages workflow is manual-only. After explicit Pages authorization:
-
-```powershell
-gh workflow run pages.yml --repo alawein/claim-review --ref main
-gh run list --repo alawein/claim-review --workflow pages.yml --limit 1
-```
-
-The existing `github-pages` environment and Pages source must be configured by
-the owner if absent. Inspect the run and <https://alawein.github.io/claim-review/> before
-claiming deployment. Changing Pages settings is a separate settings gate.
-
-## Security settings gate
-
-Follow [SECURITY_SETTINGS.md](SECURITY_SETTINGS.md) at
-<https://github.com/alawein/claim-review/settings/security_analysis>. Enable dependency
-graph, Dependabot alerts, and Dependabot security updates. Add version-update
-configuration through a separately authorized PR. No setting was changed here.
+Before PR19 merged on October 8, the v0.3.0 branch was a prepared release candidate
+and remote operations awaited the then-current owner grant. Those conditions were
+superseded by the grant recorded in AGENTS.md and actual merge/tag/GitHub delivery.
+The original local test evidence remains in [AUDIT_VERIFICATION.md](AUDIT_VERIFICATION.md).
+Do not reinterpret those tests as a newer hosted or npm publication result.

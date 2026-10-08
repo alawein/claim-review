@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.1 (publication not yet attempted)
+
+- Offline JSON-LD expansion/RDF tests with pinned context and Unicode fixtures;
+  native compatibility and stale-history integrity remain unchanged.
+- Standard-library AIS pilot preparation and supplied-label analysis, blinded
+  packet sets, answer clusters, explicit missing labels and separate adjudication.
+  Independent human collection remains pending; synthetic tests are not findings.
+- One canonical tag build, retained artifacts, exact file checksums, standalone
+  HTML attestation, OIDC publication and mismatch-rejecting release/registry retries.
+- Current release-state documentation and the entire Dependabot-family exclusion.
+
 ## 0.3.0
 
 - Enriched native packets (schema_version 2), with v0.2 migration, retained UTF-16

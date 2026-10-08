@@ -1,23 +1,30 @@
-# claim-review v0.3.0
+# claim-review v0.3.1
 
-Release candidate. Publication is gated.
+Publication has not yet been attempted. These notes describe the prepared new
+maintenance release, preserving v0.3.0 tags/assets and native packet compatibility.
 
-0.3.0
+- Offline `jsonld` 9.0.0 expansion/RDF tests with pinned W3C context and Unicode
+  fixtures. Exact selectors and stale legacy native history retain their limits.
+- AIS pilot preparation from original supplied ALCE answers and citation passages,
+  blinded packet sets, separate labels/adjudication, answer clusters and authentic
+  score columns. Independent reviewers and compound screening remain pending;
+  synthetic tests are not empirical agreement findings.
+- One canonical CI build, exact release inventory, retained Actions artifact,
+  tarball and HTML attestations, OIDC publication and download hash verification.
+  Existing version/asset mismatches fail instead of being overwritten.
+- Current authorization and publication-state documentation, with the entire
+  Dependabot family excluded and report-only dependency audits preserved.
 
-- Enriched native packets (schema_version 2), with v0.2 migration, retained UTF-16
-  spans, exact quote selectors and code-point positions with 32-point context.
-- Separate exact-source and NFC hashes; normalization-only changes remain visibly
-  stale without reanchoring a judgment or quoting changed text.
-- Published JSON Schema 2020-12 and a dev validator paired with runtime integrity
-  checks; bounded migration refuses exports over the 5 MiB reimport limit.
-- W3C JSON-LD annotation export beside native export, tested on published selector
-  examples. Migrated stale history without original selectors retains native export.
-- Opt-in device drafts, off by default, explicit restore/clear, guarded unavailable
-  storage behavior and the retained unsaved-close guard.
-- Standalone CSP with default-src none and minimum hashed inline script/style;
-  inert active-text and offline Chromium/Firefox/WebKit coverage.
-- Randomized Unicode offset/hash/round-trip tests and a proposed AIS/ALCE annotation
-  study protocol. No fabricated human annotations, agreement or accuracy claims.
+The previous [v0.3.0 GitHub Release](https://github.com/alawein/claim-review/releases/tag/v0.3.0)
+exists. Its [npm workflow](https://github.com/alawein/claim-review/actions/runs/37799350424)
+failed with `ENEEDAUTH`; its locally built assets do not establish hosted provenance.
+See [release readiness](RELEASE_READY.md), [interoperability](docs/interoperability.md)
+and [pilot tooling](studies/ais-pilot/README.md) for exact execution requirements.
 
-See [AUDIT_VERIFICATION.md](AUDIT_VERIFICATION.md) for executed checks and limitations,
-and [RELEASE_READY.md](RELEASE_READY.md) for gated publication commands.
+## Historical v0.3.0 prepublication notes
+
+The earlier release-candidate wording was accurate before PR19 merged on October 8.
+Its implemented native format, migration, selector/hash, draft and CSP improvements
+remain documented in [CHANGELOG.md](CHANGELOG.md) and dated checks in
+[AUDIT_VERIFICATION.md](AUDIT_VERIFICATION.md). No historical test is relabeled
+as a new closeout run.
