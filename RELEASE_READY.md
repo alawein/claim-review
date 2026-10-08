@@ -110,7 +110,7 @@ Stop on any mismatch. After another confirmed registry E404, the authenticated
 owner/coordinator may run:
 
 ```powershell
-npm publish bootstrap-assets/claim-review-0.3.0.tgz --access public --ignore-scripts
+npm publish ./bootstrap-assets/claim-review-0.3.0.tgz --access public --ignore-scripts
 npm view claim-review@0.3.0 version dist --json
 ```
 
