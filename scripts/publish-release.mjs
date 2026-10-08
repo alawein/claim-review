@@ -8,7 +8,12 @@ import process from "node:process";
 import { Buffer } from "node:buffer";
 import { URL } from "node:url";
 import { verifyInventory } from "./verify-release-artifacts.mjs";
-import { registryDecision, verifyProvenanceStatement, publishOrVerify } from "./release-policy.mjs";
+import {
+  registryDecision,
+  verifyProvenanceStatement,
+  publishOrVerify,
+  publishArguments,
+} from "./release-policy.mjs";
 
 const version = JSON.parse(await readFile("package.json", "utf8")).version;
 const directory = "release-assets";
@@ -36,11 +41,7 @@ const metadata = await publishOrVerify({
   downloadHash: async (data) => sha256(await download(data)),
   localHash: sha256(local),
   publish: async () => {
-    execFileSync(
-      "npm",
-      ["publish", join(directory, name), "--access", "public", "--provenance", "--ignore-scripts"],
-      { stdio: "inherit" },
-    );
+    execFileSync("npm", publishArguments(directory, name), { stdio: "inherit" });
   },
 });
 const downloaded = await download(metadata.data);

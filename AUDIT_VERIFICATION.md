@@ -13,7 +13,7 @@ assets do not establish hosted provenance. Existing assets/tags are preserved.
 
 The owner authorized the remaining compatible closeout and publication scope,
 excluding the entire Dependabot family; credentials remain owner-entered.
-v0.3.1 has not yet been tagged or published. New local checks belong to this
+v0.3.1 is tagged and its canonical hosted assets are published on GitHub; npm failed with EALLOWGIT in run 37826160022. v0.3.2 corrects the local publish path and awaits publication. New local checks belong to this
 closeout; the Phase 0 and prepublication results below are dated historical
 evidence, not current publication state or fresh test results.
 
@@ -162,3 +162,37 @@ uses `module: ESNext` and `moduleResolution: Bundler`, not NodeNext. Those
 extensionless imports follow the existing runtime/test convention. The exact
 `7e508d8` fresh-checkout TypeScript check and all 94 unit tests passed. No import
 or compiler change is warranted; this disposition changes documentation only.
+
+## npm 12.2.0 parser regression tooling, October 8, 2026
+
+npm 12.2.0 is our chosen tested production pin, now also an exact dev dependency
+for the real CLI regression. It is excluded from the six-file distribution and
+has no runtime dependencies in the product. The fixture uses empty user/global
+configs and an offline dry run; it neither authenticates nor publishes.
+
+Report-only `npm audit` identifies five vulnerable packages within npm's bundled
+`node_modules/npm/node_modules/`: brace-expansion (high), http-cache-semantics
+(high), ip-address (moderate), postcss-selector-parser (moderate), undici (high).
+Audit reports `fixAvailable: true` for all five; no bundled dependency override,
+forced upgrade or lockfile relaxation was applied. `npm audit --omit=dev` reports
+zero vulnerabilities. Tooling findings do not enter the offline HTML or shipped
+package. HTTP/cache code can be used by npm's actual registry operations; the
+offline test does not establish that every tooling advisory is unreachable.
+
+Advisories: brace-expansion
+[GHSA-q2hr-2g5m-vwhr](https://github.com/advisories/GHSA-q2hr-2g5m-vwhr),
+[GHSA-qhr7-859c-m2p7](https://github.com/advisories/GHSA-qhr7-859c-m2p7),
+[GHSA-6j4f-fj2g-mc7p](https://github.com/advisories/GHSA-6j4f-fj2g-mc7p);
+http-cache-semantics
+[GHSA-ch52-4w7c-c8xp](https://github.com/advisories/GHSA-ch52-4w7c-c8xp);
+ip-address
+[GHSA-rpw4-54j3-4h4q](https://github.com/advisories/GHSA-rpw4-54j3-4h4q),
+[GHSA-2vr4-cq9g-pvrc](https://github.com/advisories/GHSA-2vr4-cq9g-pvrc),
+[GHSA-j6r3-76f7-8jcv](https://github.com/advisories/GHSA-j6r3-76f7-8jcv),
+[GHSA-h3mg-xc3c-68pw](https://github.com/advisories/GHSA-h3mg-xc3c-68pw);
+postcss-selector-parser
+[GHSA-rj75-hqrm-r3gf](https://github.com/advisories/GHSA-rj75-hqrm-r3gf);
+undici
+[GHSA-3wwx-pv8p-q78v](https://github.com/advisories/GHSA-3wwx-pv8p-q78v),
+[GHSA-r53p-7pc4-xj5r](https://github.com/advisories/GHSA-r53p-7pc4-xj5r),
+[GHSA-rfgv-xxqx-mfg5](https://github.com/advisories/GHSA-rfgv-xxqx-mfg5).

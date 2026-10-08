@@ -103,7 +103,23 @@ state as unverified rather than absent. Matching assets remain immutable.
 
 Prefer the existing usable immutable v0.3.0 tarball for first-package bootstrap
 only after fresh registry E404, checksum and package-version verification. This
-avoids repackaging and preserves v0.3.1 for OIDC. Manual bootstrap cannot gain
+avoids repackaging and preserves the upcoming maintenance version for OIDC. Manual bootstrap cannot gain
 provenance later; that limitation stays explicit. The owner enters web-login
 credentials and configures the existing package trusted publisher. The worker
 does not publish or enter credentials.
+
+## Correct local npm artifact path and preserve v0.3.1, October 8, 2026
+
+Live run 37826160022 built and distributed v0.3.1 on GitHub but npm 12.2.0
+parsed its slash-only tarball argument as GitHub shorthand (EALLOWGIT). Resolve
+the production argument to an absolute local path. Pin npm 12.2.0 as dev-only
+regression tooling and execute a real offline dry run with empty user/global
+configs; mock-only command tests missed the parser behavior. A bounded 60-second
+integration timeout covers two npm subprocesses, not product performance.
+
+Use v0.3.2 because the immutable v0.3.1 tag retains its faulty publish script.
+Preserve all previous branches, tags and assets. First fully provenanced registry
+publication is a future workflow result, not an inference from preparation.
+Manual v0.3.0 bootstrap remains conditional on fresh absence and verified bytes;
+never manually consume the upcoming v0.3.2 version. npm tooling's bundled audit
+findings are development-only and report-only; no automatic dependency upgrade.

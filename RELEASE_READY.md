@@ -9,7 +9,7 @@ commit `876d78580bca07c3ab7f7ae7c6530db9bd1d9b69`. Its immutable
 exist. The npm [workflow](https://github.com/alawein/claim-review/actions/runs/37799350424)
 failed with `ENEEDAUTH`; npm returned 404 for claim-review@0.3.0 on October 8.
 The GitHub assets were built locally and do not establish hosted build provenance.
-Preserve those tags and assets. v0.3.1 publication has not yet been attempted.
+Preserve those tags and assets. v0.3.1 GitHub assets are published from the canonical hosted build; its npm attempt failed before authentication with EALLOWGIT. v0.3.2 is the upcoming corrected release.
 
 The owner authorized remaining compatible improvements, registry setup,
 publication, Pages and non-Dependabot security controls. Credentials remain
@@ -18,13 +18,13 @@ gate. The coordinator owns remote delivery and authenticated registry bootstrap.
 
 ## Build once and distribute the same files
 
-After reviewed v0.3.1 changes merge, push a new annotated `v0.3.1` tag at the
-verified main revision. Never reuse or rewrite v0.3.0. `release.yml` runs only
+After reviewed v0.3.2 changes merge, push a new annotated `v0.3.2` tag at the
+verified main revision. Never reuse or rewrite v0.3.0 or v0.3.1. `release.yml` runs only
 on tags and checks version and main ancestry. Its build job runs checks and
 creates the offline HTML exactly once; `npm pack --ignore-scripts` packages it
 without a second prepack build. Build tools remain development-only.
 
-`release-assets` contains exactly `claim-review-0.3.1.tgz`, `index.html` and
+`release-assets` contains exactly `claim-review-0.3.2.tgz`, `index.html` and
 `SHA256SUMS`. The verifier checks expected name/version, exact inventory, hashes
 and byte equality between standalone and packaged HTML. Checksums are separate
 from `dist`. All distribution files are retained as an Actions artifact for
@@ -56,7 +56,7 @@ anything. A matching registry version is verified without publishing it again.
   registry version was absent on readback. The owner/coordinator must resolve
   first-publication authentication and configure the trusted publisher. Do not
   manufacture credentials or claim successful setup from prepared workflow code.
-- Not yet attempted: v0.3.1 has no new tag/run/publication yet. After merge and
+- Not yet attempted: v0.3.2 has no new tag/run/publication yet. After merge and
   verified registry access, the new workflow must execute and its live artifact
   comparisons must pass before build/registry/GitHub equality is claimed.
 
@@ -110,7 +110,7 @@ Stop on any mismatch. After another confirmed registry E404, the authenticated
 owner/coordinator may run:
 
 ```powershell
-npm publish bootstrap-assets/claim-review-0.3.0.tgz --access public --ignore-scripts
+npm publish ./bootstrap-assets/claim-review-0.3.0.tgz --access public --ignore-scripts
 npm view claim-review@0.3.0 version dist --json
 ```
 
@@ -121,7 +121,7 @@ published version. Preserve its original tag and assets.
 
 Then configure the existing package's npm trusted publisher: owner `alawein`,
 repository `claim-review`, workflow `release.yml`, environment `npm`.
-Never manually publish v0.3.1: consuming that version prevents later OIDC
+Never manually publish v0.3.2: consuming that version prevents later OIDC
 publication from adding provenance. Reserve it for the canonical tag workflow.
 These instructions establish no actual login, publisher setup or publication.
 
@@ -132,3 +132,22 @@ Only a successful publish job including registry byte, provenance and signature
 verification claims verified npm publication. Failure or cancellation leaves
 registry state unverified; skipped publication remains pending. Retry uploads
 retain matching assets and reconcile the body after all asset checks pass.
+
+## Actual v0.3.1 execution and corrective v0.3.2
+
+[Run 37826160022](https://github.com/alawein/claim-review/actions/runs/37826160022)
+ran from immutable v0.3.1 at merged main
+`d2fb1b023b6ff0d9f1159005710778b72adedd0b`. Its build passed 94 unit tests,
+48 browser cases and schema validation; hosted artifact attestation succeeded.
+The [v0.3.1 GitHub Release](https://github.com/alawein/claim-review/releases/tag/v0.3.1)
+contains the canonical tarball and HTML. npm failed with EALLOWGIT: npm 12.2.0
+interpreted `release-assets/claim-review-0.3.1.tgz` as GitHub shorthand.
+This is a local-path parsing defect, not evidence of successful npm publication.
+Owner CLI authentication remains blocked with E401 pending human web login.
+
+The corrected invocation resolves the tarball to an absolute local path.
+The immutable old tag retains the old script, so retries cannot incorporate
+this fix. Preserve v0.3.1 assets/tag and use v0.3.2 for the corrected workflow.
+The v0.3.0 bootstrap route above remains conditional on fresh registry absence;
+its manual/no-OIDC-provenance limitation remains unchanged. Neither prepared
+code nor successful dry runs prove authentication or actual npm publication.

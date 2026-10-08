@@ -75,7 +75,7 @@ immutable [GitHub Release](https://github.com/alawein/claim-review/releases/tag/
 Its npm [publish attempt](https://github.com/alawein/claim-review/actions/runs/37799350424)
 failed with `ENEEDAUTH`; registry publication is not established. v0.3.1 adds
 interoperability and study preparation checks plus a canonical artifact pipeline,
-and has not yet been tagged or published. Independent study labels remain pending.
+and its canonical hosted assets are published on GitHub. Its npm attempt failed with EALLOWGIT from an ambiguous relative tarball path; v0.3.2 corrects that invocation and awaits publication. Independent study labels remain pending.
 
 ## Develop
 
