@@ -21,6 +21,12 @@
   Preserve all seeds, run counts and integrity assertions; these are correctness
   tests, not five-second performance benchmarks. Browser driver/framebuffer
   failures are reported separately and do not justify product changes.
+- The clean clone passed Chromium/Firefox completely and 15 of 16 WebKit tests.
+  The large-packet readiness assertion exhausted its default five-second wait;
+  a bounded probe completed the entire unchanged import/export/reimport in
+  9.5 seconds with a 20-second readiness wait. Apply that wait only to this
+  test's two import assertions. Keep all integrity assertions, the 60-second
+  test limit, three engines and browser driver settings unchanged.
 
 ## Original v0.3.0 implementation decisions (historical)
 
