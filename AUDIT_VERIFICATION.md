@@ -27,9 +27,9 @@ claim-review hypotheses against a fresh clone, not adoption or semantic accuracy
 | Reviewer identity is authenticated | Refuted as a product claim; candid disclosure confirmed | packet.ts:24 records arbitrary reviewer string; README explicitly calls it self-reported. |
 | Property-based Unicode coverage exists | Refuted | packet.test.ts contains examples only; package.json has no property testing dependency. |
 | History is append-only in review operation | Confirmed within product operation | reviews.ts:15-30 rejects duplicate IDs/stale appends and returns a new array; arbitrary imported history cannot prove authorship. |
-| Live Pages equals release | Partial/unverified in this scope | Local source/build cannot establish live deployment equality. No deployment is authorized. |
+| Live Pages equals release | Partially confirmed; live output unverified | Local source/build cannot establish live deployment equality. No deployment is authorized. |
 | Research validity/adoption proven | Refuted as an assertion | Synthetic examples and candid README disclaimers do not establish annotator agreement, accuracy or adoption. |
-| PR3's odd check establishes a product defect | Partial | Root checks historical Actions separately; a check count alone cannot identify cause. |
+| PR3's odd check establishes a product defect | Partially confirmed | Root checks historical Actions separately; a check count alone cannot identify cause. |
 
 ## Verification limits
 
@@ -106,7 +106,7 @@ and final review belong to the coordinator before push/draft PR.
 | README/changelog/contract | Done | Version 0.3.0 and candid scope documented; primary related-work sources opened and checked before citation. |
 | Merge/tag/release/publish | Prepared, blocked by owner gates | `RELEASE_READY.md` includes commands and registry setup, and `RELEASE_NOTES.md` is ready for the release gate. |
 | Final independent review | Done | Independent review found two eval adapter defects; both reproduced, regression-tested and independently rechecked after fixes. No remaining review findings. |
-| Final clean-clone verification | Underway | Fresh dependency installation, tests, lint, types, schemas and artifact builds are required before push. |
+| Final clean-clone verification | Done | Fresh installs, full suites, lint/types, schemas and artifacts passed; exact coordinator evidence below. |
 | Push and one draft PR | Pending authorized execution | Only `feat/v0.3.0-hardening` may be pushed; no merge/main/tag/deploy/settings change. |
 
 ### Study status
@@ -116,3 +116,17 @@ study, agreement analysis and comparison with ALCE automatic citation metrics.
 No human annotations, agreement scores or quality measurements were fabricated.
 Legacy stale reviews without the original source retain native history but
 cannot reconstruct unavailable selectors; JSON-LD export reports that limitation.
+
+### Coordinator final verification
+
+Coordinator clean clone at c167f48 (then documentation fast-forward 3f43a86):
+fresh npm ci installed 141 packages; npm run check passed lint, TypeScript,
+72 unit tests and standalone build. Both example inputs/migrated exports pass
+schema validation. npm pack --dry-run contains 6 files and npm audit --omit=dev
+reports 0 vulnerabilities. All 48 browser cases passed in 37.5 seconds across the
+three engines. Documentation fast-forward passed lint and stayed clean.
+
+All repository workflows pass local actionlint, and Markdown lint passes.
+Remote main remained at the Phase 0 commit before branch publication.
+Independent review findings were resolved and rechecked. No merging, tagging,
+registry publication, release creation, deployment or settings mutation occurred.
