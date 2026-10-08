@@ -106,4 +106,6 @@ jobs:
       - name: Upload canonical bytes without replacing mismatching assets
         env:
           GH_TOKEN: ${{ github.token }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          PUBLISH_RESULT: ${{ needs.publish.result }}
         run: node scripts/upload-release.mjs

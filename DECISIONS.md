@@ -93,3 +93,17 @@ hosting. A release tag starts trusted package publication, so the tag requires
 both tag and registry publication authorization. npm first-publication bootstrap,
 if needed, is a separate owner-approved publication using existing access; this
 run does not create secrets or bypass registry setup.
+
+## Release results and bootstrap, October 8, 2026
+
+Generate release bodies from validated workflow results instead of static
+prepublication notes, and reconcile them after successful asset checks on
+retries. Failed publication can occur after registry upload, so report registry
+state as unverified rather than absent. Matching assets remain immutable.
+
+Prefer the existing usable immutable v0.3.0 tarball for first-package bootstrap
+only after fresh registry E404, checksum and package-version verification. This
+avoids repackaging and preserves v0.3.1 for OIDC. Manual bootstrap cannot gain
+provenance later; that limitation stays explicit. The owner enters web-login
+credentials and configures the existing package trusted publisher. The worker
+does not publish or enter credentials.

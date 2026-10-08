@@ -86,3 +86,49 @@ and remote operations awaited the then-current owner grant. Those conditions wer
 superseded by the grant recorded in AGENTS.md and actual merge/tag/GitHub delivery.
 The original local test evidence remains in [AUDIT_VERIFICATION.md](AUDIT_VERIFICATION.md).
 Do not reinterpret those tests as a newer hosted or npm publication result.
+
+## First npm package bootstrap (owner/coordinator only)
+
+The owner runs `npm login --auth-type=web` and completes the browser login,
+including any second factor. Agents never enter or read credentials.
+Read `npm view claim-review@0.3.0 version dist --json` again. Only confirmed
+E404 permits bootstrap; other errors require resolving access. If the version
+exists, inspect its bytes before retrying and do not publish it again.
+
+Use the existing immutable v0.3.0 release, downloaded to a new empty directory:
+
+```powershell
+gh release download v0.3.0 --repo alawein/claim-review --pattern claim-review-0.3.0.tgz --pattern index.html --pattern SHA256SUMS --dir bootstrap-assets
+node scripts/verify-release-artifacts.mjs verify bootstrap-assets claim-review 0.3.0
+Get-FileHash bootstrap-assets/claim-review-0.3.0.tgz -Algorithm SHA256
+```
+
+The verifier must pass name/version, inventory and packaged/standalone HTML
+comparison. Independently compare the displayed tarball SHA-256 with
+`594c86a2ae02d989f55bc9872b72f9306ee1be1a42fad651ff51ed61efbd5a70`.
+Stop on any mismatch. After another confirmed registry E404, the authenticated
+owner/coordinator may run:
+
+```powershell
+npm publish bootstrap-assets/claim-review-0.3.0.tgz --access public --ignore-scripts
+npm view claim-review@0.3.0 version dist --json
+```
+
+Download the returned registry tarball and compare its SHA-256 with the same
+expected value before recording bootstrap success. Manual v0.3.0 publication
+has no OIDC registry provenance; future runs cannot add provenance to an already
+published version. Preserve its original tag and assets.
+
+Then configure the existing package's npm trusted publisher: owner `alawein`,
+repository `claim-review`, workflow `release.yml`, environment `npm`.
+Never manually publish v0.3.1: consuming that version prevents later OIDC
+publication from adding provenance. Reserve it for the canonical tag workflow.
+These instructions establish no actual login, publisher setup or publication.
+
+## Workflow result reporting
+
+Generated GitHub Release bodies use validated build/publish job results.
+Only a successful publish job including registry byte, provenance and signature
+verification claims verified npm publication. Failure or cancellation leaves
+registry state unverified; skipped publication remains pending. Retry uploads
+retain matching assets and reconcile the body after all asset checks pass.
