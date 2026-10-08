@@ -1,3 +1,16 @@
+import { resolve } from "node:path";
+
+export function publishArguments(directory, name) {
+  return [
+    "publish",
+    resolve(directory, name),
+    "--access",
+    "public",
+    "--provenance",
+    "--ignore-scripts",
+  ];
+}
+
 export function registryDecision(status, localHash, registryHash) {
   if (status === 404) return "publish";
   if (status !== 200) throw new Error(`Registry access failed: HTTP ${status}`);

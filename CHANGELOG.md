@@ -1,6 +1,13 @@
 # Changelog
 
-## 0.3.1 (publication not yet attempted)
+## 0.3.2 (publication pending)
+
+- Resolve the npm publish tarball argument to an absolute local file, avoiding
+  npm 12.2.0 GitHub shorthand parsing. Real offline CLI dry-run regression.
+- Preserve immutable v0.3.1 artifacts and record its actual GitHub-only delivery
+  and failed npm invocation; human authentication remains pending.
+
+## 0.3.1 (GitHub released; npm attempt failed)
 
 - Offline JSON-LD expansion/RDF tests with pinned context and Unicode fixtures;
   native compatibility and stale-history integrity remain unchanged.

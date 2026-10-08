@@ -1,6 +1,6 @@
 {
   "name": "claim-review",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Review citations with exact spans and explicit human rationales.",
   "license": "MIT",
   "private": false,
@@ -28,6 +28,7 @@
     "eslint": "^10.11.0",
     "fast-check": "4.10.2",
     "jsonld": "9.0.0",
+    "npm": "12.2.0",
     "prettier": "^3.0.0",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.0.0",
