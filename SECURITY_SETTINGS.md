@@ -3,6 +3,11 @@
 No repository settings were changed in the v0.3.0 branch. Dependency audits in
 CI are report-only. A clean audit is not proof that the software is secure.
 
+Read-only API checks on October 8, 2026 found Dependabot security updates
+disabled and vulnerability alerts disabled (HTTP 404 with GitHub's explicit
+"Vulnerability alerts are disabled" response). Automated security fixes
+reported `enabled: false, paused: false`. No setting was changed.
+
 After explicit authorization, open
 <https://github.com/alawein/claim-review/settings/security_analysis> and enable:
 

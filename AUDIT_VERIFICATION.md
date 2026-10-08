@@ -105,7 +105,7 @@ and final review belong to the coordinator before push/draft PR.
 | Pages | Prepared, blocked by owner gate | Existing Pages workflow is manual-only. Merge no longer deploys automatically. |
 | README/changelog/contract | Done | Version 0.3.0 and candid scope documented; primary related-work sources opened and checked before citation. |
 | Merge/tag/release/publish | Prepared, blocked by owner gates | `RELEASE_READY.md` includes commands and registry setup, and `RELEASE_NOTES.md` is ready for the release gate. |
-| Final independent review | Underway | Concrete defects must be reproduced and fixed before push. |
+| Final independent review | Done | Independent review found two eval adapter defects; both reproduced, regression-tested and independently rechecked after fixes. No remaining review findings. |
 | Final clean-clone verification | Underway | Fresh dependency installation, tests, lint, types, schemas and artifact builds are required before push. |
 | Push and one draft PR | Pending authorized execution | Only `feat/v0.3.0-hardening` may be pushed; no merge/main/tag/deploy/settings change. |
 
