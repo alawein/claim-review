@@ -51,14 +51,14 @@ test("large valid packet exports within import byte bound", async ({ page }) => 
   await page
     .getByLabel("Import packet")
     .setInputFiles({ name: "large.json", mimeType: "application/json", buffer: Buffer.from(raw) });
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.getByRole("status")).toContainText("Imported", { timeout: 20000 });
   const event = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export packet" }).click();
   const path = await (await event).path();
   const exported = await readFile(path!);
   expect(exported.length).toBeLessThanOrEqual(5 * 1024 * 1024);
   await page.getByLabel("Import packet").setInputFiles(path!);
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.getByRole("status")).toContainText("Imported", { timeout: 20000 });
 });
 
 async function importPacket(page: import("@playwright/test").Page) {

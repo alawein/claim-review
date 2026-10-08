@@ -24,7 +24,9 @@ UTF-16 offsets, choose a verdict, write rationale and reviewer label, then save.
 v0.2 packets load and migrate to the enriched native format.
 
 **Export W3C JSON-LD** exports review annotations with exact quoted text and
-code-point positions. It does not replace the resumable native packet. Legacy
+code-point positions. [Offline interoperability checks](docs/interoperability.md)
+use `jsonld` 9.0.0 and a pinned W3C context outside the product bundle.
+It does not replace the resumable native packet. Legacy
 stale history without original selectors must use native export; the W3C button
 reports this limitation. [Packet schema](schema/claim-review-packet.v1.json) and
 [contract](docs/contract.md) describe the formats and validation boundaries.
@@ -59,13 +61,21 @@ preferred but not enforced. Plain text remains literal, including CRLF.
 
 Hash consistency is not truth, authorship or semantic entailment. These are human
 judgments, not automated accuracy scores. JSON-LD export follows the W3C selector
-and annotation structures tested against published examples; arbitrary W3C import
+and annotation structures tested against published examples and the named offline
+JSON-LD consumer; arbitrary W3C import
 and compatibility with third-party annotation systems are unverified. English UI
 preserves Unicode/Arabic text; manual screen-reader coverage is unverified.
 [Evaluation](docs/evaluation.md), [study protocol](docs/study-protocol.md),
 [bounded usefulness](docs/usefulness.md), [provenance](docs/provenance.md).
 Publication preparation and observed security settings are documented in
 [release readiness](RELEASE_READY.md) and [security settings](SECURITY_SETTINGS.md).
+
+v0.3.0 merged in [PR19](https://github.com/alawein/claim-review/pull/19) and has an
+immutable [GitHub Release](https://github.com/alawein/claim-review/releases/tag/v0.3.0).
+Its npm [publish attempt](https://github.com/alawein/claim-review/actions/runs/37799350424)
+failed with `ENEEDAUTH`; registry publication is not established. v0.3.1 adds
+interoperability and study preparation checks plus a canonical artifact pipeline,
+and has not yet been tagged or published. Independent study labels remain pending.
 
 ## Develop
 

@@ -27,3 +27,7 @@ Thumbs.db
 
 playwright-report/
 test-results/
+release-assets/
+studies/ais-pilot/downloads/
+studies/ais-pilot/collected/
+__pycache__/

@@ -1,9 +1,26 @@
 # Audit verification
 
+## Current state, October 8, 2026 closeout
+
+v0.3.0 was merged by [PR19](https://github.com/alawein/claim-review/pull/19) at
+commit `876d78580bca07c3ab7f7ae7c6530db9bd1d9b69` and has an immutable
+[tag](https://github.com/alawein/claim-review/tree/v0.3.0) and
+[GitHub Release](https://github.com/alawein/claim-review/releases/tag/v0.3.0).
+The [publish workflow](https://github.com/alawein/claim-review/actions/runs/37799350424)
+failed with `ENEEDAUTH`. npm readback returned 404 for claim-review@0.3.0;
+successful registry publication is not established. Its locally built GitHub
+assets do not establish hosted provenance. Existing assets/tags are preserved.
+
+The owner authorized the remaining compatible closeout and publication scope,
+excluding the entire Dependabot family; credentials remain owner-entered.
+v0.3.1 has not yet been tagged or published. New local checks belong to this
+closeout; the Phase 0 and prepublication results below are dated historical
+evidence, not current publication state or fresh test results.
+
 Audit input: compass artifact dated October 8, 2026. This record checks its
 claim-review hypotheses against a fresh clone, not adoption or semantic accuracy.
 
-## Phase 0 baseline
+## Phase 0 baseline (historical, before publication)
 
 - Clone HEAD: e9c96dee96edc91e3bf1844067cae71168ce74bb.
 - Node v22.23.2; Python 3.14.7; package version 0.2.0; private true.
@@ -76,7 +93,7 @@ These are automation/startup timings on this machine, not latency guarantees.
 No retries hide failures. The initial timeout and intermediate CSP test failures
 remain reported above; final policy was retained and all assertions passed.
 
-### Final source audit
+### Final v0.3.0 source audit (historical, before publication)
 
 | Area | Verified implementation |
 | --- | --- |
@@ -94,7 +111,7 @@ annotations. Current publication/security preparation is documented by the
 coordinator in RELEASE_READY.md and SECURITY_SETTINGS.md. A clean-clone recheck
 and final review belong to the coordinator before push/draft PR.
 
-## Shared hardening and publication gates
+## Shared hardening and publication gates (historical, October 8 before PR19 merged)
 
 | Recommendation | Status | Evidence or remaining scope |
 | --- | --- | --- |
@@ -135,3 +152,13 @@ Hosted initial link check failed on the two references to the authenticated
 maintainer settings page, each returning 404 to anonymous lychee. Only the exact
 settings URL is excluded in .lycheeignore; public citations remain checked.
 The remote checks are rerun after this documented correction.
+
+## CodeRabbit import-extension disposition, October 8, 2026
+
+CodeRabbit's formal review of `26321f8` raised one trivial nitpick at
+`src/interoperability.test.ts:5-8`, asserting that NodeNext requires explicit
+`.js` extensions. The premise is refuted by `tsconfig.json:4-5`: this repository
+uses `module: ESNext` and `moduleResolution: Bundler`, not NodeNext. Those
+extensionless imports follow the existing runtime/test convention. The exact
+`7e508d8` fresh-checkout TypeScript check and all 94 unit tests passed. No import
+or compiler change is warranted; this disposition changes documentation only.

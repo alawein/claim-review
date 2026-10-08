@@ -4,3 +4,7 @@ node_modules
 package-lock.json
 *.md
 .github
+fixtures/anno-context.jsonld
+release-assets
+studies/ais-pilot/downloads
+studies/ais-pilot/collected
