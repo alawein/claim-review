@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { parsePacket, type Review } from "./packet";
+import { parsePacket, type LegacyReview as Review, enrichReview } from "./packet";
 import { sha256 } from "./hash";
 import { validSpan, sourceOffset } from "./spans";
 import { appendReview, latestReviews, reviewState } from "./reviews";
@@ -41,7 +41,7 @@ test("stale history retained; latest current review appended", async () => {
   const p = await parsePacket(JSON.stringify(specimen()), hash);
   const old = review();
   old.source_sha256 = "b".repeat(64);
-  p.reviews.push(old);
+  p.reviews.push(enrichReview(p, old));
   expect(reviewState(p, old)).toBe("stale");
   const next = appendReview(p, { ...review(), id: "new" });
   expect(next.reviews).toHaveLength(2);
