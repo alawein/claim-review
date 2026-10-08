@@ -93,3 +93,26 @@ Research remains a proposed protocol in docs/study-protocol.md, not measured
 annotations. Current publication/security preparation is documented by the
 coordinator in RELEASE_READY.md and SECURITY_SETTINGS.md. A clean-clone recheck
 and final review belong to the coordinator before push/draft PR.
+
+## Shared hardening and publication gates
+
+| Recommendation | Status | Evidence or remaining scope |
+| --- | --- | --- |
+| Pinned Actions | Done | Every `uses:` in `.github/workflows` has a full commit SHA; local actionlint checks passed. |
+| Dependency auditing | Done | CI reports audits with `continue-on-error`; it does not silently assert a clean audit. |
+| Release workflows | Prepared, blocked by owner gates | `release.yml` fires only on tags, uses trusted publishing/provenance and checks version plus main ancestry. No tag or publication was executed. |
+| Security settings | Prepared, blocked by owner gate | Exact settings paths and version-update configuration are in `SECURITY_SETTINGS.md`. No settings changed. |
+| Pages | Prepared, blocked by owner gate | Existing Pages workflow is manual-only. Merge no longer deploys automatically. |
+| README/changelog/contract | Done | Version 0.3.0 and candid scope documented; primary related-work sources opened and checked before citation. |
+| Merge/tag/release/publish | Prepared, blocked by owner gates | `RELEASE_READY.md` includes commands and registry setup, and `RELEASE_NOTES.md` is ready for the release gate. |
+| Final independent review | Underway | Concrete defects must be reproduced and fixed before push. |
+| Final clean-clone verification | Underway | Fresh dependency installation, tests, lint, types, schemas and artifact builds are required before push. |
+| Push and one draft PR | Pending authorized execution | Only `feat/v0.3.0-hardening` may be pushed; no merge/main/tag/deploy/settings change. |
+
+### Study status
+
+Done: `docs/study-protocol.md` specifies an AIS-style independent annotation
+study, agreement analysis and comparison with ALCE automatic citation metrics.
+No human annotations, agreement scores or quality measurements were fabricated.
+Legacy stale reviews without the original source retain native history but
+cannot reconstruct unavailable selectors; JSON-LD export reports that limitation.

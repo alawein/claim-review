@@ -33,18 +33,18 @@ requires Unicode code point positions. Grapheme boundaries are a SHOULD;
 code point boundaries preserve compatibility with existing explicit offsets.
 Plain text does not undergo HTML stripping or whitespace normalization here.
 
-9. Enriched legacy packets can become larger because exact quotes are added. Reject
+1. Enriched legacy packets can become larger because exact quotes are added. Reject
    migration incrementally when its canonical export would exceed 5 MiB, so an
    accepted packet remains resumable. No original history is silently dropped.
-10. W3C export is all-history or a visible error if a migrated stale review lacks
+2. W3C export is all-history or a visible error if a migrated stale review lacks
     original selectors; native export remains available. This avoids inventing a
     passage or silently omitting judgments.
-11. Strict CSP blocks the old doubled-text test's new inline style. Tests alter
+3. Strict CSP blocks the old doubled-text test's new inline style. Tests alter
     the allowed existing stylesheet through CSSOM to exercise layout; no policy
     exception is introduced. Firefox's baseline large-packet timeout did not
     reproduce in isolated or full subsequent runs; keep this timing fact candid.
 
-12. Bound browser workers to three and allow 60 seconds per workflow. Firefox's
+4. Bound browser workers to three and allow 60 seconds per workflow. Firefox's
     draft case passed in 11 seconds isolated but timed out at 32.7 seconds with
     six concurrent workers; large-packet cases took 19.6-26.4 seconds. Reduce
     resource contention and keep a finite limit rather than adding retries or

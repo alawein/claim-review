@@ -1,6 +1,8 @@
-# Changelog
+# claim-review v0.3.0
 
-## 0.3.0
+Release candidate. Publication is gated.
+
+0.3.0
 
 - Enriched native packets (schema_version 2), with v0.2 migration, retained UTF-16
   spans, exact quote selectors and code-point positions with 32-point context.
@@ -17,21 +19,5 @@
 - Randomized Unicode offset/hash/round-trip tests and a proposed AIS/ALCE annotation
   study protocol. No fabricated human annotations, agreement or accuracy claims.
 
-## 0.2.0
-
-- Guided packet builder: add sources and claims in the page, with in-browser SHA-256,
-  CRLF-as-LF storage note, parsePacket as sole validator, use-in-review and download paths.
-- Interface hardening: error-styled alert status with focus, import loading state,
-  announced span preview, claim-text dropdown labels, file-input reset, ticket-guarded
-  example loader, unsaved-work guard with a one-click builder confirm, and cleaned
-  save/import messages. A pending-operations counter keeps controls enabled after any
-  async builder/import completion.
-- Review-hardened: surrogate-safe dropdown labels, name-addressed builder rows, shared
-  status styling, and regression tests for the beforeunload guard and packet download.
-
-## 0.1.0
-
-- Browser-only citation review with exact UTF-8 hashes and original UTF-16 spans.
-- Human verdicts/rationales, safe imports, append history and portable exports.
-- CRLF selection mapping and byte-bounded round trips.
-- Standalone offline HTML and GitHub Pages distribution.
+See [AUDIT_VERIFICATION.md](AUDIT_VERIFICATION.md) for executed checks and limitations,
+and [RELEASE_READY.md](RELEASE_READY.md) for gated publication commands.
