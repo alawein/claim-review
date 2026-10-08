@@ -152,3 +152,13 @@ Hosted initial link check failed on the two references to the authenticated
 maintainer settings page, each returning 404 to anonymous lychee. Only the exact
 settings URL is excluded in .lycheeignore; public citations remain checked.
 The remote checks are rerun after this documented correction.
+
+## CodeRabbit import-extension disposition, October 8, 2026
+
+CodeRabbit's formal review of `26321f8` raised one trivial nitpick at
+`src/interoperability.test.ts:5-8`, asserting that NodeNext requires explicit
+`.js` extensions. The premise is refuted by `tsconfig.json:4-5`: this repository
+uses `module: ESNext` and `moduleResolution: Bundler`, not NodeNext. Those
+extensionless imports follow the existing runtime/test convention. The exact
+`7e508d8` fresh-checkout TypeScript check and all 94 unit tests passed. No import
+or compiler change is warranted; this disposition changes documentation only.
