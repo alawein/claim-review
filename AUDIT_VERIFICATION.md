@@ -107,7 +107,7 @@ and final review belong to the coordinator before push/draft PR.
 | Merge/tag/release/publish | Prepared, blocked by owner gates | `RELEASE_READY.md` includes commands and registry setup, and `RELEASE_NOTES.md` is ready for the release gate. |
 | Final independent review | Done | Independent review found two eval adapter defects; both reproduced, regression-tested and independently rechecked after fixes. No remaining review findings. |
 | Final clean-clone verification | Done | Fresh installs, full suites, lint/types, schemas and artifacts passed; exact coordinator evidence below. |
-| Push and one draft PR | Pending authorized execution | Only `feat/v0.3.0-hardening` may be pushed; no merge/main/tag/deploy/settings change. |
+| Push and one draft PR | Done | [Draft PR #19](https://github.com/alawein/claim-review/pull/19) opened on the authorized branch; no merge/main/tag/deploy/settings change. |
 
 ### Study status
 
@@ -130,3 +130,8 @@ All repository workflows pass local actionlint, and Markdown lint passes.
 Remote main remained at the Phase 0 commit before branch publication.
 Independent review findings were resolved and rechecked. No merging, tagging,
 registry publication, release creation, deployment or settings mutation occurred.
+
+Hosted initial link check failed on the two references to the authenticated
+maintainer settings page, each returning 404 to anonymous lychee. Only the exact
+settings URL is excluded in .lycheeignore; public citations remain checked.
+The remote checks are rerun after this documented correction.

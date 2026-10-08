@@ -49,3 +49,17 @@ Plain text does not undergo HTML stripping or whitespace normalization here.
     six concurrent workers; large-packet cases took 19.6-26.4 seconds. Reduce
     resource contention and keep a finite limit rather than adding retries or
     weakening any assertions. Startup/automation timing is not app latency.
+
+## Release coordination decisions
+
+Hosted link checks returned 404 only for the repository's maintainer-only security
+settings URL. Keep its exact click path, exclude only that anchored URL from
+anonymous lychee probes, and continue checking all public research/document links.
+Read-only API checks separately established the disabled alerts/update settings.
+No setting or credential was changed to make the check pass.
+
+Pages deployment is manual-only so approving a merge does not also approve
+hosting. A release tag starts trusted package publication, so the tag requires
+both tag and registry publication authorization. npm first-publication bootstrap,
+if needed, is a separate owner-approved publication using existing access; this
+run does not create secrets or bypass registry setup.
