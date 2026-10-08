@@ -13,10 +13,15 @@ behavior changes. Exact source hashes and UTF-16 spans; judgments are self-repor
 - No adoption, semantic accuracy, credential or production ownership claim.
 - Never manually edit the lock, spend money, expose secrets or bypass a hook.
 
-The owner's October 8 v0.3.0 hardening instruction authorizes local edits, dev
-dependency installation, testing, local commits, pushing feat/v0.3.0-hardening
-and one draft PR against main. The coordinating agent handles push and PR after
-review. No main push, merge, tags, releases, npm publication, Pages deployment,
-settings, secrets, branch deletion or other remote mutations. The older October
-4 publication(c) scope does not apply to this task. Work proceeds autonomously;
-reversible ambiguities go in DECISIONS.md without approval waits.
+The owner selected chat option (b) on October 8, 2026: complete the reviewed
+v0.3.0 release delivery for alawein/claim-review, alawein/eval-audit and
+alawein/outcome-check, targeting main. This explicitly authorizes merging the
+existing hardening PRs, registry trusted-publisher configuration, v0.3.0 tags,
+npm/PyPI publication and GitHub Releases. It is the plain-language equivalent
+of profile execution mode (c) for this named scope, not profile mode (b).
+
+Pages deployment, GitHub repository/security/Dependabot settings, operational
+secret creation or rotation, branch deletion, force pushes and unrelated remote
+changes remain unauthorized. Publishing requires verified existing registry
+access; missing authentication blocks registry-dependent actions, not the merge.
+Preserve the feature branches. No new repositories or kohyr copies.
