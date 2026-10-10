@@ -23,6 +23,21 @@ save. **Export packet** preserves all review history. Reimport that JSON to cont
 The status line turns red and announces errors; leaving with unsaved reviews triggers
 the browser guard.
 
+For the Agent Acceptance refund demo, choose **Load acceptance example**. Its four
+claims start unreviewed: a recent enabled-state observation, a conflicting refund
+amount, an old completion observation, and an already-true baseline. Review each
+claim with the source beside your judgment, select a passage, save your rationale,
+then export and reimport the packet. **Synthetic worked judgments** offers a
+separate packet of labeled example judgments. It does not grade your answers.
+Loading an example asks for a second click before replacing unsaved packet work.
+
+To exercise source revisions, import a revised packet containing changed source
+text, its matching hash, and earlier reviews. Their original hashes and rationales remain visible
+as stale history; save a new review against the current source, then export and
+reimport. An old completion observation and a review of a changed source are
+different: the first needs a human freshness judgment; the second is marked stale
+by the source hash.
+
 Closing without export loses reviews. Processing stays in memory: no upload,
 source fetch, telemetry, local storage or background persistence. Reviewer labels
 are self-reported. Source rights and exported file sharing remain your responsibility.
@@ -56,6 +71,10 @@ Build creates dist/index.html with inline CSS and one classic bundled script.
 or shared-repo dependency. Browser tests include keyboard navigation, exact exports,
 builder create/review/export/reimport, invalid-input recovery, error-role styling,
 invalid-import preservation, inert script text and offline local file operation.
+The acceptance demo checks the human review round trip, exact packet preservation,
+confirmation before replacing work, stale-source history, and source/judgment
+layout at 1440px and 390px. These checks establish workflow and integrity, not
+semantic accuracy.
 
 For stack naming and structure, follow the
 [shared repository conventions](https://github.com/alawein/.github/blob/main/docs/system/repos.md#stack-conventions)

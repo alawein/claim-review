@@ -20,10 +20,30 @@
       <p>Local processing. Export to keep work; closing this page loses unsaved reviews.</p>
       <label for="import">Import packet</label
       ><input id="import" name="import" type="file" accept=".json,application/json" />
-      <button id="example" type="button">Load synthetic example</button>
-      <button id="builder-toggle" type="button" aria-expanded="false" aria-controls="builder">
-        New packet
-      </button>
+      <section class="examples" aria-labelledby="examples-heading">
+        <h2 id="examples-heading">Try Agent Acceptance</h2>
+        <p>
+          Review four claims about one synthetic refund: a recent state observation, a conflicting
+          amount, an old completion observation, and a baseline that was already true. Select the
+          evidence and supply your own judgment.
+        </p>
+        <div class="packet-actions">
+          <button id="example" type="button">Load synthetic example</button>
+          <button id="acceptance-example" type="button">Load acceptance example</button>
+          <button id="builder-toggle" type="button" aria-expanded="false" aria-controls="builder">
+            New packet
+          </button>
+        </div>
+        <details>
+          <summary>Synthetic worked judgments</summary>
+          <p>
+            This optional packet contains four labeled synthetic human judgments. It replaces the
+            current packet after confirmation if you have unsaved work. The app does not grade your
+            answers.
+          </p>
+          <button id="acceptance-worked" type="button">Load synthetic worked judgments</button>
+        </details>
+      </section>
       <p id="status" role="status" aria-live="polite" tabindex="-1"></p>
       <section id="builder" hidden aria-label="Packet builder">
         <h2>Build a packet</h2>
@@ -43,46 +63,82 @@
       </section>
       <form id="review-form">
         <h2>Review a claim</h2>
+        <p id="packet-summary">Import, build, or choose an example to begin.</p>
         <label for="claim">Claim</label
         ><select id="claim" name="claim" required></select>
         <p id="claim-text" dir="auto"></p>
-        <label for="citation">Citation</label
-        ><select id="citation" name="citation" required></select>
-        <label for="source-text">Source text</label
-        ><textarea
-          id="source-text"
-          name="source-text"
-          readonly
-          dir="auto"
-          rows="10"
-          aria-describedby="excerpt"
-        ></textarea>
-        <button id="selection" type="button">Use selected span</button>
-        <label for="start">Span start</label
-        ><input
-          id="start"
-          name="start"
-          type="number"
-          min="0"
-          required
-          aria-describedby="span-help"
-        />
-        <label for="end">Span end</label
-        ><input id="end" name="end" type="number" min="1" required aria-describedby="span-help" />
-        <p id="span-help">Offsets use UTF-16 code units.</p>
-        <p id="excerpt" dir="auto" aria-live="polite"></p>
-        <label for="verdict">Verdict</label
-        ><select id="verdict" name="verdict">
-          <option value="supported">Supported</option>
-          <option value="partial">Partial</option>
-          <option value="contradicted">Contradicted</option>
-          <option value="unverifiable">Unverifiable</option>
-        </select>
-        <label for="rationale">Rationale</label
-        ><textarea id="rationale" name="rationale" maxlength="4000" required></textarea>
-        <label for="reviewer">Reviewer label</label
-        ><input id="reviewer" name="reviewer" maxlength="200" autocomplete="off" required />
-        <button type="submit">Save review</button>
+        <div class="review-workspace">
+          <section id="source-panel" aria-labelledby="source-heading">
+            <h3 id="source-heading">1. Select source evidence</h3>
+            <label for="citation">Citation</label
+            ><select id="citation" name="citation" required></select>
+            <p id="source-identity" class="metadata">No cited source</p>
+            <label for="source-text">Source text</label
+            ><textarea
+              id="source-text"
+              name="source-text"
+              readonly
+              dir="auto"
+              rows="10"
+              aria-describedby="span-help"
+            ></textarea>
+            <button id="selection" type="button">Use selected span</button>
+            <div class="span-controls">
+              <div>
+                <label for="start">Span start</label
+                ><input
+                  id="start"
+                  name="start"
+                  type="number"
+                  min="0"
+                  required
+                  aria-describedby="span-help"
+                />
+              </div>
+              <div>
+                <label for="end">Span end</label
+                ><input
+                  id="end"
+                  name="end"
+                  type="number"
+                  min="1"
+                  required
+                  aria-describedby="span-help"
+                />
+              </div>
+            </div>
+            <p id="span-help" class="metadata">Select text above or enter exact UTF-16 offsets.</p>
+            <p class="excerpt-label">Selected passage</p>
+            <p id="excerpt" dir="auto" aria-live="polite"></p>
+          </section>
+          <section id="judgment-panel" aria-labelledby="judgment-heading">
+            <h3 id="judgment-heading">2. Record a human judgment</h3>
+            <p id="review-state" dir="auto" aria-live="polite">
+              Your saved judgment for the selected claim and citation appears here.
+            </p>
+            <label for="verdict">Verdict</label
+            ><select id="verdict" name="verdict">
+              <option value="supported">Supported</option>
+              <option value="partial">Partial</option>
+              <option value="contradicted">Contradicted</option>
+              <option value="unverifiable">Unverifiable</option>
+            </select>
+            <label for="rationale">Rationale</label
+            ><textarea
+              id="rationale"
+              name="rationale"
+              rows="5"
+              maxlength="4000"
+              required
+            ></textarea>
+            <label for="reviewer">Reviewer label</label
+            ><input id="reviewer" name="reviewer" maxlength="200" autocomplete="off" required />
+            <p class="metadata">
+              Reviewer labels are self-reported. Saving does not grade the claim.
+            </p>
+            <button type="submit">Save review</button>
+          </section>
+        </div>
       </form>
       <button id="export" type="button">Export packet</button>
       <h2>Review history</h2>
