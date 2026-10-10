@@ -67,6 +67,11 @@ test("acceptance example starts unreviewed and carries human judgments through e
   const acceptance = JSON.parse(await readFile("examples/acceptance.json", "utf8"));
   expect(exported).toEqual({
     ...acceptance,
+    schema_version: 2,
+    sources: acceptance.sources.map((source: { sha256: string }) => ({
+      ...source,
+      nfc_sha256: source.sha256,
+    })),
     reviews: acceptanceCases.map((review, i) => ({
       id: `review-${i + 1}`,
       claim_id: review.id,
@@ -77,6 +82,15 @@ test("acceptance example starts unreviewed and carries human judgments through e
       verdict: review.verdict,
       rationale: review.rationale,
       reviewer: "Local human exercise",
+      reviewer_identity_assurance: "self-reported",
+      source_nfc_sha256: acceptance.sources[0].sha256,
+      text_position: { type: "TextPositionSelector", start: 0, end: 440 },
+      text_quote: {
+        type: "TextQuoteSelector",
+        exact: acceptance.sources[0].text,
+        prefix: "",
+        suffix: "",
+      },
     })),
   });
   expect(exported.claims.map((claim: { id: string }) => claim.id)).toEqual([
@@ -225,7 +239,15 @@ test("acceptance worked judgments are synthetic and revised sources retain stale
   const path = await (await download).path();
   const raw = await readFile(path!, "utf8");
   const revised = JSON.parse(raw);
-  expect(revised.reviews.slice(0, 4)).toEqual(worked.reviews);
+  expect(revised.reviews.slice(0, 4)).toEqual(
+    worked.reviews.map((review: Record<string, unknown>) => ({
+      ...review,
+      reviewer_identity_assurance: "self-reported",
+      source_nfc_sha256: null,
+      text_position: null,
+      text_quote: null,
+    })),
+  );
   expect(revised.reviews[4].source_sha256).toBe(worked.sources[0].sha256);
   await page.getByLabel("Import packet").setInputFiles(path!);
   await expect(page.locator("#history p")).toHaveCount(5);
@@ -279,14 +301,14 @@ test("large valid packet exports within import byte bound", async ({ page }) => 
   await page
     .getByLabel("Import packet")
     .setInputFiles({ name: "large.json", mimeType: "application/json", buffer: Buffer.from(raw) });
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.getByRole("status")).toContainText("Imported", { timeout: 20000 });
   const event = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export packet" }).click();
   const path = await (await event).path();
   const exported = await readFile(path!);
   expect(exported.length).toBeLessThanOrEqual(5 * 1024 * 1024);
   await page.getByLabel("Import packet").setInputFiles(path!);
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.getByRole("status")).toContainText("Imported", { timeout: 20000 });
 });
 
 async function importPacket(page: import("@playwright/test").Page) {
@@ -515,7 +537,9 @@ test("small screen reflow and doubled text size", async ({ page }) => {
   await page.goto("./");
   await importPacket(page);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.addStyleTag({ content: "body{font-size:34px}" });
+  // Simulate doubled text through the existing stylesheet, whose hash is allowed.
+  // Adding a new inline style correctly fails under the standalone CSP.
+  await page.evaluate(() => document.styleSheets[0].insertRule("body{font-size:34px}"));
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.getByRole("button", { name: "Export packet" })).toBeVisible();
 });

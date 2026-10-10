@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/alawein/claim-review/schema/claim-review-packet.v1.json",
+  "title": "Claim Review packet input and history, contract revision 1",
+  "description": "Accepts legacy schema_version 1 and enriched schema_version 2. Standard JSON Schema validates structure. Runtime validation additionally enforces exact UTF-16 length caps, SHA-256 identity, unique IDs, references, span and selector consistency, and the 5 MiB UTF-8 bound. maxLength counts code points and is an upper bound on runtime UTF-16 limits.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "sources", "claims", "reviews"],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "sources": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "text", "sha256"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 1000,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 100000,
+                "pattern": "^[^\\uD800-\\uDFFF]*$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "claims": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "text", "citation_ids"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 10000,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "citation_ids": {
+                "type": "array",
+                "maxItems": 100,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "maxLength": 200,
+                  "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+                }
+              }
+            }
+          }
+        },
+        "reviews": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "claim_id",
+              "source_id",
+              "source_sha256",
+              "start",
+              "end",
+              "verdict",
+              "rationale",
+              "reviewer"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "claim_id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "source_id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "start": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100000
+              },
+              "verdict": {
+                "enum": ["supported", "partial", "contradicted", "unverifiable"]
+              },
+              "rationale": {
+                "type": "string",
+                "maxLength": 4000,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "reviewer": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "sources", "claims", "reviews"],
+      "properties": {
+        "schema_version": {
+          "const": 2
+        },
+        "sources": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "text", "sha256", "nfc_sha256"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 1000,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 100000,
+                "pattern": "^[^\\uD800-\\uDFFF]*$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "nfc_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "claims": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "text", "citation_ids"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 10000,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "citation_ids": {
+                "type": "array",
+                "maxItems": 100,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "maxLength": 200,
+                  "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+                }
+              }
+            }
+          }
+        },
+        "reviews": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "claim_id",
+              "source_id",
+              "source_sha256",
+              "start",
+              "end",
+              "verdict",
+              "rationale",
+              "reviewer",
+              "source_nfc_sha256",
+              "reviewer_identity_assurance",
+              "text_quote",
+              "text_position"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "claim_id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "source_id": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "start": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100000
+              },
+              "verdict": {
+                "enum": ["supported", "partial", "contradicted", "unverifiable"]
+              },
+              "rationale": {
+                "type": "string",
+                "maxLength": 4000,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "reviewer": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^(?=[\\s\\S]*\\S)[^\\uD800-\\uDFFF]*$"
+              },
+              "source_nfc_sha256": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reviewer_identity_assurance": {
+                "const": "self-reported"
+              },
+              "text_quote": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["type", "exact", "prefix", "suffix"],
+                    "properties": {
+                      "type": {
+                        "const": "TextQuoteSelector"
+                      },
+                      "exact": {
+                        "type": "string",
+                        "maxLength": 100000,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$",
+                        "minLength": 1
+                      },
+                      "prefix": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                      },
+                      "suffix": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "text_position": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["type", "start", "end"],
+                    "properties": {
+                      "type": {
+                        "const": "TextPositionSelector"
+                      },
+                      "start": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000
+                      },
+                      "end": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100000
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "oneOf": [
+              {
+                "properties": {
+                  "text_quote": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["type", "exact", "prefix", "suffix"],
+                    "properties": {
+                      "type": {
+                        "const": "TextQuoteSelector"
+                      },
+                      "exact": {
+                        "type": "string",
+                        "maxLength": 100000,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$",
+                        "minLength": 1
+                      },
+                      "prefix": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                      },
+                      "suffix": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                      }
+                    }
+                  },
+                  "text_position": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["type", "start", "end"],
+                    "properties": {
+                      "type": {
+                        "const": "TextPositionSelector"
+                      },
+                      "start": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000
+                      },
+                      "end": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100000
+                      }
+                    }
+                  },
+                  "source_nfc_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "text_quote": {
+                    "type": "null"
+                  },
+                  "text_position": {
+                    "type": "null"
+                  },
+                  "source_nfc_sha256": {
+                    "type": "null"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

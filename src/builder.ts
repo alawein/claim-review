@@ -5,7 +5,7 @@ export interface BuilderState {
   claims: Claim[];
 }
 
-export function draftSource(id = "", title = "", text = ""): Omit<Source, "sha256"> {
+export function draftSource(id = "", title = "", text = ""): Omit<Source, "sha256" | "nfc_sha256"> {
   return { id, title, text };
 }
 export function draftClaim(id = "", text = "", citation_ids: string[] = []): Claim {

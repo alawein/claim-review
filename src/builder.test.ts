@@ -94,7 +94,7 @@ test("happy path builds an importable packet object", async () => {
   const full = state();
   full.claims = [draftClaim("c", "Claim text", ["s"])];
   const packet = await buildPacket(full, sha);
-  expect(packet.schema_version).toBe(1);
+  expect(packet.schema_version).toBe(2);
   expect(packet.sources).toHaveLength(1);
   expect(packet.sources[0].sha256).toBe(await sha("hello world"));
   expect(packet.claims[0].citation_ids).toEqual(["s"]);
