@@ -155,9 +155,10 @@ function showReviewState(): void {
     return;
   }
   node.textContent = `Latest human judgment: ${review.verdict} (${state === "valid" ? "valid for current source" : state === "normalization-only stale" ? state : "stale source version"}). ${review.reviewer}: ${review.rationale} Bound to SHA-256: ${review.source_sha256}.`;
-  node.textContent += stale
-    ? " Original passage unavailable; changed source is not quoted."
-    : ` Passage: ${source().text.slice(review.start, review.end)}`;
+  node.textContent +=
+    state === "valid"
+      ? ` Passage: ${source().text.slice(review.start, review.end)}`
+      : " Original passage unavailable; changed source is not quoted.";
 }
 function claimLabel(id: string, text: string): string {
   const points = Array.from(text);
