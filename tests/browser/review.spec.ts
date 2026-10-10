@@ -574,3 +574,49 @@ test("malicious text is inert; stale reviews do not quote changed source", async
   expect(await page.evaluate(() => Object.hasOwn(globalThis, "BAD"))).toBe(false);
   expect(await page.locator("script").count()).toBe(1);
 });
+
+test("normalization-only source changes remain stale and never quote revised offsets", async ({
+  page,
+}) => {
+  const { parsePacket } = await import("../../src/packet");
+  const { appendReview } = await import("../../src/reviews");
+  const hash = async (text: string) => createHash("sha256").update(text).digest("hex");
+  const legacy = (text: string) => ({
+    schema_version: 1,
+    sources: [
+      {
+        id: "s",
+        title: "Synthetic",
+        text,
+        sha256: createHash("sha256").update(text).digest("hex"),
+      },
+    ],
+    claims: [{ id: "c", text: "A synthetic claim", citation_ids: ["s"] }],
+    reviews: [],
+  });
+  const old = await parsePacket(JSON.stringify(legacy("Cafe\u0301")), hash);
+  const reviewed = appendReview(old, {
+    id: "r",
+    claim_id: "c",
+    source_id: "s",
+    source_sha256: old.sources[0].sha256,
+    start: 0,
+    end: 5,
+    verdict: "supported",
+    rationale: "Original decomposed passage",
+    reviewer: "Synthetic",
+  });
+  const next = await parsePacket(JSON.stringify(legacy("Caf\u00e9")), hash);
+  next.reviews = reviewed.reviews;
+  await page.goto("./");
+  await page.getByLabel("Import packet").setInputFiles({
+    name: "normalized.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(next)),
+  });
+  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#review-state")).toContainText("normalization-only stale");
+  await expect(page.locator("#review-state")).not.toContainText("valid for current source");
+  await expect(page.locator("#review-state")).not.toContainText("Passage:");
+  await expect(page.locator("#review-state")).toContainText("changed source is not quoted");
+});

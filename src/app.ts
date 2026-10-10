@@ -145,7 +145,8 @@ function showReviewState(): void {
         (row) => row.claim_id === claimControl.value && row.source_id === citationControl.value,
       )
     : undefined;
-  const stale = !!review && reviewState(packet!, review) === "stale";
+  const state = review ? reviewState(packet!, review) : undefined;
+  const stale = !!review && state !== "valid";
   node.classList.toggle("stale", stale);
   if (!review) {
     node.textContent = packet
@@ -153,7 +154,7 @@ function showReviewState(): void {
       : "Your saved judgment for the selected claim and citation appears here.";
     return;
   }
-  node.textContent = `Latest human judgment: ${review.verdict} (${stale ? "stale source version" : "valid for current source"}). ${review.reviewer}: ${review.rationale} Bound to SHA-256: ${review.source_sha256}.`;
+  node.textContent = `Latest human judgment: ${review.verdict} (${state === "valid" ? "valid for current source" : state === "normalization-only stale" ? state : "stale source version"}). ${review.reviewer}: ${review.rationale} Bound to SHA-256: ${review.source_sha256}.`;
   node.textContent += stale
     ? " Original passage unavailable; changed source is not quoted."
     : ` Passage: ${source().text.slice(review.start, review.end)}`;
