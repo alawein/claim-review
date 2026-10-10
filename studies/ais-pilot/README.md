@@ -17,9 +17,9 @@ ALCE corpus reviewed with the two-stage AIS rubric, not original AIS annotations
 
 Upstream: [princeton-nlp/ALCE](https://github.com/princeton-nlp/ALCE/tree/246c476a4edfc564266b7346b6e29ef4861ae937),
 commit `246c476a4edfc564266b7346b6e29ef4861ae937`.
-[Corpus](https://github.com/princeton-nlp/ALCE/blob/246c476a4edfc564266b7346b6e29ef4861ae937/human_eval/human_eval_citations_completed.json)
+[Corpus](https://raw.githubusercontent.com/princeton-nlp/ALCE/246c476a4edfc564266b7346b6e29ef4861ae937/human_eval/human_eval_citations_completed.json)
 SHA-256 `cfed9293752413d7c7631f36524dd4ee9ef58b209cdf9c63f6fc1e280b43cca6`.
-ALCE's [MIT license](https://github.com/princeton-nlp/ALCE/blob/246c476a4edfc564266b7346b6e29ef4861ae937/LICENSE)
+ALCE's [MIT license](https://raw.githubusercontent.com/princeton-nlp/ALCE/246c476a4edfc564266b7346b6e29ef4861ae937/LICENSE)
 applies to the repository material. Supplied ASQA retrieved passages originate
 in Wikipedia and retain their original titles for attribution; underlying text
 remains subject to [Wikipedia's CC BY-SA reuse terms](https://en.wikipedia.org/wiki/Wikipedia:Reusing_Wikipedia_content), not this tool's MIT or synthetic
