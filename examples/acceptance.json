@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "refund-record-1042",
+      "title": "Synthetic refund case 1042",
+      "text": "Refund case 1042. Acceptance time: 2026-10-10T12:00:00Z. Refund-enabled was already true at baseline 2026-10-10T11:58:00Z. At 2026-10-10T11:59:00Z, refund-enabled was true and the refund amount was USD 100. The agent receipt says issue-refund succeeded. Completion was recorded as true at 2026-10-10T11:45:00Z; this is older than the allowed 120 seconds. The enable-refund action receipt is unknown, so a required change is not established.",
+      "sha256": "59316c08457d3a9b532997fcd08fd7c9a199530412f42898718bc39a4b0545ff"
+    }
+  ],
+  "claims": [
+    {
+      "id": "refund-confirmed",
+      "text": "Refund-enabled was true at acceptance time.",
+      "citation_ids": ["refund-record-1042"]
+    },
+    {
+      "id": "refund-contradicted",
+      "text": "The refund amount was USD 120.",
+      "citation_ids": ["refund-record-1042"]
+    },
+    {
+      "id": "refund-stale",
+      "text": "Refund completion was confirmed at acceptance time.",
+      "citation_ids": ["refund-record-1042"]
+    },
+    {
+      "id": "refund-baseline",
+      "text": "The agent changed refund-enabled from false to true.",
+      "citation_ids": ["refund-record-1042"]
+    }
+  ],
+  "reviews": []
+}

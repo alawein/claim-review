@@ -23,6 +23,21 @@ UTF-16 offsets, choose a verdict, write rationale and reviewer label, then save.
 **Export packet** preserves all history. Reimport that JSON to continue. Existing
 v0.2 packets load and migrate to the enriched native format.
 
+For the Agent Acceptance refund demo, choose **Load acceptance example**. Its four
+claims start unreviewed: a recent enabled-state observation, a conflicting refund
+amount, an old completion observation, and an already-true baseline. Review each
+claim with the source beside your judgment, select a passage, save your rationale,
+then export and reimport the packet. **Synthetic worked judgments** offers a
+separate packet of labeled example judgments. It does not grade your answers.
+Loading an example asks for a second click before replacing unsaved packet work.
+
+To exercise source revisions, import a revised packet containing changed source
+text, its matching hash, and earlier reviews. Their original hashes and rationales remain visible
+as stale history; save a new review against the current source, then export and
+reimport. An old completion observation and a review of a changed source are
+different: the first needs a human freshness judgment; the second is marked stale
+by the source hash.
+
 **Export W3C JSON-LD** exports review annotations with exact quoted text and
 code-point positions. [Offline interoperability checks](docs/interoperability.md)
 use `jsonld` 9.0.0 and a pinned W3C context outside the product bundle.
@@ -102,6 +117,9 @@ serves that build at 127.0.0.1:4173. No runtime package or shared-repo dependenc
 Tests cover native round trips, invalid-input preservation, randomized Unicode,
 exact selectors, guarded drafts, inert active text and offline local-file operation
 in Chromium, Firefox and WebKit.
+The acceptance demo also checks confirmation before replacing work, human review and
+export/reimport, stale-source history, and the evidence layout at 1440px and 390px.
+These checks establish workflow and integrity, not semantic accuracy.
 
 For stack naming and structure, follow the
 [shared repository conventions](https://github.com/alawein/.github/blob/main/docs/system/repos.md#stack-conventions)

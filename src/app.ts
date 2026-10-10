@@ -4,6 +4,8 @@ import { appendReview, latestReviews, reviewState } from "./reviews";
 import { validSpan, sourceOffset } from "./spans";
 import { buildPacket, clean, draftClaim } from "./builder";
 import example from "../examples/packet.json";
+import acceptance from "../examples/acceptance.json";
+import acceptanceReviewed from "../examples/acceptance-reviewed.json";
 import { webAnnotations } from "./annotation";
 import { saveDraft, readDraft, clearDraft } from "./draft";
 
@@ -19,7 +21,8 @@ let packet: Packet | null = null,
   generation = 0,
   lastExport = "",
   busyCount = 0,
-  confirmBuilderUse = false;
+  confirmBuilderUse = false,
+  confirmExampleUse = "";
 const claimControl = element<HTMLSelectElement>("claim");
 const citationControl = element<HTMLSelectElement>("citation");
 const sourceControl = element<HTMLTextAreaElement>("source-text");
@@ -36,6 +39,8 @@ draftSave.checked = false;
 const busyControls = [
   importControl,
   element<HTMLButtonElement>("example"),
+  element<HTMLButtonElement>("acceptance-example"),
+  element<HTMLButtonElement>("acceptance-worked"),
   element<HTMLButtonElement>("export"),
   element<HTMLButtonElement>("export-w3c"),
   element<HTMLButtonElement>("draft-restore"),
@@ -89,12 +94,17 @@ function showSource(): void {
   if (!citationControl.value) {
     sourceControl.value = "";
     element("excerpt").textContent = "No cited source";
+    element("source-identity").textContent = "No cited source";
+    showReviewState();
     return;
   }
-  sourceControl.value = source().text;
+  const selected = source();
+  sourceControl.value = selected.text;
+  element("source-identity").textContent = `Source ${selected.id}. SHA-256: ${selected.sha256}`;
   startControl.value = "0";
   endControl.value = "0";
   showExcerpt();
+  showReviewState();
 }
 function showClaim(): void {
   const claim = packet?.claims.find((row) => row.id === claimControl.value);
@@ -123,6 +133,32 @@ function showHistory(): void {
       return row;
     }),
   );
+  element("packet-summary").textContent = packet
+    ? `${packet.claims.length} claims, ${packet.sources.length} sources, ${packet.reviews.length} review records.`
+    : "Import, build, or choose an example to begin.";
+  showReviewState();
+}
+function showReviewState(): void {
+  const node = element("review-state");
+  const review = packet
+    ? latestReviews(packet).find(
+        (row) => row.claim_id === claimControl.value && row.source_id === citationControl.value,
+      )
+    : undefined;
+  const state = review ? reviewState(packet!, review) : undefined;
+  const stale = !!review && state !== "valid";
+  node.classList.toggle("stale", stale);
+  if (!review) {
+    node.textContent = packet
+      ? "Unreviewed. Select an exact passage, choose a verdict, and explain your human judgment."
+      : "Your saved judgment for the selected claim and citation appears here.";
+    return;
+  }
+  node.textContent = `Latest human judgment: ${review.verdict} (${state === "valid" ? "valid for current source" : state === "normalization-only stale" ? state : "stale source version"}). ${review.reviewer}: ${review.rationale} Bound to SHA-256: ${review.source_sha256}.`;
+  node.textContent +=
+    state === "valid"
+      ? ` Passage: ${source().text.slice(review.start, review.end)}`
+      : " Original passage unavailable; changed source is not quoted.";
 }
 function claimLabel(id: string, text: string): string {
   const points = Array.from(text);
@@ -131,6 +167,8 @@ function claimLabel(id: string, text: string): string {
 }
 function usePacket(next: Packet, note: string): void {
   packet = next;
+  confirmExampleUse = "";
+  confirmBuilderUse = false;
   options(
     claimControl,
     next.claims.map((row) => ({ id: row.id, label: claimLabel(row.id, row.text) })),
@@ -146,12 +184,16 @@ function persistDraft(): void {
     setStatus(false, "Device draft storage unavailable; work kept in memory. Export to keep it.");
   }
 }
-async function importText(raw: string, ticket: number): Promise<void> {
+async function importText(
+  raw: string,
+  ticket: number,
+  note = "Imported packet. Export to keep changes.",
+): Promise<void> {
   beginBusy();
   try {
     const next = await parsePacket(raw, sha256);
     if (ticket !== generation) return;
-    usePacket(next, "Imported packet. Export to keep changes.");
+    usePacket(next, note);
   } finally {
     endBusy();
   }
@@ -177,12 +219,35 @@ importControl.addEventListener("change", async (event) => {
     (event.target as HTMLInputElement).value = "";
   }
 });
-element("example").addEventListener("click", () => {
-  const ticket = ++generation;
-  void importText(JSON.stringify(example), ticket).catch((error) => {
-    if (ticket === generation) setStatus(false, `Example failed: ${message(error)}`);
+function exampleLoader(id: string, data: unknown, note: string): void {
+  const control = element<HTMLButtonElement>(id);
+  control.addEventListener("click", () => {
+    if (isDirty() && confirmExampleUse !== id) {
+      confirmExampleUse = id;
+      setStatus(
+        false,
+        `Unsaved packet work will be replaced. Click ${control.textContent} again to confirm. Export first to keep it.`,
+      );
+      return;
+    }
+    confirmExampleUse = "";
+    const ticket = ++generation;
+    void importText(JSON.stringify(data), ticket, note).catch((error) => {
+      if (ticket === generation) setStatus(false, `Example failed: ${message(error)}`);
+    });
   });
-});
+}
+exampleLoader("example", example, "Imported packet. Export to keep changes.");
+exampleLoader(
+  "acceptance-example",
+  acceptance,
+  "Imported acceptance example. All four claims are unreviewed. Add your human judgments, then export.",
+);
+exampleLoader(
+  "acceptance-worked",
+  acceptanceReviewed,
+  "Synthetic worked judgments imported. These examples illustrate human reasoning, not an automatic grade.",
+);
 claimControl.addEventListener("change", showClaim);
 citationControl.addEventListener("change", showSource);
 startControl.addEventListener("input", showExcerpt);
@@ -216,6 +281,8 @@ element<HTMLFormElement>("review-form").addEventListener("submit", async (event)
     const next = await parsePacket(JSON.stringify(appendReview(previous, review)), sha256);
     requireValue(ticket === generation && previous === packet, "Session changed; save again");
     packet = next;
+    confirmExampleUse = "";
+    confirmBuilderUse = false;
     showHistory();
     setStatus(true, "Saved human review in memory. Export to keep it.");
     persistDraft();
