@@ -1,4 +1,29 @@
 import { test, expect } from "@playwright/test";
+test("completion celebration occurs once rather than after every saved revision", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.getByLabel("Motion vibe").selectOption("cartoon");
+  await page.evaluate(() => {
+    const hero = document.querySelector<HTMLElement>(".hero")!;
+    const animate = hero.animate.bind(hero);
+    hero.animate = (...args: Parameters<typeof animate>) => {
+      hero.dataset.celebrations = String(Number(hero.dataset.celebrations ?? 0) + 1);
+      return animate(...args);
+    };
+  });
+  await page.getByText("Synthetic worked judgments", { exact: true }).click();
+  await page.getByRole("button", { name: "Load synthetic worked judgments", exact: true }).click();
+  await expect(page.locator(".hero")).toHaveAttribute("data-celebrations", "1");
+  await page.getByLabel("Span start").fill("0");
+  await page.getByLabel("Span end").fill("10");
+  await page.getByLabel("Reviewer label").fill("Revision exercise");
+  await page.getByLabel("Rationale").fill("Changed rationale, same completed review queue.");
+  await page.getByRole("button", { name: "Save review", exact: true }).click();
+  await expect(page.locator("#status")).toContainText("Saved");
+  await expect(page.locator(".hero")).toHaveAttribute("data-celebrations", "1");
+});
 test("theme storage failure and reduced motion preserve offline queue and label exports", async ({
   page,
 }) => {

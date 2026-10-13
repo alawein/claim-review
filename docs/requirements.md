@@ -5,26 +5,26 @@ Scope: claim-review / Siftgrain Cite. Parent coordinates the two Python tools an
 | Requirement | Status | Evidence or remaining limit |
 | --- | --- | --- |
 | Current MAIOS policy/style/metadata/load order before edits | Done | MAIOS_CONTEXT.md source pin and paths; dirty primary preserved. |
-| October4-current own repository commit/PR/release/settings inventory | Done with historical limit | docs/recent-history.json plus current ruleset/security reads; deleted history and exact unobserved settings transitions unavailable. |
+| October 4-current own repository commit/PR/release/settings inventory | Done with historical limit | docs/recent-history.json plus current ruleset/security reads; deleted history and exact unobserved settings transitions unavailable. |
 | Shared meshal-site/kohyr history and style references | Done | Parent-provided docs/shared-history.json/.md; private sources require authenticated access. |
 | Baseline hypotheses and prechange test counts | Done | AUDIT_VERIFICATION.md;96 observed unit tests, no invented fresh browser baseline. |
-| Recent/foundational market, paper, official docs and HF scan | Partial | RESEARCH.md includes verified September19 paper and foundational datasets/tools; no exhaustive HF Spaces/leaderboard/OpenReview survey or invented2026 release pins. |
+| Recent/foundational market, paper, official docs and HF scan | Partial | RESEARCH.md includes verified September 19 paper and foundational datasets/tools; no exhaustive HF Spaces/leaderboard/OpenReview survey or invented2026 release pins. |
 | Positioning/user/integration points | Done | BRAND.md, README and docs/adapters.md; exact supported shapes and omissions. |
 | Family/product naming collision checks | Done with limit | Siftgrain/Cite; docs/name-checks.json. Limited exact/web searches, not legal clearance. |
 | Original SVG logo/wordmark, palette/type/voice | Done | brand/, BRAND.md; local/system fonts, no copied personal art. |
-| Shared design-tokens package | Done | private design-tokens1.0.0 canonical source/generator/CSS/AA tests; siblings vendor identical hashes. No shared runtime publication. |
+| Shared design-tokens package | Done | private design-tokens 1.0.0 canonical source/generator/CSS/AA tests; siblings vendor identical hashes. No shared runtime publication. |
 | Runtime four vibes and appearance preference | Done | Cartoon/Calm/Pixel/Lab, dark default/light choice, guarded prepaint preferences. |
 | Theme motion personalities | Done with bounded interpretation | Spring/sticker completion, soft pointer parallax, stepped pixel/dither, dense lab; original geometry rather than a full illustrated scene. |
 | WebGL2 hero/background and static fallback | Done | viewer.ts local bounded renderer, initialized on interaction; CSS first paint/fallback. |
-| Optional WebGPU | Done by omission | Not justified for24particles; no unnecessary dependency. |
+| Optional WebGPU | Done by omission | Not justified for 24 particles; no unnecessary dependency. |
 | CSS transform/opacity/filter only, no CDN | Done | style.css/viewer.ts, local standalone build; no idle render loop or permanent will-change. |
 | Meaningful stale evidence and Cartoon completion | Done | Dashed stale state/text with fully opaque transform-only arrival, exact-passage transition and completion only when all pairs have current ratings. Completion is not accuracy. |
 | Span/cursor glow and evidence link choreography | Done | Selected passage has a pointer-following decorative glow behind literal text; paired claim/source borders explain linkage for pointer/keyboard, with instant reduced-motion state and no text opacity animation. |
 | Reduced motion, pause/hidden behavior | Done | CSS and bounded renderer guards; browser reduced-motion flows. Hidden/offscreen independent observation not manually profiled. |
-| WCAG2.2AA/keyboard/focus/labels | Partial certification | All8themes automated axe checks across3engines; keyboard/zoom tests. Manual screen-reader and complete WCAG certification not performed. |
-| 60fps/INP<200/LCP<2.5s and gzip CI budgets | Partial | Actual local LCP, event maxima and post-workflow RAF cadence in RESULTS.md; field INP and representative midrange laptop not established. Gzip/LHCI/axe CI gates implemented. |
+| WCAG2.2AA/keyboard/focus/labels | Partial certification | All 8 themes automated axe checks across 3 engines; keyboard/zoom tests. Manual screen-reader and complete WCAG certification not performed. |
+| 60 fps/INP<200/LCP<2.5s and gzip CI budgets | Partial | Actual local LCP, event maxima and post-workflow RAF cadence in RESULTS.md; field INP and representative midrange laptop not established. Gzip/LHCI/axe CI gates implemented. |
 | Deterministic explicit-input core, no model/network | Done | Strict packets/hash/selector checks; file imports only; no telemetry/backend/service worker. |
-| JSON Schema2020-12/versioning/migration | Done | Published packet+label+stress schemas; build-time precompiled validator used in browser plus semantic parser; v0.2/schema1 migrates to2. |
+| JSON Schema2020-12/versioning/migration | Done | Published packet+label+stress schemas; build-time precompiled validator used in browser plus semantic parser; v0.2/schema1 migrates to 2. |
 | Python stdlib runtime and optional extras | Not applicable here | TypeScript standalone runtime has no npm package runtime dependency; sibling Python controllers own Python contract. Python bench/study tooling stdlib. |
 | UTF16 and bidirectional W3C code-point/quote conversions | Done; prior defect refuted | Existing conversions/properties retained, astral/combining/CRLF tests. |
 | Raw/NFC hashes and normalization-only stale | Done; prior defect refuted | Original bytes preserved, no automatic reanchoring. |
@@ -43,19 +43,19 @@ Scope: claim-review / Siftgrain Cite. Parent coordinates the two Python tools an
 | Actions full commit pins | Done | Existing40-character action/reusable-workflow pins retained. |
 | npm/pip audits report-only | Done scoped | npm production+dev report-only; no runtime packages. pip-audit belongs to Python repos. |
 | Dependabot settings/restoration docs | Done | SECURITY_SETTINGS.md exclusion preserved; exact optional UI paths. No settings changes. |
-| Unicode/RTL/CRLF/normalization/stale benchmark | Done | v1dev/test+separate keys,8cases and actual core/naive baseline, tampering gate negative test. |
+| Unicode/RTL/CRLF/normalization/stale benchmark | Done | v1 dev/test+separate keys,8 cases and actual core/naive baseline, tampering gate negative test. |
 | Licensed external gold attribution subset | Partial task evaluation | 20 pinned ALCE supplied labels and packet migration preserved; no new semantic prediction/accuracy or human collection. External text fetch-only with MIT notice/underlying rights. |
-| Real reviewer throughput/error | Done scripted; human partial | 16 actual scripted saves and0status errors, recorded4vibe GIFs. Automation speed is not human productivity. |
+| Real reviewer throughput/error | Done scripted; human partial | 16 actual scripted saves and 0status errors, recorded 4 vibe GIFs. Automation speed is not human productivity. |
 | Human agreement protocol | Done protocol; collection partial | Existing AIS protocol/bootstrap analysis tests retained; no new human data. |
 | Dataset license/version/URL/checksum/date | Done | DATASHEET/fetch checksum pins, license checksum and source titles; underlying page revisions unknown. |
-| Versioned splits/cards/schemas/checksums/local archive | Done with metadata limit | benchmarks/v1, separate keys, datasheet/card/Croissant metadata, local ZIP. Native mlcroissant1.1.1 parses2RecordSets; JSON-LD namespace/hash regression test retained. Full cross-consumer certification not claimed. |
+| Versioned splits/cards/schemas/checksums/local archive | Done with metadata limit | benchmarks/v1, separate keys, datasheet/card/Croissant metadata, local ZIP. Native mlcroissant 1.1.1 parses 2 RecordSets; JSON-LD namespace/hash regression test retained. Full cross-consumer certification not claimed. |
 | One-command runner | Done | make bench/npm run bench after explicit checksum-pinned fetch; no model/network in core. |
 | Performance/memory/metrics/CIs | Partial scope | Actual repetitions/RSS, UI/LHCI and stress results; no population CIs inferred from fixed regression suite, no LLM judge. |
-| README4real GIFs/quickstart/differences/limits | Done | Actual app recordings with explicit synthetic-script provenance. |
+| README 4 real GIFs/quickstart/differences/limits | Done | Actual app recordings with explicit synthetic-script provenance. |
 | CHANGELOG and MIGRATION | Done | Compatibility, append order and prepared gated remote steps. |
 | American spelling/no em dash/ASCII CI and commits | Done scoped | Conventional commit/check output; docs reviewed. Third-party tool formatting remains external. |
-| Clean clone/fresh environment full verification | Done for observed heads | Windows clean clone7bf3870 with fresh npm ci passed full chain; hosted fresh checkout700e91b passed108unit/96browser plusLHCI and all required checks. Exact run links in RESULTS.md; later documentation heads retain authoritative PR checks. |
-| Independent final review and draft PR | Done for reviewed source | Coordinator reviewed implementation700e91b/docs41fef2d and required the first-frame contrast follow-up. Opaque stale text and paused-frame AA/axe checks address that finding; focused10tests and native Croissant4dev/4test extraction also passed. Final approval/CI/landing status is owned by PR24. No self-approval or merge by this Controller. |
+| Clean clone/fresh environment full verification | Done for observed heads | Windows clean clone 7bf3870 with fresh npm ci passed full chain; hosted fresh checkout 700e91b passed 108 unit/96 browser plusLHCI and all required checks. Exact run links in RESULTS.md; later documentation heads retain authoritative PR checks. |
+| Independent final review and draft PR | Done for reviewed source | Coordinator reviewed implementation 700e91b/docs 41fef2d and required the first-frame contrast follow-up. Opaque stale text and paused-frame AA/axe checks address that finding; focused 10 tests and native Croissant 4 dev/4 test extraction also passed. Final approval/CI/landing status is owned by PR24. No self-approval or merge by this Controller. |
 | Remote rename/transfer/new package/HF/release | Gated broad scope | MIGRATION.md exact prepared operation shapes; no inferred authorization, no new publication executed. |
 | Permanent deletes/secrets/messages to people | Done constraint | None authorized or performed. Parent coordination explicitly authorized. |
 

@@ -1,4 +1,6 @@
 import { chromium } from "@playwright/test";
+import { uiFailureCount } from "./invariants.mjs";
+import process from "node:process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -102,3 +104,4 @@ const result = {
 };
 await writeFile("benchmarks/artifacts/ui/results.json", JSON.stringify(result, null, 2) + "\n");
 console.log(JSON.stringify(result, null, 2));
+if (uiFailureCount(reports) > 0) process.exitCode = 1;

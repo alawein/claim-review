@@ -1,14 +1,14 @@
 # Results, October 13, 2026
 
-Baseline source5e05d87:96 tests in11files; npm check passed before edits. Implementation source700e91b:108 unit tests in15files and96 browser cases passed in fresh hosted CI. Windows fresh clone7bf3870 passed107unit tests,96browser cases, schema/tokens/bench/study/native Croissant and3LHCI runs. Final PR checks bind any later documentation-only head.
+Baseline source 5e05d87:96 tests in 11 files; npm check passed before edits. Implementation source 700e91b:108 unit tests in 15 files and 96 browser cases passed in fresh hosted CI. Windows fresh clone 7bf3870 passed 107 unit tests,96 browser cases, schema/tokens/bench/study/native Croissant and 3 LHCI runs. Final PR checks bind any later documentation-only head.
 
 ## Integrity task
 
 Reproduce: `python benchmarks/fetch.py`, then `make bench` (or `npm run bench`). Raw measured snapshot: benchmarks/results.snapshot.json. Node22.23.2, Windows11 build26300, AMD Ryzen7 8845HS with Radeon780M. RSS is whole runner process, not isolated core peak memory.
 
-Core span conversions:8/8; naive code-point-as-UTF16 baseline6/8. Changed-source detection8/8; tampered-hash rejection8/8. Normalization-only cases3/3, with reviews remaining stale. Dev/test each4cases. Thirty repetitions per split: dev p503.68ms, p959.76ms; test p503.96ms, p959.10ms. Whole-process RSS46,948,352bytes.
+Core span conversions:8/8; naive code-point-as-UTF16 baseline 6/8. Changed-source detection8/8; tampered-hash rejection8/8. Normalization-only cases3/3, with reviews remaining stale. Dev/test each4 cases. Thirty repetitions per split: dev p503.68 ms, p959.76 ms; test p503.96 ms, p959.10 ms. Whole-process RSS46,948,352 bytes.
 
-External ALCE: dev9claims/14citation items, test4claims/6items. All20 original supplied numeric attribution labels are retained separately from review inputs. Source hashes/schema/migration are validated. Semantic accuracy is null: the tool does not predict attribution. This is external gold preservation plus an integrity benchmark, not a new model or human semantic evaluation. Original source-page revision lineage and compound screening remain incomplete.
+External ALCE: dev9claims/14citation items, test4claims/6items. All 20 original supplied numeric attribution labels are retained separately from review inputs. Source hashes/schema/migration are validated. Semantic accuracy is null: the tool does not predict attribution. This is external gold preservation plus an integrity benchmark, not a new model or human semantic evaluation. Original source-page revision lineage and compound screening remain incomplete.
 
 ## Scripted UI task
 
@@ -21,7 +21,7 @@ Four real offline workflows per vibe,16 scripted saves total,0 save-status error
 | pixel | 144 | 96 | 201.1 | 60.00 | 16.80 |
 | lab | 156 | 56 | 211.2 | 60.00 | 16.80 |
 
-RAF cadence is a1.5-second window after scripted saves, not frame timing during each interaction. This workstation is identified; no generic midrange-laptop60fps certification is claimed. Max event duration is a laboratory observation, not field INP. INP remains unavailable. Small deterministic stress suites do not justify population confidence intervals; timing quantiles describe observed repetitions only. The existing human-study protocol defines cluster bootstrap intervals when actual labels exist; none were fabricated.
+RAF cadence is a 1.5-second window after scripted saves, not frame timing during each interaction. This workstation is identified; no generic midrange-laptop60 fps certification is claimed. Max event duration is a laboratory observation, not field INP. INP remains unavailable. Small deterministic stress suites do not justify population confidence intervals; timing quantiles describe observed repetitions only. The existing human-study protocol defines cluster bootstrap intervals when actual labels exist; none were fabricated.
 
 ## Lighthouse CI
 
@@ -33,28 +33,34 @@ Three loopback desktop Lighthouse runs after removing synchronous first-paint We
 | 2 | 1.00 | 1.00 | 431.4 | 0.0 |
 | 3 | 1.00 | 1.00 | 442.2 | 23.5 |
 
-The first implementation failed TBT200ms with375-704ms because WebGL initialized before interaction. The bounded fix keeps a static CSS hero first and initializes WebGL on viewer interaction/completion. Later changes require fresh checks; the snapshot is dated evidence, not a perpetual guarantee.
+The first implementation failed TBT200 ms with 375-704 ms because WebGL initialized before interaction. The bounded fix keeps a static CSS hero first and initializes WebGL on viewer interaction/completion. Later changes require fresh checks; the snapshot is dated evidence, not a perpetual guarantee.
 
 ## Limits and audits
 
 No independent human collection, adoption, production ownership, semantic accuracy or model-as-judge result. ALCE model execution is omitted; original labels/scores are provenance, not our baseline judge. Human consent/independence follow studies/ais-pilot/README.md. Dataset ZIP remains local, not published to HF or a new release.
 
-Before adding dev-only axe/LHCI, npm audit reported5 findings (2moderate,3high). The expanded dev graph reported22 (2low,6moderate,14high) on installation; current report-only audit is the authoritative latest snapshot. Production dependency audit has no runtime dependencies. No automatic dependency fix or Dependabot changes were applied. Audit success/failure alone is not a security guarantee.
+Before adding dev-only axe/LHCI, npm audit reported 5 findings (2 moderate, 3 high). The expanded dev graph reported 22 (2 low, 6 moderate,14 high) on installation; current report-only audit is the authoritative latest snapshot. Production dependency audit has no runtime dependencies. No automatic dependency fix or Dependabot changes were applied. Audit success/failure alone is not a security guarantee.
 
 Schema integration caught a Node-ESM Unicode helper require; explicit ESM generation repaired it. A concurrent UI/browser run also hit Windows Firefox software-compositor teardown failures; the complete single-worker96-case run passed without retries. Software WebGL contexts with major performance caveats now use static fallback. Dataset text writes explicitly use LF after the initial hosted Croissant hash check exposed Windows newline differences. No failing check was bypassed.
 
 ## Verification binding
 
-Implementation head `700e91b4912bbe297ff5d6e1b98ed7555b6dff26`: [CI run38382973636](https://github.com/alawein/claim-review/actions/runs/38382973636) and [Browser workflows run38382972867](https://github.com/alawein/claim-review/actions/runs/38382972867) succeeded. Browser workflow executes96cases across3engines, token/bundle gates and3Lighthouse runs with the runner system Chrome version recorded in its log. CodeRabbit reports a green status but explicitly skipped this draft; it is not completed independent review.
+Implementation head `700e91b4912bbe297ff5d6e1b98ed7555b6dff26`: [CI run 38382973636](https://github.com/alawein/claim-review/actions/runs/38382973636) and [Browser workflows run 38382972867](https://github.com/alawein/claim-review/actions/runs/38382972867) succeeded. Browser workflow executes 96 cases across 3 engines, token/bundle gates and 3 Lighthouse runs with the runner system Chrome version recorded in its log. CodeRabbit reports a green status but explicitly skipped this draft; it is not completed independent review.
 
-Local clean clone was created with --no-local at7bf3870 and a fresh npm ci:107unit tests,96browser cases,4example+2external packet validations,1token contrast/generated-byte test,10study tests, native Croissant parse, benchmark and3LHCI runs passed. Source700e91b adds the bounded-schema-diagnostics regression (108tests) and sandboxed system Chrome CI selection. The malformed100-record case generated902diagnostics before short-circuit validation; the new test bounds diagnostics to8or fewer.
+Local clean clone was created with --no-local at 7bf3870 and a fresh npm ci:107 unit tests,96 browser cases,4 example+2 external packet validations, 1 token contrast/generated-byte test,10 study tests, native Croissant parse, benchmark and 3 LHCI runs passed. Source 700e91b adds the bounded-schema-diagnostics regression (108 tests) and sandboxed system Chrome CI selection. The malformed100-record case generated902diagnostics before short-circuit validation; the new test bounds diagnostics to 8 or fewer.
 
-Measurement tables and4GIFs are recorded from7bf3870 UI behavior. They are dated laboratory evidence, not a claim that every later source head has identical timings. Final700e91b hosted LCP/TBT/accessibility/bundle assertions passed. A transient concurrent-run2120ms event maximum was observed before rejecting software WebGL major-performance-caveat contexts and isolating verification; it is not omitted as field INP evidence.
+Measurement tables and 4 GIFs are recorded from 7bf3870 UI behavior. They are dated laboratory evidence, not a claim that every later source head has identical timings. Final 700e91b hosted LCP/TBT/accessibility/bundle assertions passed. A transient concurrent-run 2120 ms event maximum was observed before rejecting software WebGL major-performance-caveat contexts and isolating verification; it is not omitted as field INP evidence.
 
-The deterministic dataset ZIP recreated in the working checkout and clean clone has identical SHA256 `5d91ac6b2b47b7ac988a82049f4edff7b4591d2f2aa694422b9dcbec3aee2130`. Its checksums.json verifies15payload files, including split/answer-key data, cards, license and schemas, and is itself included as the16thentry. No archive upload occurred.
+The deterministic dataset ZIP recreated in the working checkout and clean clone has identical SHA256 `5d91ac6b2b47b7ac988a82049f4edff7b4591d2f2aa694422b9dcbec3aee2130`. Its checksums.json verifies15 payload files, including split/answer-key data, cards, license and schemas, and is itself included as the16thentry. No archive upload occurred.
 
 ## Stale-motion contrast follow-up
 
-Independent review identified that the first stale-animation frame faded text to opacity0.45. Real canonical compositing gave contrast3.9677:1in dark and2.9364:1in light, below4.5:1. Two node tests failed before the fix. Six browser cases (both appearances in all3engines) also failed on the prior built HTML while the actual CSS animation was paused at currentTime0, observing opacity0.45. This was a product defect despite reduced-motion axe checks passing.
+Independent review identified that the first stale-animation frame faded text to opacity 0.45. Real canonical compositing gave contrast 3.9677:1 in dark and 2.9364:1 in light, below 4.5:1. Two node tests failed before the fix. Six browser cases (both appearances in all 3 engines) also failed on the prior built HTML while the actual CSS animation was paused at currentTime 0, observing opacity 0.45. This was a product defect despite reduced-motion axe checks passing.
 
-The fix removes both text-opacity keyframes and retains only translation plus the dashed stale border. The suite now has110unit tests in16files. New browser regressions pause the actual stale state at frame0, assert full text opacity and calculated AA contrast, and run axe while still paused. No delay or reduced-motion override conceals the initial frame. Final source-head results belong to PR24 checks.
+The fix removes both text-opacity keyframes and retains only translation plus the dashed stale border. The suite now has 110 unit tests in 16 files. New browser regressions pause the actual stale state at frame 0, assert full text opacity and calculated AA contrast, and run axe while still paused. No delay or reduced-motion override conceals the initial frame. Final source-head results belong to PR24 checks.
+
+## Final review verification
+
+The corrected working tree passed 112 unit tests in 16 files, lint/types/build, and the checksum-pinned benchmark (8/8 stress conversions, stale detection and tamper rejection; 20 supplied ALCE labels preserved). The full browser attempt passed 103 cases and reported two Firefox browser-context teardown protocol errors. Both failed cases then passed unchanged in an isolated two-case run; this is reported separately from a single 105-case pass. Hosted checks on the final PR head are authoritative for delivery.
+
+An updated scripted UI measurement completed 16 saves with zero errors. Local-file LCP was 92-156 ms, maximum observed event duration 48-56 ms, and post-workflow frame p95 16.7-16.8 ms. These remain workstation laboratory observations, not field INP or human throughput. Updated gzip size is 38,405 bytes against the unchanged 80,000-byte budget.

@@ -1,16 +1,22 @@
-import { parsePacket, requireValue, type Packet, type LegacyReview, type Verdict } from "./packet";
-import { sha256 } from "./hash";
-import { appendReview, latestReviews, reviewState } from "./reviews";
-import { validSpan, sourceOffset } from "./spans";
-import { buildPacket, clean, draftClaim } from "./builder";
+import {
+  parsePacket,
+  requireValue,
+  type Packet,
+  type LegacyReview,
+  type Verdict,
+} from "./packet.js";
+import { sha256 } from "./hash.js";
+import { appendReview, latestReviews, reviewState } from "./reviews.js";
+import { validSpan, sourceOffset } from "./spans.js";
+import { buildPacket, clean, draftClaim } from "./builder.js";
 import example from "../examples/packet.json";
 import acceptance from "../examples/acceptance.json";
 import acceptanceReviewed from "../examples/acceptance-reviewed.json";
-import { webAnnotations } from "./annotation";
-import { importTrace, labelExport, csvExport } from "./adapters";
-import { agreement, mergePackets } from "./coordination";
-import { setupViewer, celebrate } from "./viewer";
-import { saveDraft, readDraft, clearDraft } from "./draft";
+import { webAnnotations } from "./annotation.js";
+import { importTrace, labelExport, csvExport } from "./adapters.js";
+import { agreement, mergePackets } from "./coordination.js";
+import { setupViewer, celebrate } from "./viewer.js";
+import { saveDraft, readDraft, clearDraft } from "./draft.js";
 
 setupViewer();
 
@@ -27,7 +33,8 @@ let packet: Packet | null = null,
   lastExport = "",
   busyCount = 0,
   confirmBuilderUse = false,
-  confirmExampleUse = "";
+  confirmExampleUse = "",
+  queueWasComplete = false;
 const claimControl = element<HTMLSelectElement>("claim");
 const citationControl = element<HTMLSelectElement>("citation");
 const sourceControl = element<HTMLTextAreaElement>("source-text");
@@ -150,7 +157,9 @@ function showHistory(): void {
     : 0;
   element("queue-state").textContent =
     `${done} of ${total} citation pairs have current reviews. This is completion, not accuracy.`;
-  if (total > 0 && done === total) celebrate();
+  const complete = total > 0 && done === total;
+  if (complete && !queueWasComplete) celebrate();
+  queueWasComplete = complete;
   const latest = new Set(packet ? latestReviews(packet).map((row) => row.id) : []);
   history.replaceChildren(
     ...(packet?.reviews ?? []).map((review) => {
@@ -200,6 +209,7 @@ function claimLabel(id: string, text: string): string {
 }
 function usePacket(next: Packet, note: string): void {
   packet = next;
+  queueWasComplete = false;
   confirmExampleUse = "";
   confirmBuilderUse = false;
   options(

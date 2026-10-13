@@ -1,4 +1,4 @@
-import { integrityFailures } from "./invariants.mjs";
+import { integrityFailures, validateStressKeys } from "./invariants.mjs";
 import { performance } from "node:perf_hooks";
 import { build } from "esbuild";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
@@ -26,6 +26,7 @@ const results = [];
 for (const split of ["dev", "test"]) {
   const rows = JSON.parse(await readFile(`benchmarks/v1/${split}/stress.json`, "utf8"));
   const keys = JSON.parse(await readFile(`benchmarks/v1/answer-keys/${split}.json`, "utf8"));
+  validateStressKeys(rows, keys);
   let correct = 0,
     naive = 0,
     stale = 0,

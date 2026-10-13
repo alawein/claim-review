@@ -1,5 +1,5 @@
-import { assertReview, requireValue, type Packet, type Review, type Verdict } from "./packet";
-import { reviewState } from "./reviews";
+import { assertReview, requireValue, type Packet, type Review, type Verdict } from "./packet.js";
+import { reviewState } from "./reviews.js";
 function population(p: Packet): string {
   return JSON.stringify([
     [...p.sources].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0)),

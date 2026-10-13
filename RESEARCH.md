@@ -1,6 +1,6 @@
 # Citation studio research
 
-Cutoff: 2026-10-13 America/Los_Angeles. All accesses below: 2026-10-13. Search emphasized September1-October13; foundational sources retained for definitions. Dates unavailable from inspected sources are unknown, not inferred from crawl dates. Live docs are observations, not version-pinned 2026 releases. No post-cutoff releases or claims used.
+Cutoff: 2026-10-13 America/Los_Angeles. All accesses below: 2026-10-13. Search emphasized September 1-October 13; foundational sources retained for definitions. Dates unavailable from inspected sources are unknown, not inferred from crawl dates. Live docs are observations, not version-pinned 2026 releases. No post-cutoff releases or claims used.
 
 | Source | Publication | Revision | Version/release | Relevance |
 | --- | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ Cutoff: 2026-10-13 America/Los_Angeles. All accesses below: 2026-10-13. Search e
 | [TruLens](https://www.trulens.org/getting_started/core_concepts/feedback_functions/) | unknown | unknown | docs, release unknown | Feedback-function framework for retrieval/groundedness; not an offline annotation packet replacement. |
 | [Label Studio](https://docs.humansignal.com/guide/) | unknown | unknown | docs, release unknown | General labeling workflow/platform; compare task completion and agreement, not source hashes as semantic accuracy. |
 | [Argilla](https://docs.argilla.io/latest/) | unknown | unknown | latest docs, release unknown | Feedback datasets and reviewer workflows; broader hosted/local service model, not single HTML portability. |
-| [Hypothesis client](https://github.com/hypothesis/client) | unknown | unknown | repository snapshot accessed | General web annotation client/service ecosystem. Recent GitHub search showed October4 update, not a verified release. |
+| [Hypothesis client](https://github.com/hypothesis/client) | unknown | unknown | repository snapshot accessed | General web annotation client/service ecosystem. Recent GitHub search showed October 4 update, not a verified release. |
 | [LangSmith run shape](https://reference.langchain.com/javascript/langsmith/index/Run) | unknown | unknown | reference docs, release unknown | Explicit run inputs/outputs; only documented string/document-array subset imported. No API or arbitrary tree parser. |
 | [LangChain RetrievalQA](https://reference.langchain.com/python/langchain-classic/chains/retrieval_qa/base/BaseRetrievalQA/return_source_documents) | unknown | unknown | reference attempted; browser fetch unavailable | Parent primary reference plus tests support result/source_documents subset. No complete vendor conformance claim. |
 | [Recent controlled RAG citation study](https://arxiv.org/abs/2609.23053v1) | 2026-09-19 | 2026-09-19 | v1 | Post-rationalization study separates plausible support from whether a model used a source. No study numbers copied as our measurements. |
@@ -27,7 +27,7 @@ ALCE evaluates generated answer quality and citation support over ASQA, QAMPARI 
 
 This studio therefore measures integrity separately: exact Unicode round trips, changed-source detection and preserved external labels. A naive code-point-as-UTF16 script is a reproducible coordinate baseline. The external ALCE subset preserves20 supplied citation labels; no semantic predictions are produced, so semantic accuracy is null. The human protocol remains collection-ready, not a completed agreement study. Ragas/TruLens model scoring and native ALCE model execution were omitted; no model or human costs/results fabricated.
 
-For workflow platforms (Label Studio, Argilla, Hypothesis), useful comparisons include import/export fidelity, keyboard completion, reviewer disagreement and time per labeled item. Our Playwright run measures explicitly scripted operations/errors, not human annotation speed. It establishes a reproducible workflow path, not productivity adoption. The recent September19 citation paper motivates separating support from source use; the product cannot prove causal use or source truth.
+For workflow platforms (Label Studio, Argilla, Hypothesis), useful comparisons include import/export fidelity, keyboard completion, reviewer disagreement and time per labeled item. Our Playwright run measures explicitly scripted operations/errors, not human annotation speed. It establishes a reproducible workflow path, not productivity adoption. The recent September 19 citation paper motivates separating support from source use; the product cannot prove causal use or source truth.
 
 ## Positioning and integration
 

@@ -2,18 +2,18 @@
 
 ## Fresh redesign baseline, October 13, 2026
 
-Source baseline5e05d871a8d17ff00a90f3af008e8a5e8e4f2c10 on freshly fetched main. Before changes: npm ci succeeded, npm run check exited0:96 tests in11 files, lint/types/build passed. npm audit initially reported5 dev findings (2moderate,3high). Browser prechange full baseline was not rerun; the repository had63 cases by inspection, not a newly observed63-pass result. Added tests first failed for absent studio modules and absent theme state, then passed after implementation.
+Source baseline 5e05d871a8d17ff00a90f3af008e8a5e8e4f2c10 on freshly fetched main. Before changes: npm ci succeeded, npm run check exited 0: 96 tests in 11 files, lint/types/build passed. npm audit initially reported 5 dev findings (2 moderate, 3 high). Browser prechange full baseline was not rerun; the repository had 63 cases by inspection, not a newly observed 63-pass result. Added tests first failed for absent studio modules and absent theme state, then passed after implementation.
 
-| October8 hypothesis | Fresh status | Evidence at baseline/current owner |
+| October 8 hypothesis | Fresh status | Evidence at baseline/current owner |
 | --- | --- | --- |
-| Created October4 in one AI-assisted session | Partially confirmed | API created_at2026-10-04T16:52:08Z; provenance docs disclose AI-assisted examples. Single-session authorship cannot be established from Git alone. |
-| Zero stars/single contributor | Partially confirmed | Current API0stars; contributors are alawein and dependabot[bot], so one human account plus a bot, not one total contributor. |
+| Created October 4 in one AI-assisted session | Partially confirmed | API created_at2026-10-04T16:52:08Z; provenance docs disclose AI-assisted examples. Single-session authorship cannot be established from Git alone. |
+| Zero stars/single contributor | Partially confirmed | Current API 0 stars; contributors are alawein and dependabot[bot], so one human account plus a bot, not one total contributor. |
 | Squash-merged history | Confirmed for named release path | main merge commits/PR links in docs/recent-history.json; no blanket claim about inaccessible/deleted branches. |
 | CodeRabbit only reviewer | Partially confirmed | PR3 reviews empty and CodeRabbit status pending. Bot presence does not prove independent completed review. All repository-wide historical reviewers not exhaustively inferred. |
 | No npm/PyPI releases | Partially confirmed | GitHub v0.2/v0.3.0/v0.3.1/v0.3.2 releases exist; prior npm attempts failed. Current npm registry readback recorded separately; PyPI is not this TypeScript distribution target. |
-| First-release PR3 merged with one check not passing | Partially confirmed | Exact head6b2e18faa76b50428f5a3a20b3e81c8080c2f179 merged2026-10-04T17:24:04Z; returned check-runs SUCCESS, CodeRabbit StatusContext PENDING. No failing required build proved. |
-| Dependabot/alerts off October6 | Current disabled state confirmed; exact historical transition partial | Fresh API explicitly alerts disabled, security fixes false and security updates disabled; no settings mutation. October6 timing remains prior dated evidence. |
-| UTF16 conflicts with W3C | Refuted as a current defect | src/spans.ts:31 and44 convert both directions; annotation.ts:45 exports stored code-point/quote selectors. Native UTF16 remains deliberate compatibility. |
+| First-release PR3 merged with one check not passing | Partially confirmed | Exact head 6b2e18faa76b50428f5a3a20b3e81c8080c2f179 merged 2026-10-04T17:24:04Z; returned check-runs SUCCESS, CodeRabbit StatusContext PENDING. No failing required build proved. |
+| Dependabot/alerts off October 6 | Current disabled state confirmed; exact historical transition partial | Fresh API explicitly alerts disabled, security fixes false and security updates disabled; no settings mutation. October 6 timing remains prior dated evidence. |
+| UTF16 conflicts with W3C | Refuted as a current defect | src/spans.ts:31 and 44 convert both directions; annotation.ts:45 exports stored code-point/quote selectors. Native UTF16 remains deliberate compatibility. |
 | No NFC policy | Refuted as current | packet.ts:244 computes separate NFC hash; reviews.ts:10 labels normalization-only stale without reanchoring. |
 | No published packet schema | Refuted as current | schema/claim-review-packet.v1.json; scripts/generate-validator.mjs precompiles AJV2020; packet.ts invokes it for actual browser imports before semantic checks. |
 | Tab closure loses work | Partially confirmed | draft.ts:3/12/19 guarded opt-in draft operations; app.ts beforeunload/export guard. Off-default/no export or crash without saved draft still loses memory state. |
@@ -234,6 +234,12 @@ undici
 
 ## Redesign verification binding
 
-Source700e91b:108unit tests in15files,96hosted cross-engine browser cases and all required CI/LHCI checks succeeded. Fresh Windows clone7bf3870: npm ci,107unit/96browser, schemas, token contrast, benchmark,10study tests, native Croissant and3Lighthouse runs passed. See RESULTS.md for exact source/run URLs, bounded diagnostics, platform failures repaired, reproducible archive hash and candid partial requirements. No independent human study, field INP, registry publication or repository transfer is inferred.
+Source 700e91b:108 unit tests in 15 files,96 hosted cross-engine browser cases and all required CI/LHCI checks succeeded. Fresh Windows clone 7bf3870: npm ci,107 unit/96 browser, schemas, token contrast, benchmark,10 study tests, native Croissant and 3 Lighthouse runs passed. See RESULTS.md for exact source/run URLs, bounded diagnostics, platform failures repaired, reproducible archive hash and candid partial requirements. No independent human study, field INP, registry publication or repository transfer is inferred.
 
-Stale-animation follow-up: independent review found first-frame contrast3.9677dark/2.9364light at textopacity0.45. Both unit cases and all6paused browser cases failed on the previous style. Transform-only stale arrival removes text fading;110unit tests and explicit paused-frame axe/contrast regressions replace reduced-motion-only confidence. Exact final head/checks are recorded in PR24.
+Stale-animation follow-up: independent review found first-frame contrast 3.9677 dark/2.9364 light at textopacity 0.45. Both unit cases and all 6 paused browser cases failed on the previous style. Transform-only stale arrival removes text fading;110 unit tests and explicit paused-frame axe/contrast regressions replace reduced-motion-only confidence. Exact final head/checks are recorded in PR24.
+
+## Final benchmark review fixes
+
+Actual CodeRabbit review identified mispaired stress keys and successful exits after failed UI saves. New regressions failed before the helpers existed; valid keys now require matching IDs and exact quotes before scoring, and UI save errors cause a nonzero exit after preserving the report. A Chromium workflow regression observed a second completion celebration after a saved revision; the corrected queue transition celebrates once. Repeated completed saves remain test-covered across all three engines.
+
+The coordinator also disabled unused persisted checkout credentials in the two development jobs and normalized new relative imports to .js. Shader compilation remains bounded to explicit viewer changes/completion and disposes programs and shaders after the finite draw; reuse is an optional optimization, without a demonstrated correctness or budget failure. Test assertions intentionally fail if required CSS/schema invariants disappear; they were not weakened. Browser computed colors are canonical RGB values observed across all three engines, so a speculative named-color parser change was omitted.

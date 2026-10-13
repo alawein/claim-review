@@ -1,5 +1,5 @@
-import { parsePacket, requireValue, type Packet, type Hash } from "./packet";
-import { reviewState } from "./reviews";
+import { parsePacket, requireValue, type Packet, type Hash } from "./packet.js";
+import { reviewState } from "./reviews.js";
 const obj = (v: unknown): Record<string, unknown> => {
   requireValue(typeof v === "object" && v !== null && !Array.isArray(v), "trace object required");
   return v as Record<string, unknown>;
