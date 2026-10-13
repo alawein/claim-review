@@ -1,0 +1,26 @@
+[
+  {
+    "id": "test-0",
+    "text": "𝒜😀é\r\nאב",
+    "start_codepoint": 0,
+    "end_codepoint": 8
+  },
+  {
+    "id": "test-1",
+    "text": "Café",
+    "start_codepoint": 0,
+    "end_codepoint": 4
+  },
+  {
+    "id": "test-2",
+    "text": "Café",
+    "start_codepoint": 0,
+    "end_codepoint": 5
+  },
+  {
+    "id": "test-3",
+    "text": "zero‍width",
+    "start_codepoint": 0,
+    "end_codepoint": 10
+  }
+]

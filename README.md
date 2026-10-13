@@ -1,6 +1,22 @@
-# Claim Review
+# Siftgrain Cite
 
 Review claims against exact source passages and export the reasoning.
+
+![Siftgrain Cite wordmark](brand/wordmark.svg)
+
+Import local RAG trace JSON/JSONL, triage with Alt+J / Alt+K, merge reviewer packets, and compare Cohen/Fleiss kappa or nominal Krippendorff alpha. Labels remain self-reported. The native packet preserves all history; CSV and AIS/ALCE analysis labels have the bounded [adapter contract](docs/adapters.md).
+
+Dark is the default; Appearance offers accessible light. Calm, Cartoon, Pixel and Lab change density and motion. Preferences store only those choices with guarded access, independently of opt-in packet drafts.
+
+| Cartoon | Calm |
+| --- | --- |
+| ![Recorded Cartoon workflow](docs/demos/cartoon.gif) | ![Recorded Calm workflow](docs/demos/calm.gif) |
+| Pixel | Lab |
+| ![Recorded Pixel workflow](docs/demos/pixel.gif) | ![Recorded Lab workflow](docs/demos/lab.gif) |
+
+These are recordings from the real offline app using explicitly synthetic scripted judgments. They do not represent human annotations.
+
+[Benchmark results](RESULTS.md), [performance](PERF.md), [research](RESEARCH.md), [migration](MIGRATION.md), and [requirement coverage](docs/requirements.md). Run `python benchmarks/fetch.py` once, then `make bench` or `npm run bench` to generate local dev/test packets, separate answer keys and a downloadable ZIP. External text remains fetch-only.
 
 ![Evidence review](assets/label-purpose.svg)
 ![TypeScript](assets/label-stack.svg)
@@ -47,7 +63,7 @@ reports this limitation. [Packet schema](schema/claim-review-packet.v1.json) and
 [contract](docs/contract.md) describe the formats and validation boundaries.
 
 Processing stays in memory unless you check **Save draft on this device**.
-There is no local storage access unless you opt in or explicitly restore/clear
+Packet draft storage is not accessed unless you opt in or explicitly restore/clear
 an existing draft. Saving is off on each page load; **Restore saved draft** is
 an explicit action. Blocked storage leaves review and export usable. Stored drafts
 can contain sensitive text, are specific to the browser/origin, and may be erased
@@ -113,7 +129,7 @@ JSON Schema alone cannot establish those semantic invariants.
 
 Build creates `dist/index.html` with inline CSS, one classic bundled script and a
 CSP permitting only their exact hashes, with `default-src 'none'`. `node scripts/serve.mjs`
-serves that build at 127.0.0.1:4173. No runtime package or shared-repo dependency.
+serves that build at 127.0.0.1:4173. No runtime package or shared-repo dependency; private vendored design tokens build into the HTML.
 Tests cover native round trips, invalid-input preservation, randomized Unicode,
 exact selectors, guarded drafts, inert active text and offline local-file operation
 in Chromium, Firefox and WebKit.

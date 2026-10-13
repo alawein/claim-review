@@ -31,3 +31,7 @@ release-assets/
 studies/ais-pilot/downloads/
 studies/ais-pilot/collected/
 __pycache__/
+
+benchmarks/downloads/
+benchmarks/artifacts/
+.lighthouseci/

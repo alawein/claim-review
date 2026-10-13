@@ -1,0 +1,149 @@
+{
+  "integrity": {
+    "schema_version": 1,
+    "access_date": "2026-10-13",
+    "environment": {
+      "node": "v22.23.2",
+      "os": "win32 10.0.26300",
+      "cpu": "AMD Ryzen 7 8845HS w/ Radeon 780M Graphics",
+      "memory_bytes": 46948352
+    },
+    "stress": [
+      {
+        "split": "dev",
+        "cases": 4,
+        "span_correct": 4,
+        "naive_codepoint_as_utf16_correct": 3,
+        "stale_detected": 4,
+        "normalization_only_detected": 1,
+        "tampering_rejected": 4,
+        "iterations": 30,
+        "p50_ms": 3.679300000000012,
+        "p95_ms": 9.75789999999995
+      },
+      {
+        "split": "test",
+        "cases": 4,
+        "span_correct": 4,
+        "naive_codepoint_as_utf16_correct": 3,
+        "stale_detected": 4,
+        "normalization_only_detected": 2,
+        "tampering_rejected": 4,
+        "iterations": 30,
+        "p50_ms": 3.955699999999979,
+        "p95_ms": 9.100299999999947
+      }
+    ],
+    "external": [
+      {
+        "split": "dev",
+        "claims": 9,
+        "sources": 14,
+        "external_gold_items": 14,
+        "labels_preserved": 14,
+        "semantic_accuracy": null
+      },
+      {
+        "split": "test",
+        "claims": 4,
+        "sources": 6,
+        "external_gold_items": 6,
+        "labels_preserved": 6,
+        "semantic_accuracy": null
+      }
+    ],
+    "limitations": [
+      "Synthetic integrity gold is not attribution truth.",
+      "External labels are preserved, not predicted. No model or human judge was run.",
+      "Timing quantiles are descriptive 30 repetitions, not population confidence intervals."
+    ]
+  },
+  "ui": {
+    "cpu": "AMD Ryzen 7 8845HS w/ Radeon 780M Graphics",
+    "browser": "Playwright Chromium",
+    "runs": [
+      {
+        "vibe": "cartoon",
+        "viewport": "1280x900",
+        "file_lcp_ms": 1096,
+        "max_observed_event_ms": 88,
+        "inp": null,
+        "inp_limit": "Short scripted session is not field INP",
+        "frame_p95_ms": 16.799999999999727,
+        "mean_fps": 60.00400026668444,
+        "scripted_reviews": 4,
+        "errors": 0,
+        "elapsed_ms": 868.3845999999994,
+        "reviews_per_minute": 276.3752374236026
+      },
+      {
+        "vibe": "calm",
+        "viewport": "1280x900",
+        "file_lcp_ms": 160,
+        "max_observed_event_ms": 56,
+        "inp": null,
+        "inp_limit": "Short scripted session is not field INP",
+        "frame_p95_ms": 16.799999999999727,
+        "mean_fps": 60.00263747857049,
+        "scripted_reviews": 4,
+        "errors": 0,
+        "elapsed_ms": 1196.2698,
+        "reviews_per_minute": 200.62363858052757
+      },
+      {
+        "vibe": "pixel",
+        "viewport": "1280x900",
+        "file_lcp_ms": 144,
+        "max_observed_event_ms": 96,
+        "inp": null,
+        "inp_limit": "Short scripted session is not field INP",
+        "frame_p95_ms": 16.799999999999727,
+        "mean_fps": 60.0039202561234,
+        "scripted_reviews": 4,
+        "errors": 0,
+        "elapsed_ms": 1193.7086000000018,
+        "reviews_per_minute": 201.05409310111332
+      },
+      {
+        "vibe": "lab",
+        "viewport": "1280x900",
+        "file_lcp_ms": 156,
+        "max_observed_event_ms": 56,
+        "inp": null,
+        "inp_limit": "Short scripted session is not field INP",
+        "frame_p95_ms": 16.799999999999727,
+        "mean_fps": 60.002640116165104,
+        "scripted_reviews": 4,
+        "errors": 0,
+        "elapsed_ms": 1136.5528000000013,
+        "reviews_per_minute": 211.16484865463332
+      }
+    ],
+    "limitations": [
+      "No human throughput measurement",
+      "FPS from requestAnimationFrame on this workstation, not certification on a midrange laptop",
+      "LCP API may be unavailable for local files",
+      "INP requires representative long-lived user interactions, max event is only a laboratory observation"
+    ]
+  },
+  "lighthouse": [
+    {
+      "performance": 0.75,
+      "accessibility": 1,
+      "lcp_ms": 461.02600000000007,
+      "tbt_ms": 656
+    },
+    {
+      "performance": 1,
+      "accessibility": 1,
+      "lcp_ms": 431.377,
+      "tbt_ms": 0
+    },
+    {
+      "performance": 1,
+      "accessibility": 1,
+      "lcp_ms": 442.212,
+      "tbt_ms": 23.5
+    }
+  ]
+}

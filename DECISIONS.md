@@ -138,3 +138,23 @@ pending human web login/OTP and trusted publisher setup.
 
 Preserve the immutable tag and canonical hosted assets. Successful build and
 GitHub/Pages delivery do not establish npm authentication or publication.
+
+## Citation studio redesign
+
+Architectural scope: retain strict native packet core and standalone HTML, extend with small adapters, merge/agreement module and independent viewer preferences. Replacing the core would reopen proven migration/integrity behavior; hosting a service would break offline use. The chosen approach preserves both.
+
+- Native schema version 2 and UTF16 offsets remain unchanged. Version1/v0.2 imports migrate through the existing parser. Hashes bind supplied bytes, never truth.
+- Common trace shapes deliberately require string answer/output/response and a document array, including page_content/metadata.title. Unsupported/nested/message-only traces fail atomically rather than guessing citations. Native run IDs are not trusted as review identities; deterministic positional IDs are assigned.
+- Merge requires identical source/claim populations, rejects conflicting review IDs and retains histories. Order is left packet history, then novel right packet history. Latest means last appended per claim/source/reviewer, so right-hand novel ratings supersede left-hand ratings for the same self-reported label. No timestamps or independence are inferred. Global queue completion uses the most recently appended rating per pair.
+- Cohen uses exactly two reviewer labels and complete pairs. Fleiss uses complete items for a fixed rater population. Nominal Krippendorff alpha uses all items with at least two available labels, weighted coincidence counts. Undefined coefficients are null, missingness and excluded stale records explicit. A valid rating remains available if later stale history appears, with the stale record excluded.
+- AIS/ALCE labels are a versioned analysis interchange, not a claim of native scorer compatibility. Interpretability is null because the review form does not collect the AIS first stage. Supported maps to attributable, other verdicts to not_attributable only for current sources. Stale attribution is null. W3C and native exports retain exact proven formats.
+- Preference storage contains only appearance/vibe and is try/catch guarded. Packet drafts remain opt-in and off each load. A prepaint hash-authorized script reads preferences; the app script owns packet interaction. Explicit connect-src none documents the existing default-src network denial.
+- WebGL2 is a bounded local hero/celebration renderer with static CSS fallback; no WebGPU dependency is justified. No perpetual render loop. Finite celebration and pointer parallax respect pause, hidden state and reduced motion.
+- Canonical private design-tokens 1.0.0 is vendored byte-identically into sibling tools. No independently published shared runtime dependency.
+- External ALCE gold is checksum-pinned and fetch-only. Local archives preserve source titles and separate supplied labels. Synthetic Unicode correctness is independent of attribution accuracy. No human labels or LLM judge are fabricated.
+
+The published packet schema is precompiled with AJV2020 at development/build time. Its ESM Unicode-length helper is bundled locally; no runtime code generation or CSP exception. Sparse agreement stores only supplied ratings, retaining the full missing denominator. Croissant metadata uses the official inline context and JSONPath field sources; optional mlcroissant 1.1.1 parses 2 RecordSets without product runtime dependencies.
+
+## Retain source branches on delivery
+
+On October 13, 2026, GitHub reported automatic branch deletion enabled. The coordinator changed only `delete_branch_on_merge` to `false` and verified the live readback, applying this repository's explicit feature-branch retention instruction. Other settings, protections, and Dependabot were unchanged.

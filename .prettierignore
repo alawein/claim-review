@@ -8,3 +8,11 @@ fixtures/anno-context.jsonld
 release-assets
 studies/ais-pilot/downloads
 studies/ais-pilot/collected
+
+design-tokens/tokens.css
+benchmarks/downloads
+benchmarks/artifacts
+
+src/generated/packet-validator.js
+
+benchmarks/v1/

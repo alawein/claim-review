@@ -31,3 +31,11 @@ updates disabled, vulnerability alerts disabled (HTTP 404 with GitHub's explicit
 "Vulnerability alerts are disabled" response), and automated security fixes
 `enabled: false, paused: false`. No setting was changed in that inspection.
 This historical readback does not establish every current non-Dependabot control.
+
+## Readback and optional restore paths, October 13, 2026
+
+Authenticated repository API reports Dependabot security updates disabled; vulnerability-alerts endpoint returned404 with the explicit message "Vulnerability alerts are disabled"; automated-security-fixes returned enabled:false, paused:false. Secret scanning and push protection are enabled in the observed repository snapshot. This task changed none of these settings. Current settings are not a historical settings-change log. Existing required main/release-tag rulesets remain active.
+
+Report-only production and development npm audits run in CI. Local audit details and environment are summarized in RESULTS.md; they do not establish security. No runtime npm dependencies are added. Dev-only axe/Lighthouse packages expand the development dependency surface; report findings rather than silently upgrading or weakening required checks.
+
+Optional owner-only restoration instructions, not authorization or a recommendation to change the exclusion: repository Settings > Security > Advanced Security (older UI: Code security and analysis) > Dependabot alerts > Enable; Dependabot security updates > Enable. Version updates require a separately reviewed .github/dependabot.yml. Exact maintained entry URL is above. Leave the entire family off unless the owner expressly changes that instruction. Do not create tokens or modify credential settings to make a check pass.
