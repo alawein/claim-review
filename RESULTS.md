@@ -1,6 +1,6 @@
 # Results, October 13, 2026
 
-Baseline source5e05d87:96 tests in11files; npm check passed before edits. Current implementation:107 unit tests in15files and96 browser cases passed; final clean-clone verification is recorded against the PR head.
+Baseline source5e05d87:96 tests in11files; npm check passed before edits. Implementation source700e91b:108 unit tests in15files and96 browser cases passed in fresh hosted CI. Windows fresh clone7bf3870 passed107unit tests,96browser cases, schema/tokens/bench/study/native Croissant and3LHCI runs. Final PR checks bind any later documentation-only head.
 
 ## Integrity task
 
@@ -42,3 +42,13 @@ No independent human collection, adoption, production ownership, semantic accura
 Before adding dev-only axe/LHCI, npm audit reported5 findings (2moderate,3high). The expanded dev graph reported22 (2low,6moderate,14high) on installation; current report-only audit is the authoritative latest snapshot. Production dependency audit has no runtime dependencies. No automatic dependency fix or Dependabot changes were applied. Audit success/failure alone is not a security guarantee.
 
 Schema integration caught a Node-ESM Unicode helper require; explicit ESM generation repaired it. A concurrent UI/browser run also hit Windows Firefox software-compositor teardown failures; the complete single-worker96-case run passed without retries. Software WebGL contexts with major performance caveats now use static fallback. Dataset text writes explicitly use LF after the initial hosted Croissant hash check exposed Windows newline differences. No failing check was bypassed.
+
+## Verification binding
+
+Implementation head `700e91b4912bbe297ff5d6e1b98ed7555b6dff26`: [CI run38382973636](https://github.com/alawein/claim-review/actions/runs/38382973636) and [Browser workflows run38382972867](https://github.com/alawein/claim-review/actions/runs/38382972867) succeeded. Browser workflow executes96cases across3engines, token/bundle gates and3Lighthouse runs with the runner system Chrome version recorded in its log. CodeRabbit reports a green status but explicitly skipped this draft; it is not completed independent review.
+
+Local clean clone was created with --no-local at7bf3870 and a fresh npm ci:107unit tests,96browser cases,4example+2external packet validations,1token contrast/generated-byte test,10study tests, native Croissant parse, benchmark and3LHCI runs passed. Source700e91b adds the bounded-schema-diagnostics regression (108tests) and sandboxed system Chrome CI selection. The malformed100-record case generated902diagnostics before short-circuit validation; the new test bounds diagnostics to8or fewer.
+
+Measurement tables and4GIFs are recorded from7bf3870 UI behavior. They are dated laboratory evidence, not a claim that every later source head has identical timings. Final700e91b hosted LCP/TBT/accessibility/bundle assertions passed. A transient concurrent-run2120ms event maximum was observed before rejecting software WebGL major-performance-caveat contexts and isolating verification; it is not omitted as field INP evidence.
+
+The deterministic dataset ZIP recreated in the working checkout and clean clone has identical SHA256 `5d91ac6b2b47b7ac988a82049f4edff7b4591d2f2aa694422b9dcbec3aee2130`. Its checksums.json verifies15payload files, including split/answer-key data, cards, license and schemas, and is itself included as the16thentry. No archive upload occurred.

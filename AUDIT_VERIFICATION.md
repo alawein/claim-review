@@ -231,3 +231,7 @@ undici
 [GHSA-3wwx-pv8p-q78v](https://github.com/advisories/GHSA-3wwx-pv8p-q78v),
 [GHSA-r53p-7pc4-xj5r](https://github.com/advisories/GHSA-r53p-7pc4-xj5r),
 [GHSA-rfgv-xxqx-mfg5](https://github.com/advisories/GHSA-rfgv-xxqx-mfg5).
+
+## Redesign verification binding
+
+Source700e91b:108unit tests in15files,96hosted cross-engine browser cases and all required CI/LHCI checks succeeded. Fresh Windows clone7bf3870: npm ci,107unit/96browser, schemas, token contrast, benchmark,10study tests, native Croissant and3Lighthouse runs passed. See RESULTS.md for exact source/run URLs, bounded diagnostics, platform failures repaired, reproducible archive hash and candid partial requirements. No independent human study, field INP, registry publication or repository transfer is inferred.
