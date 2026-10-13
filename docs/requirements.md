@@ -18,7 +18,7 @@ Scope: claim-review / Siftgrain Cite. Parent coordinates the two Python tools an
 | WebGL2 hero/background and static fallback | Done | viewer.ts local bounded renderer, initialized on interaction; CSS first paint/fallback. |
 | Optional WebGPU | Done by omission | Not justified for24particles; no unnecessary dependency. |
 | CSS transform/opacity/filter only, no CDN | Done | style.css/viewer.ts, local standalone build; no idle render loop or permanent will-change. |
-| Meaningful stale evidence and Cartoon completion | Done | Dashed stale state/text, arrival fade, exact-passage transition and completion only when all pairs have current ratings. Completion is not accuracy. |
+| Meaningful stale evidence and Cartoon completion | Done | Dashed stale state/text with fully opaque transform-only arrival, exact-passage transition and completion only when all pairs have current ratings. Completion is not accuracy. |
 | Span/cursor glow and evidence link choreography | Done | Selected passage has a pointer-following decorative glow behind literal text; paired claim/source borders explain linkage for pointer/keyboard, with instant reduced-motion state and no text opacity animation. |
 | Reduced motion, pause/hidden behavior | Done | CSS and bounded renderer guards; browser reduced-motion flows. Hidden/offscreen independent observation not manually profiled. |
 | WCAG2.2AA/keyboard/focus/labels | Partial certification | All8themes automated axe checks across3engines; keyboard/zoom tests. Manual screen-reader and complete WCAG certification not performed. |
@@ -55,7 +55,7 @@ Scope: claim-review / Siftgrain Cite. Parent coordinates the two Python tools an
 | CHANGELOG and MIGRATION | Done | Compatibility, append order and prepared gated remote steps. |
 | American spelling/no em dash/ASCII CI and commits | Done scoped | Conventional commit/check output; docs reviewed. Third-party tool formatting remains external. |
 | Clean clone/fresh environment full verification | Done for observed heads | Windows clean clone7bf3870 with fresh npm ci passed full chain; hosted fresh checkout700e91b passed108unit/96browser plusLHCI and all required checks. Exact run links in RESULTS.md; later documentation heads retain authoritative PR checks. |
-| Independent final review and draft PR | Done for reviewed source | Coordinator reviewed implementation700e91b and docs41fef2d, focused10tests and native Croissant4dev/4test extraction passed, no blocking findings. Final CI/landing status is owned by PR24. No self-approval or merge by this Controller. |
+| Independent final review and draft PR | Done for reviewed source | Coordinator reviewed implementation700e91b/docs41fef2d and required the first-frame contrast follow-up. Opaque stale text and paused-frame AA/axe checks address that finding; focused10tests and native Croissant4dev/4test extraction also passed. Final approval/CI/landing status is owned by PR24. No self-approval or merge by this Controller. |
 | Remote rename/transfer/new package/HF/release | Gated broad scope | MIGRATION.md exact prepared operation shapes; no inferred authorization, no new publication executed. |
 | Permanent deletes/secrets/messages to people | Done constraint | None authorized or performed. Parent coordination explicitly authorized. |
 

@@ -52,3 +52,9 @@ Local clean clone was created with --no-local at7bf3870 and a fresh npm ci:107un
 Measurement tables and4GIFs are recorded from7bf3870 UI behavior. They are dated laboratory evidence, not a claim that every later source head has identical timings. Final700e91b hosted LCP/TBT/accessibility/bundle assertions passed. A transient concurrent-run2120ms event maximum was observed before rejecting software WebGL major-performance-caveat contexts and isolating verification; it is not omitted as field INP evidence.
 
 The deterministic dataset ZIP recreated in the working checkout and clean clone has identical SHA256 `5d91ac6b2b47b7ac988a82049f4edff7b4591d2f2aa694422b9dcbec3aee2130`. Its checksums.json verifies15payload files, including split/answer-key data, cards, license and schemas, and is itself included as the16thentry. No archive upload occurred.
+
+## Stale-motion contrast follow-up
+
+Independent review identified that the first stale-animation frame faded text to opacity0.45. Real canonical compositing gave contrast3.9677:1in dark and2.9364:1in light, below4.5:1. Two node tests failed before the fix. Six browser cases (both appearances in all3engines) also failed on the prior built HTML while the actual CSS animation was paused at currentTime0, observing opacity0.45. This was a product defect despite reduced-motion axe checks passing.
+
+The fix removes both text-opacity keyframes and retains only translation plus the dashed stale border. The suite now has110unit tests in16files. New browser regressions pause the actual stale state at frame0, assert full text opacity and calculated AA contrast, and run axe while still paused. No delay or reduced-motion override conceals the initial frame. Final source-head results belong to PR24 checks.

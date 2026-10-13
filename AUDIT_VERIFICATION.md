@@ -235,3 +235,5 @@ undici
 ## Redesign verification binding
 
 Source700e91b:108unit tests in15files,96hosted cross-engine browser cases and all required CI/LHCI checks succeeded. Fresh Windows clone7bf3870: npm ci,107unit/96browser, schemas, token contrast, benchmark,10study tests, native Croissant and3Lighthouse runs passed. See RESULTS.md for exact source/run URLs, bounded diagnostics, platform failures repaired, reproducible archive hash and candid partial requirements. No independent human study, field INP, registry publication or repository transfer is inferred.
+
+Stale-animation follow-up: independent review found first-frame contrast3.9677dark/2.9364light at textopacity0.45. Both unit cases and all6paused browser cases failed on the previous style. Transform-only stale arrival removes text fading;110unit tests and explicit paused-frame axe/contrast regressions replace reduced-motion-only confidence. Exact final head/checks are recorded in PR24.

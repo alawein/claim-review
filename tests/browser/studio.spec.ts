@@ -111,3 +111,70 @@ test("selected evidence links claim/source for pointer and keyboard without redu
   await expect(cursor).not.toHaveAttribute("style", /translate3d/);
   await expect(cursor).toBeHidden();
 });
+for (const appearance of ["dark", "light"]) {
+  test(`stale text retains AA contrast at paused animation start in ${appearance}`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.addInitScript(() => {
+      const observer = new MutationObserver(() => {
+        for (const node of Array.from(document.querySelectorAll(".stale")))
+          for (const animation of node.getAnimations()) {
+            animation.pause();
+            animation.currentTime = 0;
+          }
+      });
+      observer.observe(document, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    });
+    await page.goto("/");
+    await page.getByLabel("Appearance").selectOption(appearance);
+    const fs = await import("node:fs/promises");
+    const packet = JSON.parse(await fs.readFile("examples/reviewed.json", "utf8"));
+    packet.reviews = packet.reviews.map((row: Record<string, unknown>) => ({
+      ...row,
+      source_sha256: "a".repeat(64),
+    }));
+    await page.getByLabel("Import packet", { exact: true }).setInputFiles({
+      name: "stale.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(packet)),
+    });
+    await expect(page.locator("#status")).toContainText("Imported");
+    const contrast = await page.locator("#review-state.stale").evaluate((node) => {
+      const style = getComputedStyle(node),
+        opacity = Number(style.opacity);
+      const rgb = (s: string) =>
+        s
+          .match(/[\d.]+/g)!
+          .slice(0, 3)
+          .map(Number);
+      const foreground = rgb(style.color),
+        background = rgb(style.backgroundColor);
+      const composed = foreground.map((v, i) => v * opacity + background[i] * (1 - opacity));
+      const lum = (v: number[]) =>
+        v
+          .map((c) => c / 255)
+          .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+          .reduce((s, c, i) => s + c * [0.2126, 0.7152, 0.0722][i], 0);
+      const a = lum(composed),
+        b = lum(background);
+      return {
+        opacity,
+        ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05),
+        paused: node.getAnimations().some((a) => a.playState === "paused" && a.currentTime === 0),
+      };
+    });
+    expect(contrast.paused).toBe(true);
+    expect(contrast.opacity).toBe(1);
+    expect(contrast.ratio).toBeGreaterThanOrEqual(4.5);
+    const result = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+      .analyze();
+    expect(result.violations).toEqual([]);
+  });
+}
