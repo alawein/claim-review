@@ -9,7 +9,7 @@ Import local RAG trace JSON/JSONL, triage with Alt+J / Alt+K, merge reviewer pac
 Dark is the default; Appearance offers accessible light. Calm, Cartoon, Pixel and Lab change density and motion. Preferences store only those choices with guarded access, independently of opt-in packet drafts.
 
 | Cartoon | Calm |
-|---|---|
+| --- | --- |
 | ![Recorded Cartoon workflow](docs/demos/cartoon.gif) | ![Recorded Calm workflow](docs/demos/calm.gif) |
 | Pixel | Lab |
 | ![Recorded Pixel workflow](docs/demos/pixel.gif) | ![Recorded Lab workflow](docs/demos/lab.gif) |

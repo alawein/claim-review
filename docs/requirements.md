@@ -3,7 +3,7 @@
 Scope: claim-review / Siftgrain Cite. Parent coordinates the two Python tools and independent review. This matrix covers the original multi-tool brief as it applies here; it does not declare the whole three-tool program complete. Final candidate checks bind the PR head, not historical reports. Current candidate retains main target and existing package identity.
 
 | Requirement | Status | Evidence or remaining limit |
-|---|---|---|
+| --- | --- | --- |
 | Current MAIOS policy/style/metadata/load order before edits | Done | MAIOS_CONTEXT.md source pin and paths; dirty primary preserved. |
 | October4-current own repository commit/PR/release/settings inventory | Done with historical limit | docs/recent-history.json plus current ruleset/security reads; deleted history and exact unobserved settings transitions unavailable. |
 | Shared meshal-site/kohyr history and style references | Done | Parent-provided docs/shared-history.json/.md; private sources require authenticated access. |

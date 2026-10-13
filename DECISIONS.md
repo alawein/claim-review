@@ -139,7 +139,6 @@ pending human web login/OTP and trusted publisher setup.
 Preserve the immutable tag and canonical hosted assets. Successful build and
 GitHub/Pages delivery do not establish npm authentication or publication.
 
-
 ## Citation studio redesign
 
 Architectural scope: retain strict native packet core and standalone HTML, extend with small adapters, merge/agreement module and independent viewer preferences. Replacing the core would reopen proven migration/integrity behavior; hosting a service would break offline use. The chosen approach preserves both.

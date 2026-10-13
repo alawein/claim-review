@@ -5,7 +5,7 @@
 Source baseline5e05d871a8d17ff00a90f3af008e8a5e8e4f2c10 on freshly fetched main. Before changes: npm ci succeeded, npm run check exited0:96 tests in11 files, lint/types/build passed. npm audit initially reported5 dev findings (2moderate,3high). Browser prechange full baseline was not rerun; the repository had63 cases by inspection, not a newly observed63-pass result. Added tests first failed for absent studio modules and absent theme state, then passed after implementation.
 
 | October8 hypothesis | Fresh status | Evidence at baseline/current owner |
-|---|---|---|
+| --- | --- | --- |
 | Created October4 in one AI-assisted session | Partially confirmed | API created_at2026-10-04T16:52:08Z; provenance docs disclose AI-assisted examples. Single-session authorship cannot be established from Git alone. |
 | Zero stars/single contributor | Partially confirmed | Current API0stars; contributors are alawein and dependabot[bot], so one human account plus a bot, not one total contributor. |
 | Squash-merged history | Confirmed for named release path | main merge commits/PR links in docs/recent-history.json; no blanket claim about inaccessible/deleted branches. |

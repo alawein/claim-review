@@ -122,6 +122,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run validate:schema
+      - run: python benchmarks/fetch.py
+      - run: npm run bench
       - run: npm run test:tokens
       - run: npm run build && npm run perf:budget
       - name: Report development dependency audit

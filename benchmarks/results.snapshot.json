@@ -6,7 +6,7 @@
       "node": "v22.23.2",
       "os": "win32 10.0.26300",
       "cpu": "AMD Ryzen 7 8845HS w/ Radeon 780M Graphics",
-      "memory_bytes": 48697344
+      "memory_bytes": 46948352
     },
     "stress": [
       {
@@ -18,8 +18,8 @@
         "normalization_only_detected": 1,
         "tampering_rejected": 4,
         "iterations": 30,
-        "p50_ms": 2.571300000000008,
-        "p95_ms": 4.752199999999988
+        "p50_ms": 3.679300000000012,
+        "p95_ms": 9.75789999999995
       },
       {
         "split": "test",
@@ -30,8 +30,8 @@
         "normalization_only_detected": 2,
         "tampering_rejected": 4,
         "iterations": 30,
-        "p50_ms": 2.391900000000021,
-        "p95_ms": 3.532600000000002
+        "p50_ms": 3.955699999999979,
+        "p95_ms": 9.100299999999947
       }
     ],
     "external": [
@@ -65,58 +65,58 @@
       {
         "vibe": "cartoon",
         "viewport": "1280x900",
-        "file_lcp_ms": 308,
-        "max_observed_event_ms": 48,
+        "file_lcp_ms": 1096,
+        "max_observed_event_ms": 88,
         "inp": null,
         "inp_limit": "Short scripted session is not field INP",
         "frame_p95_ms": 16.799999999999727,
-        "mean_fps": 60.002637478570485,
+        "mean_fps": 60.00400026668444,
         "scripted_reviews": 4,
         "errors": 0,
-        "elapsed_ms": 1230.7132000000001,
-        "reviews_per_minute": 195.00887777916088
+        "elapsed_ms": 868.3845999999994,
+        "reviews_per_minute": 276.3752374236026
       },
       {
         "vibe": "calm",
         "viewport": "1280x900",
-        "file_lcp_ms": 156,
-        "max_observed_event_ms": 48,
+        "file_lcp_ms": 160,
+        "max_observed_event_ms": 56,
         "inp": null,
         "inp_limit": "Short scripted session is not field INP",
-        "frame_p95_ms": 16.799999999999955,
-        "mean_fps": 60.0052488107751,
+        "frame_p95_ms": 16.799999999999727,
+        "mean_fps": 60.00263747857049,
         "scripted_reviews": 4,
         "errors": 0,
-        "elapsed_ms": 1101.0020999999997,
-        "reviews_per_minute": 217.98323545431936
+        "elapsed_ms": 1196.2698,
+        "reviews_per_minute": 200.62363858052757
       },
       {
         "vibe": "pixel",
         "viewport": "1280x900",
-        "file_lcp_ms": 136,
-        "max_observed_event_ms": 48,
+        "file_lcp_ms": 144,
+        "max_observed_event_ms": 96,
         "inp": null,
         "inp_limit": "Short scripted session is not field INP",
-        "frame_p95_ms": 16.700000000000273,
-        "mean_fps": 60.00400026668444,
+        "frame_p95_ms": 16.799999999999727,
+        "mean_fps": 60.0039202561234,
         "scripted_reviews": 4,
         "errors": 0,
-        "elapsed_ms": 1105.929,
-        "reviews_per_minute": 217.0121228397121
+        "elapsed_ms": 1193.7086000000018,
+        "reviews_per_minute": 201.05409310111332
       },
       {
         "vibe": "lab",
         "viewport": "1280x900",
-        "file_lcp_ms": 140,
-        "max_observed_event_ms": 40,
+        "file_lcp_ms": 156,
+        "max_observed_event_ms": 56,
         "inp": null,
         "inp_limit": "Short scripted session is not field INP",
-        "frame_p95_ms": 16.700000000000273,
-        "mean_fps": 60.00128002730724,
+        "frame_p95_ms": 16.799999999999727,
+        "mean_fps": 60.002640116165104,
         "scripted_reviews": 4,
         "errors": 0,
-        "elapsed_ms": 1099.0794999999998,
-        "reviews_per_minute": 218.36454960719405
+        "elapsed_ms": 1136.5528000000013,
+        "reviews_per_minute": 211.16484865463332
       }
     ],
     "limitations": [
@@ -128,22 +128,22 @@
   },
   "lighthouse": [
     {
-      "performance": 1,
+      "performance": 0.75,
       "accessibility": 1,
-      "lcp_ms": 337.577,
-      "tbt_ms": 24
+      "lcp_ms": 461.02600000000007,
+      "tbt_ms": 656
     },
     {
       "performance": 1,
       "accessibility": 1,
-      "lcp_ms": 308.99199999999996,
+      "lcp_ms": 431.377,
       "tbt_ms": 0
     },
     {
       "performance": 1,
       "accessibility": 1,
-      "lcp_ms": 295.196,
-      "tbt_ms": 10
+      "lcp_ms": 442.212,
+      "tbt_ms": 23.5
     }
   ]
 }

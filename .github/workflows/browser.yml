@@ -25,5 +25,6 @@ jobs:
       - run: npm run perf:budget
       - name: Lighthouse CI
         run: |
-          export CHROME_PATH="$(node --input-type=module -e "import {chromium} from '@playwright/test'; console.log(chromium.executablePath());")"
+          CHROME_PATH="$(node --input-type=module -e "import {chromium} from '@playwright/test'; console.log(chromium.executablePath());")"
+          export CHROME_PATH
           npx lhci autorun

@@ -1,6 +1,6 @@
 # Performance budgets
 
-Standalone dist/index.html gzip budget80000bytes, enforced by scripts/perf-budget.mjs in CI; current measured build is about20KiB gzip. No CDN, runtime npm packages, remote fonts or source retrieval. Shared design tokens are compiled locally. Canonical budget is the script; exact candidate bytes appear in check output.
+Standalone dist/index.html gzip budget80000bytes, enforced by scripts/perf-budget.mjs in CI; current measured build is about33KiB gzip. No CDN, runtime npm packages, remote fonts or source retrieval. Shared design tokens are compiled locally. Canonical budget is the script; exact candidate bytes appear in check output.
 
 Lighthouse CI (.lighthouserc.json): LCP<=2500ms, TBT<=200ms, accessibility1.0, performance>=0.9 warning. Browser CI exercises all eight appearance/vibe combinations with axe WCAG2/2.1/2.2AA tags and reduced motion, on Chromium/Firefox/WebKit. Automated accessibility is partial coverage, not WCAG certification or manual screen-reader proof.
 

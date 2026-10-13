@@ -6,7 +6,7 @@ from prepare_packets import prepare,UPSTREAM_SHA256
 
 def write(path,value):
     path.parent.mkdir(parents=True,exist_ok=True)
-    path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8', newline='\n')
 
 def main():
     texts=['A\U0001f600B','e\u0301 cafe','\u0645\u0631\u062d\u0628\u0627','line\r\nsecond','\U0001d49c\U0001f600e\u0301\r\n\u05d0\u05d1','Caf\u00e9','Cafe\u0301','zero\u200dwidth']

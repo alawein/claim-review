@@ -32,7 +32,6 @@ updates disabled, vulnerability alerts disabled (HTTP 404 with GitHub's explicit
 `enabled: false, paused: false`. No setting was changed in that inspection.
 This historical readback does not establish every current non-Dependabot control.
 
-
 ## Readback and optional restore paths, October 13, 2026
 
 Authenticated repository API reports Dependabot security updates disabled; vulnerability-alerts endpoint returned404 with the explicit message "Vulnerability alerts are disabled"; automated-security-fixes returned enabled:false, paused:false. Secret scanning and push protection are enabled in the observed repository snapshot. This task changed none of these settings. Current settings are not a historical settings-change log. Existing required main/release-tag rulesets remain active.

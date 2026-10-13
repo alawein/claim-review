@@ -3,7 +3,7 @@
 Cutoff: 2026-10-13 America/Los_Angeles. All accesses below: 2026-10-13. Search emphasized September1-October13; foundational sources retained for definitions. Dates unavailable from inspected sources are unknown, not inferred from crawl dates. Live docs are observations, not version-pinned 2026 releases. No post-cutoff releases or claims used.
 
 | Source | Publication | Revision | Version/release | Relevance |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | [W3C Annotation](https://www.w3.org/TR/annotation-model/) | 2017-02-23 | 2017-02-23 | Recommendation | Code-point selectors plus exact quote/context; hash-bound offline export is narrower than a general annotation platform. |
 | [AIS](https://arxiv.org/abs/2112.12870v2) | 2021-12-23 | 2022-08-02 | v2 | Two-stage interpretability/attribution protocol; do not infer interpretability from a support verdict. |
 | [ALCE](https://arxiv.org/abs/2305.14627v2) | 2023-05-24 | 2023-10-31 | v2 | ASQA/QAMPARI/ELI5, automatic citation precision/recall and human evaluation; chosen pinned external label corpus. |
