@@ -8,6 +8,11 @@ migrate to schema2 without changing source text; use native Export packet to
 preserve enriched history. W3C and CSV/label exports do not replace the resumable
 packet.
 
+After a repository rename, verify the current README/badges, package repository
+metadata and release-workflow repository guard. Read back the native npm trusted
+publisher binding against `alawein/siftgrain-cite`; local metadata does not prove
+that registry configuration changed.
+
 Preferences use siftgrain-viewer (appearance/vibe only). Drafts retain claim-review.draft.v1 and require explicit opt-in. No automatic restore. Merge right-hand novel history takes append precedence, with labels self-reported. Export both original reviewer packets before merging if you need independently frozen inputs.
 
 ## Repository and distribution identities

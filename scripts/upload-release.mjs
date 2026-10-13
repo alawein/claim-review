@@ -56,7 +56,7 @@ export async function uploadRelease({
         repository,
         "--verify-tag",
         "--title",
-        `claim-review ${tag}`,
+        `Siftgrain Cite ${tag}`,
         "--notes-file",
         notes,
       ]);
