@@ -24,7 +24,7 @@ export function releaseBody(version, buildResult, publishResult, assetsVerified 
     skipped:
       "npm publication/verification job was skipped. Publication remains pending and registry state is unverified.",
   }[publishResult];
-  return `# claim-review v${version}\n\nCanonical tag build succeeded.\n\n${publication}\n\n${assetsVerified ? "GitHub Release asset bytes match the canonical checksum inventory." : "GitHub Release asset verification is pending."}\n\nSee [changes](https://github.com/alawein/claim-review/blob/v${version}/CHANGELOG.md).\n`;
+  return `# Siftgrain Cite v${version}\n\nCanonical tag build succeeded.\n\n${publication}\n\n${assetsVerified ? "GitHub Release asset bytes match the canonical checksum inventory." : "GitHub Release asset verification is pending."}\n\nSee [changes](https://github.com/alawein/siftgrain-cite/blob/v${version}/CHANGELOG.md).\n`;
 }
 
 export async function uploadRelease({
@@ -37,7 +37,7 @@ export async function uploadRelease({
 }) {
   const initialBody = releaseBody(version, buildResult, publishResult);
   if (tag !== `v${version}`) throw new Error("Release tag/version mismatch");
-  const repository = "alawein/claim-review";
+  const repository = "alawein/siftgrain-cite";
   await verifyInventory(assetDirectory, "claim-review", version);
   const releases = JSON.parse(
     await gh(["api", `repos/${repository}/releases`, "--paginate", "--slurp"]),
@@ -56,7 +56,7 @@ export async function uploadRelease({
         repository,
         "--verify-tag",
         "--title",
-        `claim-review ${tag}`,
+        `Siftgrain Cite ${tag}`,
         "--notes-file",
         notes,
       ]);

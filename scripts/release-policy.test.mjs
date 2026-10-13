@@ -74,14 +74,14 @@ test("npm provenance policy binds subject, workflow, source, tag and hosted buil
         buildType: "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
         externalParameters: {
           workflow: {
-            repository: "https://github.com/alawein/claim-review",
+            repository: "https://github.com/alawein/siftgrain-cite",
             path: ".github/workflows/release.yml",
             ref: "refs/tags/v0.3.1",
           },
         },
         resolvedDependencies: [
           {
-            uri: "git+https://github.com/alawein/claim-review@refs/tags/v0.3.1",
+            uri: "git+https://github.com/alawein/siftgrain-cite@refs/tags/v0.3.1",
             digest: { gitCommit: source },
           },
         ],

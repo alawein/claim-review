@@ -47,6 +47,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alawein/claim-review.git"
+    "url": "git+https://github.com/alawein/siftgrain-cite.git"
+  },
+  "homepage": "https://github.com/alawein/siftgrain-cite#readme",
+  "bugs": {
+    "url": "https://github.com/alawein/siftgrain-cite/issues"
   }
 }

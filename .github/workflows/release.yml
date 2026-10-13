@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: github.repository == 'alawein/claim-review'
+    if: github.repository == 'alawein/siftgrain-cite'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:

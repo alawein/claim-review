@@ -20,6 +20,7 @@ test("release retry reconciles failed publication to verified success without re
     await rm(join(root, "package"), { recursive: true });
     await createInventory(root, "claim-review", "0.3.1");
     let release;
+    let releaseTitle;
     let uploads = 0;
     let edits = 0;
     const bytes = new Map();
@@ -27,13 +28,14 @@ test("release retry reconciles failed publication to verified success without re
       const value = (flag) => args[args.indexOf(flag) + 1];
       if (args[0] === "api")
         return JSON.stringify(args[1].endsWith("/releases") ? [release ? [release] : []] : release);
-      if (args[1] === "create")
+      if (args[1] === "create") {
+        releaseTitle = value("--title");
         release = {
           tag_name: args[2],
           assets: [],
           body: await readFile(value("--notes-file"), "utf8"),
         };
-      else if (args[1] === "edit") {
+      } else if (args[1] === "edit") {
         edits++;
         release.body = await readFile(value("--notes-file"), "utf8");
       } else if (args[1] === "upload") {
@@ -54,6 +56,7 @@ test("release retry reconciles failed publication to verified success without re
       gh,
     };
     await uploadRelease({ ...options, publishResult: "failure" });
+    expect(releaseTitle).toBe("Siftgrain Cite v0.3.1");
     expect(release.body).toContain("failed");
     expect(release.body).not.toContain("npm publication verified");
     expect(release.body).not.toContain("Publication not attempted");
@@ -61,6 +64,10 @@ test("release retry reconciles failed publication to verified success without re
     expect(uploads).toBe(3);
     expect(edits).toBe(2);
     expect(release.body).toContain("npm publication verified");
+    expect(release.body).toContain("# Siftgrain Cite v0.3.1");
+    expect(release.body).toContain(
+      "https://github.com/alawein/siftgrain-cite/blob/v0.3.1/CHANGELOG.md",
+    );
     expect(release.body).not.toContain("failed");
     bytes.set("index.html", "different");
     await expect(uploadRelease({ ...options, publishResult: "failure" })).rejects.toThrow(

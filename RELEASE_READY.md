@@ -70,8 +70,13 @@ anything. A matching registry version is verified without publishing it again.
   absolute tarball path, then failed with ENEEDAUTH. GitHub build artifacts and
   hosted provenance are verified; npm byte/provenance equality remains pending.
 
-Trusted publisher: owner `alawein`, repository `claim-review`, workflow
-`release.yml`, environment `npm`. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
+Trusted publisher for the current repository identity: owner `alawein`, repository
+`siftgrain-cite`, workflow `release.yml`, environment `npm`. The native npm
+publisher binding has not been read back after the repository rename and remains
+unverified. On October 13, the signed-in npm account listed 13 managed personal
+packages, none `claim-review`, and `npm view claim-review version --json` returned
+E404. No publisher setup or package bootstrap is verified. See [npm trusted
+publishing](https://docs.npmjs.com/trusted-publishers/).
 The workflow uses Node 22.23.2 and npm 12.2.0. First-publication bootstrap may be
 needed because npm package settings require an existing package. The human enters
 credentials through the managed flow. Build preparation and pack dry runs prove
@@ -107,7 +112,7 @@ exists, inspect its bytes before retrying and do not publish it again.
 Use the existing immutable v0.3.0 release, downloaded to a new empty directory:
 
 ```powershell
-gh release download v0.3.0 --repo alawein/claim-review --pattern claim-review-0.3.0.tgz --pattern index.html --pattern SHA256SUMS --dir bootstrap-assets
+gh release download v0.3.0 --repo alawein/siftgrain-cite --pattern claim-review-0.3.0.tgz --pattern index.html --pattern SHA256SUMS --dir bootstrap-assets
 node scripts/verify-release-artifacts.mjs verify bootstrap-assets claim-review 0.3.0
 Get-FileHash bootstrap-assets/claim-review-0.3.0.tgz -Algorithm SHA256
 ```
@@ -128,8 +133,10 @@ expected value before recording bootstrap success. Manual v0.3.0 publication
 has no OIDC registry provenance; future runs cannot add provenance to an already
 published version. Preserve its original tag and assets.
 
-Then configure the existing package's npm trusted publisher: owner `alawein`,
-repository `claim-review`, workflow `release.yml`, environment `npm`.
+The current npm trusted publisher identity is owner `alawein`, repository
+`siftgrain-cite`, workflow `release.yml`, environment `npm`; its native binding
+has not been read back since the repository rename and remains unverified.
+The October 13 npm account/package readback above did not inspect or change this binding.
 Never manually publish v0.3.2: consuming that version prevents later OIDC
 publication from adding provenance. Reserve it for the canonical tag workflow.
 These instructions establish no actual login, publisher setup or publication.

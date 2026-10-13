@@ -215,7 +215,7 @@
     }
   ],
   "conformsTo": "http://mlcommons.org/croissant/1.0",
-  "url": "https://github.com/alawein/claim-review/tree/main/benchmarks",
+  "url": "https://github.com/alawein/siftgrain-cite/tree/main/benchmarks",
   "creator": {
     "@type": "Organization",
     "name": "Siftgrain Cite contributors"

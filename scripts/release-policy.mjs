@@ -50,12 +50,12 @@ export function verifyProvenanceStatement(statement, sha512, version, sourceComm
     subject[0].digest?.sha512 !== sha512 ||
     definition?.buildType !==
       "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1" ||
-    workflow?.repository !== "https://github.com/alawein/claim-review" ||
+    workflow?.repository !== "https://github.com/alawein/siftgrain-cite" ||
     workflow.path !== ".github/workflows/release.yml" ||
     workflow.ref !== `refs/tags/v${version}` ||
     !dependencies?.some(
       (row) =>
-        row.uri === `git+https://github.com/alawein/claim-review@refs/tags/v${version}` &&
+        row.uri === `git+https://github.com/alawein/siftgrain-cite@refs/tags/v${version}` &&
         row.digest?.gitCommit === sourceCommit,
     ) ||
     statement.predicate?.runDetails?.builder?.id !==

@@ -2,6 +2,12 @@
 
 Review claims against exact source passages and export the reasoning.
 
+Siftgrain Cite is the human citation-review tool in the Siftgrain suite, alongside
+[Siftgrain Audit](https://github.com/alawein/siftgrain-audit) for evaluation
+completeness and [Siftgrain State](https://github.com/alawein/siftgrain-state)
+for checking requested outcomes against supplied observations. Cite records a
+reviewer's judgment and exact evidence span; it does not determine claim truth.
+
 ![Siftgrain Cite wordmark](brand/wordmark.svg)
 
 Import local RAG trace JSON/JSONL, triage with Alt+J / Alt+K, merge reviewer packets, and compare Cohen/Fleiss kappa or nominal Krippendorff alpha. Labels remain self-reported. The native packet preserves all history; CSV and AIS/ALCE analysis labels have the bounded [adapter contract](docs/adapters.md).
@@ -26,7 +32,7 @@ Import source text, select a passage, and record whether it supports, partly
 supports, contradicts, or cannot verify a claim. Export the packet to preserve
 your review history. No account, model, or server.
 
-![Claim review with the packet builder open over the synthetic example](docs/screenshots/app.png)
+![Siftgrain Cite packet builder with a synthetic example](docs/screenshots/app.png)
 
 ## Use
 
@@ -147,7 +153,7 @@ The [W3C Web Annotation Data Model](https://www.w3.org/TR/annotation-model/)
 defines the selector and JSON-LD structures used by the export adapter. Its
 published quote and position examples are exercised as literal test cases.
 The [Selectors and States note](https://www.w3.org/TR/selectors-states/) provides
-additional selector guidance. Claim Review keeps exact supplied plain text,
+additional selector guidance. Siftgrain Cite keeps exact supplied plain text,
 hash-bound review history and an offline interface; it does not retrieve web
 documents or implement a general annotation service.
 [AIS](https://arxiv.org/abs/2112.12870v2) defines attribution and a two-stage human
