@@ -1,0 +1,26 @@
+[
+  {
+    "id": "dev-0",
+    "start_utf16": 0,
+    "end_utf16": 4,
+    "exact": "A😀B"
+  },
+  {
+    "id": "dev-1",
+    "start_utf16": 0,
+    "end_utf16": 7,
+    "exact": "é cafe"
+  },
+  {
+    "id": "dev-2",
+    "start_utf16": 0,
+    "end_utf16": 5,
+    "exact": "مرحبا"
+  },
+  {
+    "id": "dev-3",
+    "start_utf16": 0,
+    "end_utf16": 12,
+    "exact": "line\r\nsecond"
+  }
+]

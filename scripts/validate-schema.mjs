@@ -19,7 +19,14 @@ const { parsePacket } = await import(
 );
 const hash = async (text) => createHash("sha256").update(text, "utf8").digest("hex");
 const files = process.argv.slice(2);
-for (const file of files.length ? files : ["examples/packet.json", "examples/reviewed.json"]) {
+for (const file of files.length
+  ? files
+  : [
+      "examples/packet.json",
+      "examples/reviewed.json",
+      "examples/acceptance.json",
+      "examples/acceptance-reviewed.json",
+    ]) {
   try {
     const raw = await readFile(file, "utf8");
     if (!validate(JSON.parse(raw))) throw new Error(JSON.stringify(validate.errors));

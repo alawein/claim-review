@@ -1,0 +1,26 @@
+[
+  {
+    "id": "test-0",
+    "start_utf16": 0,
+    "end_utf16": 10,
+    "exact": "𝒜😀é\r\nאב"
+  },
+  {
+    "id": "test-1",
+    "start_utf16": 0,
+    "end_utf16": 4,
+    "exact": "Café"
+  },
+  {
+    "id": "test-2",
+    "start_utf16": 0,
+    "end_utf16": 5,
+    "exact": "Café"
+  },
+  {
+    "id": "test-3",
+    "start_utf16": 0,
+    "end_utf16": 10,
+    "exact": "zero‍width"
+  }
+]

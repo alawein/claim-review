@@ -267,7 +267,7 @@ test("CRLF selection preserves original source offsets", async ({ page }) => {
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(p)),
   });
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#status")).toContainText("Imported");
   await page
     .getByLabel("Source text")
     .evaluate((el: HTMLTextAreaElement) => el.setSelectionRange(6, 12));
@@ -301,14 +301,14 @@ test("large valid packet exports within import byte bound", async ({ page }) => 
   await page
     .getByLabel("Import packet")
     .setInputFiles({ name: "large.json", mimeType: "application/json", buffer: Buffer.from(raw) });
-  await expect(page.getByRole("status")).toContainText("Imported", { timeout: 20000 });
+  await expect(page.locator("#status")).toContainText("Imported", { timeout: 20000 });
   const event = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export packet" }).click();
   const path = await (await event).path();
   const exported = await readFile(path!);
   expect(exported.length).toBeLessThanOrEqual(5 * 1024 * 1024);
   await page.getByLabel("Import packet").setInputFiles(path!);
-  await expect(page.getByRole("status")).toContainText("Imported", { timeout: 20000 });
+  await expect(page.locator("#status")).toContainText("Imported", { timeout: 20000 });
 });
 
 async function importPacket(page: import("@playwright/test").Page) {
@@ -317,7 +317,7 @@ async function importPacket(page: import("@playwright/test").Page) {
     mimeType: "application/json",
     buffer: Buffer.from(input),
   });
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#status")).toContainText("Imported");
 }
 
 async function fourReviews(page: import("@playwright/test").Page) {
@@ -329,7 +329,7 @@ async function fourReviews(page: import("@playwright/test").Page) {
     await page.getByLabel("Rationale").fill(expected.rationales[i]);
     await page.getByLabel("Reviewer label").fill("Synthetic exercise");
     await page.getByRole("button", { name: "Save review" }).press("Enter");
-    await expect(page.getByRole("status")).toContainText("Saved");
+    await expect(page.locator("#status")).toContainText("Saved");
   }
 }
 
@@ -391,6 +391,14 @@ test("keyboard navigation saves and exports", async ({ page }) => {
   await page.keyboard.press("Tab");
   await expect(page.locator("summary")).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Import RAG trace JSON or JSONL")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Merge reviewer packet")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Previous item", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Next unreviewed", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(page.getByLabel("Claim", { exact: true })).toBeFocused();
   await page.keyboard.press("Tab"); // citation
   await page.keyboard.press("Tab"); // readonly source
@@ -408,7 +416,7 @@ test("keyboard navigation saves and exports", async ({ page }) => {
   await page.keyboard.type("Synthetic exercise");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("status")).toContainText("Saved");
+  await expect(page.locator("#status")).toContainText("Saved");
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Export packet" })).toBeFocused();
   const download = page.waitForEvent("download");
@@ -420,7 +428,7 @@ test("standalone offline file imports, reviews, exports and reimports", async ({
   await page.goto(pathToFileURL(resolve(process.env.RELEASE_HTML ?? "dist/index.html")).href);
   await page.route(/^https?:/, (route) => route.abort());
   await page.getByRole("button", { name: "Load synthetic example" }).click();
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#status")).toContainText("Imported");
   expect(await page.evaluate(() => !!globalThis.crypto?.subtle)).toBe(true);
   await fourReviews(page);
   const event = page.waitForEvent("download");
@@ -430,7 +438,7 @@ test("standalone offline file imports, reviews, exports and reimports", async ({
   const saved = info.outputPath("offline-review.json");
   await writeFile(saved, await readFile(path!));
   await page.getByLabel("Import packet").setInputFiles(saved);
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#status")).toContainText("Imported");
   await expect(page.getByLabel("Review history")).toContainText("unverifiable");
 });
 
@@ -568,11 +576,11 @@ test("malicious text is inert; stale reviews do not quote changed source", async
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(p)),
   });
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#status")).toContainText("Imported");
   await expect(page.getByLabel("Source text")).toHaveValue(p.sources[0].text);
   await expect(page.getByLabel("Review history")).toContainText("stale");
   expect(await page.evaluate(() => Object.hasOwn(globalThis, "BAD"))).toBe(false);
-  expect(await page.locator("script").count()).toBe(1);
+  expect(await page.locator("script").count()).toBe(2);
 });
 
 test("normalization-only source changes remain stale and never quote revised offsets", async ({
@@ -614,7 +622,7 @@ test("normalization-only source changes remain stale and never quote revised off
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(next)),
   });
-  await expect(page.getByRole("status")).toContainText("Imported");
+  await expect(page.locator("#status")).toContainText("Imported");
   await expect(page.locator("#review-state")).toContainText("normalization-only stale");
   await expect(page.locator("#review-state")).not.toContainText("valid for current source");
   await expect(page.locator("#review-state")).not.toContainText("Passage:");

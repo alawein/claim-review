@@ -24,15 +24,21 @@ test("draft is off by default, opt-in saves and explicit restore recovers histor
   page,
 }) => {
   await page.addInitScript(() => {
-    const storage = window.localStorage;
     Object.assign(window, { draftAccesses: 0 });
-    Object.defineProperty(window, "localStorage", {
-      get() {
-        const tracked = window as unknown as { draftAccesses: number };
-        tracked.draftAccesses++;
-        return storage;
-      },
-    });
+    for (const method of ["getItem", "setItem", "removeItem"] as const) {
+      const original = Storage.prototype[method] as (
+        this: Storage,
+        key: string,
+        value?: string,
+      ) => unknown;
+      Object.defineProperty(Storage.prototype, method, {
+        value: function (this: Storage, key: string, value?: string) {
+          if (key === "claim-review.draft.v1")
+            (window as unknown as { draftAccesses: number }).draftAccesses++;
+          return original.call(this, key, value!);
+        },
+      });
+    }
   });
   await page.goto("./");
   await expect(page.getByLabel("Save draft on this device")).not.toBeChecked();
@@ -79,7 +85,7 @@ test("standalone strict CSP blocks network and active imported text, exports W3C
     .locator('meta[http-equiv="Content-Security-Policy"]')
     .getAttribute("content");
   expect(policy).toContain("default-src 'none'");
-  expect(policy).not.toContain("connect-src");
+  expect(policy).toContain("connect-src 'none'");
   const payload =
     '<script>globalThis.INJECTED=1</script><img src="https://example.invalid/a" onerror="globalThis.INJECTED=2"><a href="javascript:globalThis.INJECTED=3">click</a>';
   const packet = JSON.parse(input);

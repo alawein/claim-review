@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/alawein/claim-review/schema/labels.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "format", "scope", "items"],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "format": {
+      "enum": ["ais", "alce"]
+    },
+    "scope": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "review_id",
+          "claim_id",
+          "source_id",
+          "source_sha256",
+          "reviewer",
+          "identity_assurance",
+          "verdict",
+          "rationale",
+          "state",
+          "interpretability",
+          "attribution",
+          "citation_precision_label"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "review_id": {
+            "type": "string"
+          },
+          "claim_id": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "source_sha256": {
+            "type": "string"
+          },
+          "reviewer": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "identity_assurance": {
+            "const": "self-reported"
+          },
+          "verdict": {
+            "enum": ["supported", "partial", "contradicted", "unverifiable"]
+          },
+          "interpretability": {
+            "type": "null"
+          },
+          "attribution": {
+            "enum": ["attributable", "not_attributable", null]
+          },
+          "citation_precision_label": {
+            "enum": [0, 1, null]
+          }
+        }
+      }
+    }
+  }
+}

@@ -10,16 +10,21 @@
   },
   "scripts": {
     "lint": "eslint . && prettier --check . && tsc --noEmit",
-    "test": "vitest run",
+    "test": "node scripts/generate-validator.mjs && vitest run",
     "build": "node scripts/build.mjs",
     "check": "npm run lint && npm test && npm run build",
     "fix": "eslint . --fix && prettier --write .",
     "test:browser": "playwright test",
     "validate:schema": "node scripts/validate-schema.mjs",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "bench": "python benchmarks/prepare.py && node benchmarks/run.mjs",
+    "test:tokens": "node --test design-tokens/tokens.test.mjs",
+    "perf:budget": "node scripts/perf-budget.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@eslint/js": "^9.0.0",
+    "@lhci/cli": "0.15.1",
     "@playwright/test": "1.63.0",
     "@types/jsonld": "1.5.15",
     "@types/node": "26.6.3",

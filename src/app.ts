@@ -7,7 +7,12 @@ import example from "../examples/packet.json";
 import acceptance from "../examples/acceptance.json";
 import acceptanceReviewed from "../examples/acceptance-reviewed.json";
 import { webAnnotations } from "./annotation";
+import { importTrace, labelExport, csvExport } from "./adapters";
+import { agreement, mergePackets } from "./coordination";
+import { setupViewer, celebrate } from "./viewer";
 import { saveDraft, readDraft, clearDraft } from "./draft";
+
+setupViewer();
 
 function element<T extends HTMLElement>(id: string): T {
   const node = document.getElementById(id);
@@ -86,12 +91,25 @@ function showExcerpt(): void {
   const value = source(),
     start = Number(startControl.value),
     end = Number(endControl.value);
-  element("excerpt").textContent = validSpan(value.text, start, end)
+  const valid = validSpan(value.text, start, end);
+  const excerpt = element("excerpt");
+  excerpt.textContent = valid
     ? value.text.slice(start, end)
     : "Enter a span inside the source text";
+  for (const id of ["claim-text", "source-panel"])
+    element(id).classList.toggle("evidence-linked", valid);
+  excerpt.classList.toggle("evidence-linked", valid);
+  if (valid) {
+    const glow = document.createElement("span");
+    glow.className = "evidence-cursor";
+    glow.setAttribute("aria-hidden", "true");
+    excerpt.append(glow);
+  }
 }
 function showSource(): void {
   if (!citationControl.value) {
+    for (const id of ["claim-text", "source-panel", "excerpt"])
+      element(id).classList.remove("evidence-linked");
     sourceControl.value = "";
     element("excerpt").textContent = "No cited source";
     element("source-identity").textContent = "No cited source";
@@ -119,11 +137,26 @@ function showClaim(): void {
   showSource();
 }
 function showHistory(): void {
+  if (packet) {
+    const metrics = agreement(packet);
+    const value = (n: number | null) => (n === null ? "Not enough ratings" : n.toFixed(3));
+    element("agreement").textContent =
+      `${metrics.reviewers.length} self-reported reviewer labels. ${metrics.complete_items} complete citation pairs; ${metrics.missing_ratings} missing ratings; ${metrics.excluded_stale} stale records excluded. Cohen kappa: ${value(metrics.cohen_kappa)}. Fleiss kappa: ${value(metrics.fleiss_kappa)}. Krippendorff alpha: ${value(metrics.krippendorff_alpha)}. Latest appended rating per reviewer is used; merged right-hand history takes precedence.`;
+  } else
+    element("agreement").textContent = "Import a packet to compare self-reported reviewer labels.";
+  const total = packet?.claims.reduce((n, c) => n + c.citation_ids.length, 0) ?? 0;
+  const done = packet
+    ? latestReviews(packet).filter((r) => reviewState(packet!, r) === "valid").length
+    : 0;
+  element("queue-state").textContent =
+    `${done} of ${total} citation pairs have current reviews. This is completion, not accuracy.`;
+  if (total > 0 && done === total) celebrate();
   const latest = new Set(packet ? latestReviews(packet).map((row) => row.id) : []);
   history.replaceChildren(
     ...(packet?.reviews ?? []).map((review) => {
       const row = document.createElement("p");
       row.dir = "auto";
+      row.classList.toggle("stale", reviewState(packet!, review) !== "valid");
       row.textContent = `${review.id}: ${review.claim_id} / ${review.source_id} [${review.start},${review.end}) ${review.verdict} (${reviewState(packet!, review)}, ${latest.has(review.id) ? "latest" : "prior"}), ${review.reviewer}: ${review.rationale}`;
       const snapshot = packet!.sources.find((source) => source.id === review.source_id)!;
       row.textContent +=
@@ -284,7 +317,7 @@ element<HTMLFormElement>("review-form").addEventListener("submit", async (event)
     confirmExampleUse = "";
     confirmBuilderUse = false;
     showHistory();
-    setStatus(true, "Saved human review in memory. Export to keep it.");
+    setStatus(true, "Saved review in memory. Export to keep it.");
     persistDraft();
   } catch (error) {
     setStatus(false, `Review not saved: ${message(error)}`);
@@ -533,4 +566,108 @@ element("builder-download").addEventListener("click", () => {
     })
     .catch((error) => setBusyStatus(false, message(error)))
     .finally(() => endBusy());
+});
+
+function moveQueue(direction: number): void {
+  if (!packet || busyCount) return;
+  const pairs = packet.claims.flatMap((c) =>
+    c.citation_ids.map((s) => ({ claim: c.id, source: s })),
+  );
+  const index = pairs.findIndex(
+    (p) => p.claim === claimControl.value && p.source === citationControl.value,
+  );
+  for (let step = 1; step <= pairs.length; step++) {
+    const next = pairs[(index + direction * step + pairs.length * 2) % pairs.length];
+    const reviewed = latestReviews(packet).some(
+      (r) =>
+        r.claim_id === next.claim &&
+        r.source_id === next.source &&
+        reviewState(packet!, r) === "valid",
+    );
+    if (direction < 0 || !reviewed) {
+      claimControl.value = next.claim;
+      showClaim();
+      citationControl.value = next.source;
+      showSource();
+      claimControl.focus();
+      return;
+    }
+  }
+  setStatus(true, "All citation pairs have current reviews. Export to preserve them.");
+}
+element("next-item").addEventListener("click", () => moveQueue(1));
+element("previous-item").addEventListener("click", () => moveQueue(-1));
+globalThis.addEventListener("keydown", (e) => {
+  if (e.altKey && ["j", "k"].includes(e.key.toLowerCase())) {
+    e.preventDefault();
+    moveQueue(e.key.toLowerCase() === "j" ? 1 : -1);
+  }
+});
+for (const kind of ["trace", "merge"] as const) {
+  const control = element<HTMLInputElement>(`${kind}-import`);
+  control.addEventListener("change", () => {
+    const file = control.files?.[0];
+    if (!file) return;
+    if (kind === "trace" && isDirty()) {
+      setStatus(false, "Export current work before importing a trace.");
+      control.value = "";
+      return;
+    }
+    const ticket = ++generation;
+    const previous = packet;
+    beginBusy();
+    void (async () => {
+      requireValue(file.size <= 5 * 1024 * 1024, "Import exceeds 5 MiB");
+      const raw = await file.text();
+      let next: Packet;
+      if (kind === "trace") next = await importTrace(raw, sha256);
+      else {
+        requireValue(!!previous, "Import a base packet first");
+        next = mergePackets(previous, await parsePacket(raw, sha256));
+        next = await parsePacket(JSON.stringify(next), sha256);
+      }
+      requireValue(ticket === generation && previous === packet, "Session changed; import again");
+      usePacket(
+        next,
+        kind === "trace"
+          ? "Trace imported. Claims are unreviewed; supplied documents are candidate citations, actual use unverified."
+          : "Reviewer histories merged. Export to preserve them.",
+      );
+    })()
+      .catch((error) => {
+        if (ticket === generation)
+          setStatus(false, `Import failed; current work kept: ${message(error)}`);
+      })
+      .finally(() => {
+        control.value = "";
+        endBusy();
+      });
+  });
+}
+for (const format of ["ais", "alce", "csv"] as const)
+  element(`export-${format}`).addEventListener("click", () => {
+    if (!packet) {
+      setStatus(false, "Import a packet first");
+      return;
+    }
+    download(
+      format === "csv" ? csvExport(packet) : JSON.stringify(labelExport(packet, format)),
+      `claim-review.${format === "csv" ? "csv" : `${format}.json`}`,
+      format === "csv" ? "text/csv" : "application/json",
+    );
+    setStatus(true, "Label export requested. Native packet export preserves resumable history.");
+  });
+
+element("excerpt").addEventListener("pointermove", (event) => {
+  if (
+    document.hidden ||
+    document.documentElement.dataset.paused === "true" ||
+    matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
+    return;
+  const excerpt = element("excerpt"),
+    glow = excerpt.querySelector<HTMLElement>(".evidence-cursor");
+  if (!glow) return;
+  const bounds = excerpt.getBoundingClientRect();
+  glow.style.transform = `translate3d(${event.clientX - bounds.left - 24}px,${event.clientY - bounds.top - 24}px,0)`;
 });

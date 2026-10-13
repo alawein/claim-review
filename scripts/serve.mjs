@@ -1,3 +1,4 @@
+import console from "node:console";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 const server = createServer(async (request, response) => {
@@ -15,4 +16,4 @@ const server = createServer(async (request, response) => {
     response.end("Build missing");
   }
 });
-server.listen(4173, "127.0.0.1");
+server.listen(4173, "127.0.0.1", () => console.log("Listening on 127.0.0.1:4173"));

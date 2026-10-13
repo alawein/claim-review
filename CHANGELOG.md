@@ -57,3 +57,8 @@
 - Human verdicts/rationales, safe imports, append history and portable exports.
 - CRLF selection mapping and byte-bounded round trips.
 - Standalone offline HTML and GitHub Pages distribution.
+
+
+## Unreleased
+
+Siftgrain Cite display identity, shared dark/light tokens and four runtime vibes, guarded preferences and bounded WebGL2 completion. Add common trace JSON/JSONL import, keyboard queue, atomic reviewer merge and nominal agreement metrics, analysis label/CSV exports, standalone performance budget and accessibility checks. Native version2 and v0.2 migration remain compatible. Benchmarks add Unicode/staleness integrity and checksum-pinned external ALCE label preservation without new semantic accuracy claims.

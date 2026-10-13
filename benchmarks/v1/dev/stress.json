@@ -1,0 +1,26 @@
+[
+  {
+    "id": "dev-0",
+    "text": "A😀B",
+    "start_codepoint": 0,
+    "end_codepoint": 3
+  },
+  {
+    "id": "dev-1",
+    "text": "é cafe",
+    "start_codepoint": 0,
+    "end_codepoint": 7
+  },
+  {
+    "id": "dev-2",
+    "text": "مرحبا",
+    "start_codepoint": 0,
+    "end_codepoint": 5
+  },
+  {
+    "id": "dev-3",
+    "text": "line\r\nsecond",
+    "start_codepoint": 0,
+    "end_codepoint": 12
+  }
+]

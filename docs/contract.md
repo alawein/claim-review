@@ -67,7 +67,7 @@ JSON uses JSON.parse's last-key semantics for duplicate object keys; object-key
 duplication is not an integrity signal. Collection IDs/citations are strictly
 checked. Compact exports have no trailing newline and fit the import byte bound.
 
-There is no browser storage access by default. Checking Save draft on this device
+Packet draft storage is not accessed by default; appearance/vibe preferences use a separate guarded key before paint. Checking Save draft on this device
 writes the current canonical packet after import/build/save. Each new page starts
 with saving off. Explicit restore reads and validates a stored packet; explicit
 clear removes it. Every localStorage access is try/catch guarded. Storage failure
@@ -78,7 +78,7 @@ portable preservation. Drafts and exports may contain confidential supplied text
 
 ## Validation and JSON-LD scope
 
-`npm run validate:schema` combines the published structural schema with parsePacket.
+The standalone browser parser uses a build-time precompiled AJV2020 validator from the published schema before semantic validation. No runtime code generation or unsafe-eval is required. `npm run validate:schema` also combines the published structural schema with parsePacket.
 Schema alone cannot verify SHA-256, cross-record references, ID uniqueness, exact
 UTF-16 caps, current selector equivalence, stale provenance or total UTF-8 bytes.
 All packet fixtures and negative cases exercise the combined validator and
@@ -103,6 +103,6 @@ native resumable packet.
 
 No automatic judge, source retrieval, OCR/PDF extraction, server, accounts or
 telemetry. One standalone HTML uses safe text sinks and a default-src none CSP
-with only build-computed inline script/style hashes and no connect-src directive.
+with only build-computed inline script/style hashes and explicit connect-src none.
 The CSP denies network connections via default-src. Device storage is a browser
 capability, not a network exception. MIT applies to code, not supplied source rights.

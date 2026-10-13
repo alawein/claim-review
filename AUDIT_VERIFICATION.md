@@ -1,5 +1,28 @@
 # Audit verification
 
+## Fresh redesign baseline, October 13, 2026
+
+Source baseline5e05d871a8d17ff00a90f3af008e8a5e8e4f2c10 on freshly fetched main. Before changes: npm ci succeeded, npm run check exited0:96 tests in11 files, lint/types/build passed. npm audit initially reported5 dev findings (2moderate,3high). Browser prechange full baseline was not rerun; the repository had63 cases by inspection, not a newly observed63-pass result. Added tests first failed for absent studio modules and absent theme state, then passed after implementation.
+
+| October8 hypothesis | Fresh status | Evidence at baseline/current owner |
+|---|---|---|
+| Created October4 in one AI-assisted session | Partially confirmed | API created_at2026-10-04T16:52:08Z; provenance docs disclose AI-assisted examples. Single-session authorship cannot be established from Git alone. |
+| Zero stars/single contributor | Partially confirmed | Current API0stars; contributors are alawein and dependabot[bot], so one human account plus a bot, not one total contributor. |
+| Squash-merged history | Confirmed for named release path | main merge commits/PR links in docs/recent-history.json; no blanket claim about inaccessible/deleted branches. |
+| CodeRabbit only reviewer | Partially confirmed | PR3 reviews empty and CodeRabbit status pending. Bot presence does not prove independent completed review. All repository-wide historical reviewers not exhaustively inferred. |
+| No npm/PyPI releases | Partially confirmed | GitHub v0.2/v0.3.0/v0.3.1/v0.3.2 releases exist; prior npm attempts failed. Current npm registry readback recorded separately; PyPI is not this TypeScript distribution target. |
+| First-release PR3 merged with one check not passing | Partially confirmed | Exact head6b2e18faa76b50428f5a3a20b3e81c8080c2f179 merged2026-10-04T17:24:04Z; returned check-runs SUCCESS, CodeRabbit StatusContext PENDING. No failing required build proved. |
+| Dependabot/alerts off October6 | Current disabled state confirmed; exact historical transition partial | Fresh API explicitly alerts disabled, security fixes false and security updates disabled; no settings mutation. October6 timing remains prior dated evidence. |
+| UTF16 conflicts with W3C | Refuted as a current defect | src/spans.ts:31 and44 convert both directions; annotation.ts:45 exports stored code-point/quote selectors. Native UTF16 remains deliberate compatibility. |
+| No NFC policy | Refuted as current | packet.ts:244 computes separate NFC hash; reviews.ts:10 labels normalization-only stale without reanchoring. |
+| No published packet schema | Refuted as current | schema/claim-review-packet.v1.json; scripts/generate-validator.mjs precompiles AJV2020; packet.ts invokes it for actual browser imports before semantic checks. |
+| Tab closure loses work | Partially confirmed | draft.ts:3/12/19 guarded opt-in draft operations; app.ts beforeunload/export guard. Off-default/no export or crash without saved draft still loses memory state. |
+| Reviewer identity self-reported | Confirmed by design | packet.ts:120 requires self-reported; no credential or human independence claim. |
+| Unsafe DOM/absent CSP | Refuted as current | app.ts:58/94/116 textContent, no innerHTML sinks; build.mjs:19 hash-authorized CSP/default-src none, now explicit connect-src none. Active text browser tests retained. |
+| No Unicode properties | Refuted as current | unicode.test.ts:26-30 exercises both conversions, fast-check randomized text and normalization. |
+
+Historical sections below refer to their stated revisions/dates. They are retained as evidence, not repeated work or current completion claims.
+
 ## Current state, October 8, 2026 closeout
 
 v0.3.0 was merged by [PR19](https://github.com/alawein/claim-review/pull/19) at

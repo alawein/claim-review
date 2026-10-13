@@ -1,0 +1,2 @@
+bench:
+	npm run bench

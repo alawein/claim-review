@@ -1,3 +1,4 @@
+import validateSchema from "./generated/packet-validator.js";
 import { validSpan, selectors, type TextQuoteSelector, type TextPositionSelector } from "./spans";
 export type Hash = (text: string) => Promise<string>;
 export type Verdict = "supported" | "partial" | "contradicted" | "unverifiable";
@@ -231,6 +232,15 @@ export async function parsePacket(raw: string, hash: Hash): Promise<Packet> {
   requireValue(
     root.schema_version === 1 || root.schema_version === 2,
     "schema_version must be 1 or 2",
+  );
+  const structural = validateSchema(root);
+  const duplicateCitation = validateSchema.errors?.some(
+    (error) =>
+      error.keyword === "uniqueItems" && /^\/claims\/\d+\/citation_ids/.test(error.instancePath),
+  );
+  requireValue(
+    structural,
+    duplicateCitation ? "duplicate citation" : "packet schema validation failed",
   );
   const modern = root.schema_version === 2;
   const sources: Source[] = [];

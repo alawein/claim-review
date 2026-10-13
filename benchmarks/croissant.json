@@ -1,0 +1,224 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "dct": "http://purl.org/dc/terms/",
+    "conformsTo": "dct:conformsTo",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform",
+    "equivalentProperty": "cr:equivalentProperty",
+    "samplingRate": "cr:samplingRate"
+  },
+  "@type": "Dataset",
+  "name": "Siftgrain Cite stress v1",
+  "version": "1.0.0",
+  "description": "Synthetic Unicode integrity regression corpus; external gold fetched separately",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "datePublished": "2026-10-13",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "dev",
+      "name": "dev",
+      "contentUrl": "v1/dev/stress.json",
+      "encodingFormat": "application/json",
+      "sha256": "7e888a7984a84b9a194e37a15eca4b8cc265604c45a99de8ff2ad1e7f6ab4821"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "test",
+      "name": "test",
+      "contentUrl": "v1/test/stress.json",
+      "encodingFormat": "application/json",
+      "sha256": "c87bc45e3f5e39477e0467ebd4a40f026e542167c989738140cea0656c61efac"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "dev_records",
+      "name": "dev_records",
+      "description": "dev synthetic stress split; separate answer keys are not included as inputs",
+      "key": {
+        "@id": "dev_records/id"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "dev_records/id",
+          "name": "id",
+          "description": "Synthetic integrity case id",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dev"
+            },
+            "extract": {
+              "jsonPath": "$[*].id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dev_records/text",
+          "name": "text",
+          "description": "Synthetic integrity case text",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dev"
+            },
+            "extract": {
+              "jsonPath": "$[*].text"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dev_records/start_codepoint",
+          "name": "start_codepoint",
+          "description": "Synthetic integrity case start_codepoint",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "dev"
+            },
+            "extract": {
+              "jsonPath": "$[*].start_codepoint"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dev_records/end_codepoint",
+          "name": "end_codepoint",
+          "description": "Synthetic integrity case end_codepoint",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "dev"
+            },
+            "extract": {
+              "jsonPath": "$[*].end_codepoint"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "test_records",
+      "name": "test_records",
+      "description": "test synthetic stress split; separate answer keys are not included as inputs",
+      "key": {
+        "@id": "test_records/id"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "test_records/id",
+          "name": "id",
+          "description": "Synthetic integrity case id",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test"
+            },
+            "extract": {
+              "jsonPath": "$[*].id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "test_records/text",
+          "name": "text",
+          "description": "Synthetic integrity case text",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "test"
+            },
+            "extract": {
+              "jsonPath": "$[*].text"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "test_records/start_codepoint",
+          "name": "start_codepoint",
+          "description": "Synthetic integrity case start_codepoint",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "test"
+            },
+            "extract": {
+              "jsonPath": "$[*].start_codepoint"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "test_records/end_codepoint",
+          "name": "end_codepoint",
+          "description": "Synthetic integrity case end_codepoint",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "test"
+            },
+            "extract": {
+              "jsonPath": "$[*].end_codepoint"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "url": "https://github.com/alawein/claim-review/tree/main/benchmarks",
+  "creator": {
+    "@type": "Organization",
+    "name": "Siftgrain Cite contributors"
+  },
+  "citeAs": "Siftgrain Cite contributors. Siftgrain Cite stress v1, 2026. Original CC0 synthetic integrity corpus; external ALCE gold fetched separately."
+}

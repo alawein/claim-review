@@ -21,3 +21,9 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps
       - run: npm run test:browser
+      - run: npm run test:tokens
+      - run: npm run perf:budget
+      - name: Lighthouse CI
+        run: |
+          export CHROME_PATH="$(node --input-type=module -e "import {chromium} from '@playwright/test'; console.log(chromium.executablePath());")"
+          npx lhci autorun
