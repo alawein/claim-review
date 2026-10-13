@@ -2,7 +2,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import standaloneCode from "ajv/dist/standalone/index.js";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 const schema = JSON.parse(await readFile("schema/claim-review-packet.v1.json", "utf8"));
-const ajv = new Ajv2020({ allErrors: true, code: { source: true, esm: true } });
+const ajv = new Ajv2020({ allErrors: false, code: { source: true, esm: true } });
 const code = standaloneCode(ajv, ajv.compile(schema)).replaceAll(
   'require("ajv/dist/runtime/ucs2length").default',
   "ucs2length",

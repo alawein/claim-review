@@ -44,8 +44,8 @@ Scope: claim-review / Siftgrain Cite. Parent coordinates the two Python tools an
 | npm/pip audits report-only | Done scoped | npm production+dev report-only; no runtime packages. pip-audit belongs to Python repos. |
 | Dependabot settings/restoration docs | Done | SECURITY_SETTINGS.md exclusion preserved; exact optional UI paths. No settings changes. |
 | Unicode/RTL/CRLF/normalization/stale benchmark | Done | v1dev/test+separate keys,8cases and actual core/naive baseline, tampering gate negative test. |
-| Licensed external gold attribution subset | Partial task evaluation |20 pinned ALCE supplied labels and packet migration preserved; no new semantic prediction/accuracy or human collection. External text fetch-only with MIT notice/underlying rights. |
-| Real reviewer throughput/error | Done scripted; human partial |16 actual scripted saves and0status errors, recorded4vibe GIFs. Automation speed is not human productivity. |
+| Licensed external gold attribution subset | Partial task evaluation | 20 pinned ALCE supplied labels and packet migration preserved; no new semantic prediction/accuracy or human collection. External text fetch-only with MIT notice/underlying rights. |
+| Real reviewer throughput/error | Done scripted; human partial | 16 actual scripted saves and0status errors, recorded4vibe GIFs. Automation speed is not human productivity. |
 | Human agreement protocol | Done protocol; collection partial | Existing AIS protocol/bootstrap analysis tests retained; no new human data. |
 | Dataset license/version/URL/checksum/date | Done | DATASHEET/fetch checksum pins, license checksum and source titles; underlying page revisions unknown. |
 | Versioned splits/cards/schemas/checksums/local archive | Done with metadata limit | benchmarks/v1, separate keys, datasheet/card/Croissant metadata, local ZIP. Native mlcroissant1.1.1 parses2RecordSets; JSON-LD namespace/hash regression test retained. Full cross-consumer certification not claimed. |

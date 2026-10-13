@@ -134,3 +134,15 @@ test("sparse agreement retains full missing denominator with many unreviewed pai
   expect(result.complete_items).toBe(0);
   expect(result.krippendorff_alpha).toBeNull();
 });
+test("browser schema validation bounds diagnostic amplification on malformed collections", async () => {
+  const { default: validate } = await import("./generated/packet-validator.js");
+  expect(
+    validate({
+      schema_version: 1,
+      sources: Array.from({ length: 100 }, () => ({})),
+      claims: [],
+      reviews: [],
+    }),
+  ).toBe(false);
+  expect(validate.errors!.length).toBeLessThanOrEqual(8);
+});
