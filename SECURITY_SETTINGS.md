@@ -16,7 +16,7 @@ Observed settings and live execution are reported by the coordinating agent;
 prepared workflow code does not prove enforcement or deployment.
 
 The authenticated maintainer UI is
-<https://github.com/alawein/claim-review/settings/security_analysis>.
+<https://github.com/alawein/siftgrain-cite/settings/security_analysis>.
 The exact URL is narrowly excluded from anonymous link checks because it requires
 maintainer access. Public documentation/release links are not exempted.
 

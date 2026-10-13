@@ -61,6 +61,10 @@ test("release retry reconciles failed publication to verified success without re
     expect(uploads).toBe(3);
     expect(edits).toBe(2);
     expect(release.body).toContain("npm publication verified");
+    expect(release.body).toContain("# Siftgrain Cite v0.3.1");
+    expect(release.body).toContain(
+      "https://github.com/alawein/siftgrain-cite/blob/v0.3.1/CHANGELOG.md",
+    );
     expect(release.body).not.toContain("failed");
     bytes.set("index.html", "different");
     await expect(uploadRelease({ ...options, publishResult: "failure" })).rejects.toThrow(
