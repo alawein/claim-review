@@ -48,8 +48,12 @@ v0.2 packets load and migrate to the enriched native format.
 For the Agent Acceptance refund demo, choose **Load acceptance example**. Its four
 claims start unreviewed: a recent enabled-state observation, a conflicting refund
 amount, an old completion observation, and an already-true baseline. Review each
-claim with the source beside your judgment, select a passage, save your rationale,
-then export and reimport the packet. **Synthetic worked judgments** offers a
+claim using the **Acceptance review guide**: select a claim-specific passage,
+record your human judgment and rationale, then choose **Export packet** and
+reimport that native JSON to resume. Check observation age yourself; a source-hash
+change separately marks saved reviews stale. CSV, AIS/ALCE labels and W3C JSON-LD
+are sibling exports rather than replacements for the resumable native packet.
+**Synthetic worked judgments** offers a
 separate packet of labeled example judgments. It does not grade your answers.
 Loading an example asks for a second click before replacing unsaved packet work.
 
