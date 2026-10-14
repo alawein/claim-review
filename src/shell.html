@@ -53,6 +53,18 @@
             New packet
           </button>
         </div>
+        <section aria-labelledby="acceptance-guide-heading">
+          <h3 id="acceptance-guide-heading">Acceptance review guide</h3>
+          <ol>
+            <li>Select evidence. Match each claim to exact source spans.</li>
+            <li>
+              Make a human judgment. Choose a verdict and record your rationale. Older observations
+              need a freshness judgment; unknown evidence stays unverifiable.
+            </li>
+            <li>Export packet. Save the native packet to preserve review history.</li>
+            <li>Reimport and resume. Use Import packet to continue the same review.</li>
+          </ol>
+        </section>
         <details>
           <summary>Synthetic worked judgments</summary>
           <p>
@@ -171,6 +183,12 @@
             <p class="metadata">
               Reviewer labels are self-reported. Saving does not grade the claim.
             </p>
+            <p class="metadata">
+              Freshness is separate from source integrity. Judge whether an old observation is
+              recent enough for this claim; a current source hash does not make an old observation
+              fresh. Hash-stale means the source text changed; the prior review remains history and
+              cannot quote the changed text. Unknown evidence stays unverifiable.
+            </p>
             <button type="submit">Save review</button>
           </section>
         </div>
@@ -180,6 +198,10 @@
       <button id="export-ais" type="button">Export AIS labels</button
       ><button id="export-alce" type="button">Export ALCE labels</button
       ><button id="export-csv" type="button">Export CSV</button>
+      <p class="metadata">
+        Export packet is the native resumable format and preserves review history. W3C JSON-LD, AIS,
+        ALCE, and CSV are separate exports, not replacements for the native packet.
+      </p>
       <section aria-label="Draft storage">
         <h2>Optional device draft</h2>
         <label

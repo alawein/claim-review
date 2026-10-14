@@ -10,21 +10,25 @@ const input = await readFile("examples/packet.json", "utf8");
 const acceptanceCases = [
   {
     id: "refund-confirmed",
+    span: "At 2026-10-10T11:59:00Z, refund-enabled was true",
     verdict: "supported",
     rationale: "The refund-enabled observation is within the allowed 120 seconds.",
   },
   {
     id: "refund-contradicted",
+    span: "the refund amount was USD 100.",
     verdict: "contradicted",
     rationale: "The source records USD 100, which contradicts the claimed USD 120.",
   },
   {
     id: "refund-stale",
+    span: "Completion was recorded as true at 2026-10-10T11:45:00Z; this is older than the allowed 120 seconds.",
     verdict: "unverifiable",
     rationale: "The completion observation is older than 120 seconds; the receipt is insufficient.",
   },
   {
     id: "refund-baseline",
+    span: "Refund-enabled was already true at baseline 2026-10-10T11:58:00Z.",
     verdict: "contradicted",
     rationale: "The baseline was already true and the required change has no known action receipt.",
   },
@@ -44,14 +48,43 @@ test("acceptance example starts unreviewed and carries human judgments through e
   await expect(page.locator("#review-state")).toContainText("Unreviewed");
   await expect(page.locator("#history p")).toHaveCount(0);
   await expect(page.getByLabel("Claim", { exact: true }).locator("option")).toHaveCount(4);
+  const guide = page.getByRole("region", { name: "Acceptance review guide" });
+  await expect(guide).toBeVisible();
+  const steps = guide.getByRole("listitem");
+  await expect(steps).toHaveCount(4);
+  await expect(steps.nth(0)).toContainText(/select evidence/i);
+  await expect(steps.nth(1)).toContainText(/human judgment/i);
+  await expect(steps.nth(2)).toContainText(/export packet/i);
+  await expect(steps.nth(3)).toContainText(/reimport and resume/i);
+  const judgmentPanel = page.locator("#judgment-panel");
+  const judgmentCopy = (await judgmentPanel.innerText()).replace(/\s+/g, " ");
+  expect(judgmentCopy).toContain("Freshness is separate from source integrity.");
+  expect(judgmentCopy).toContain("a current source hash does not make an old observation fresh.");
+  expect(judgmentCopy).toContain("Hash-stale means the source text changed");
+  const exportCopy = (await page.locator("body").innerText()).replace(/\s+/g, " ");
+  expect(exportCopy).toContain("Export packet is the native resumable format");
+  expect(exportCopy).toContain(
+    "W3C JSON-LD, AIS, ALCE, and CSV are separate exports, not replacements",
+  );
+
+  const acceptance = JSON.parse(await readFile("examples/acceptance.json", "utf8"));
+  const sourceText = acceptance.sources[0].text;
 
   for (const review of acceptanceCases) {
     await page.getByLabel("Claim", { exact: true }).selectOption(review.id);
     await expect(page.locator("#review-state")).toContainText("Unreviewed");
-    await page.getByLabel("Source text", { exact: true }).press("ControlOrMeta+A");
+    const start = sourceText.indexOf(review.span);
+    expect(start).toBeGreaterThanOrEqual(0);
+    const end = start + review.span.length;
+    await page.getByLabel("Source text", { exact: true }).evaluate(
+      (element, selection) => {
+        (element as HTMLTextAreaElement).setSelectionRange(selection.start, selection.end);
+      },
+      { start, end },
+    );
     await page.getByRole("button", { name: "Use selected span" }).press("Enter");
-    await expect(page.getByLabel("Span start")).toHaveValue("0");
-    await expect(page.getByLabel("Span end")).toHaveValue("440");
+    await expect(page.getByLabel("Span start")).toHaveValue(String(start));
+    await expect(page.getByLabel("Span end")).toHaveValue(String(end));
     await page.getByLabel("Verdict").selectOption(review.verdict);
     await page.getByLabel("Rationale").fill(review.rationale);
     await page.getByLabel("Reviewer label").fill("Local human exercise");
@@ -64,7 +97,6 @@ test("acceptance example starts unreviewed and carries human judgments through e
   const path = await (await event).path();
   const raw = await readFile(path!, "utf8");
   const exported = JSON.parse(raw);
-  const acceptance = JSON.parse(await readFile("examples/acceptance.json", "utf8"));
   expect(exported).toEqual({
     ...acceptance,
     schema_version: 2,
@@ -72,26 +104,34 @@ test("acceptance example starts unreviewed and carries human judgments through e
       ...source,
       nfc_sha256: source.sha256,
     })),
-    reviews: acceptanceCases.map((review, i) => ({
-      id: `review-${i + 1}`,
-      claim_id: review.id,
-      source_id: "refund-record-1042",
-      source_sha256: acceptance.sources[0].sha256,
-      start: 0,
-      end: 440,
-      verdict: review.verdict,
-      rationale: review.rationale,
-      reviewer: "Local human exercise",
-      reviewer_identity_assurance: "self-reported",
-      source_nfc_sha256: acceptance.sources[0].sha256,
-      text_position: { type: "TextPositionSelector", start: 0, end: 440 },
-      text_quote: {
-        type: "TextQuoteSelector",
-        exact: acceptance.sources[0].text,
-        prefix: "",
-        suffix: "",
-      },
-    })),
+    reviews: acceptanceCases.map((review, i) => {
+      const start = sourceText.indexOf(review.span);
+      const end = start + review.span.length;
+      const prefix = Array.from(sourceText.slice(0, start)).slice(-32).join("");
+      const suffix = Array.from(sourceText.slice(end)).slice(0, 32).join("");
+      const codePointStart = Array.from(sourceText.slice(0, start)).length;
+      const codePointEnd = Array.from(sourceText.slice(0, end)).length;
+      return {
+        id: `review-${i + 1}`,
+        claim_id: review.id,
+        source_id: "refund-record-1042",
+        source_sha256: acceptance.sources[0].sha256,
+        start,
+        end,
+        verdict: review.verdict,
+        rationale: review.rationale,
+        reviewer: "Local human exercise",
+        reviewer_identity_assurance: "self-reported",
+        source_nfc_sha256: acceptance.sources[0].sha256,
+        text_position: { type: "TextPositionSelector", start: codePointStart, end: codePointEnd },
+        text_quote: {
+          type: "TextQuoteSelector",
+          exact: review.span,
+          prefix,
+          suffix,
+        },
+      };
+    }),
   });
   expect(exported.claims.map((claim: { id: string }) => claim.id)).toEqual([
     "refund-confirmed",
@@ -108,12 +148,12 @@ test("acceptance example starts unreviewed and carries human judgments through e
   ]);
   expect(
     exported.reviews.map((review: { start: number; end: number }) => [review.start, review.end]),
-  ).toEqual([
-    [0, 440],
-    [0, 440],
-    [0, 440],
-    [0, 440],
-  ]);
+  ).toEqual(
+    acceptanceCases.map((review) => {
+      const start = sourceText.indexOf(review.span);
+      return [start, start + review.span.length];
+    }),
+  );
   expect(exported.reviews.map((review: { rationale: string }) => review.rationale)).toEqual(
     acceptanceCases.map((review) => review.rationale),
   );
@@ -122,6 +162,43 @@ test("acceptance example starts unreviewed and carries human judgments through e
   await expect(page.locator("#history p")).toHaveCount(4);
   await page.getByLabel("Claim", { exact: true }).selectOption("refund-stale");
   await expect(page.locator("#review-state")).toContainText("unverifiable");
+  const resumedStart = sourceText.indexOf(acceptanceCases[2].span);
+  const resumedEnd = resumedStart + acceptanceCases[2].span.length;
+  await page.getByLabel("Source text", { exact: true }).evaluate(
+    (element, selection) => {
+      (element as HTMLTextAreaElement).setSelectionRange(selection.start, selection.end);
+    },
+    { start: resumedStart, end: resumedEnd },
+  );
+  await page.getByRole("button", { name: "Use selected span" }).press("Enter");
+  await expect(page.getByLabel("Span start")).toHaveValue(String(resumedStart));
+  await expect(page.getByLabel("Span end")).toHaveValue(String(resumedEnd));
+  await page.getByLabel("Verdict").selectOption("partial");
+  await page.getByLabel("Rationale").fill("Second reviewer continued the imported native packet.");
+  await page.getByLabel("Reviewer label").fill("Resumed human exercise");
+  await page.getByRole("button", { name: "Save review" }).press("Enter");
+  await expect(page.locator("#review-state")).toContainText("partial");
+  await expect(page.locator("#history p")).toHaveCount(5);
+  const resumedEvent = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export packet" }).press("Enter");
+  const resumedPath = await (await resumedEvent).path();
+  const resumedRaw = await readFile(resumedPath!, "utf8");
+  const resumed = JSON.parse(resumedRaw);
+  expect(resumed.reviews).toHaveLength(5);
+  expect(resumed.reviews.slice(0, 4)).toEqual(exported.reviews);
+  expect(resumed.reviews[4]).toMatchObject({
+    claim_id: "refund-stale",
+    source_id: "refund-record-1042",
+    start: resumedStart,
+    end: resumedEnd,
+    verdict: "partial",
+    rationale: "Second reviewer continued the imported native packet.",
+    reviewer: "Resumed human exercise",
+    reviewer_identity_assurance: "self-reported",
+    text_quote: {
+      exact: acceptanceCases[2].span,
+    },
+  });
 
   const corrupt = JSON.parse(raw);
   corrupt.sources[0].text += " Changed source";
@@ -131,13 +208,15 @@ test("acceptance example starts unreviewed and carries human judgments through e
     buffer: Buffer.from(JSON.stringify(corrupt)),
   });
   await expect(page.locator("#status")).toContainText("current work kept");
-  await expect(page.locator("#review-state")).toContainText(acceptanceCases[2].rationale);
+  await expect(page.locator("#review-state")).toContainText(
+    "Second reviewer continued the imported native packet.",
+  );
   await expect(page.getByLabel("Claim", { exact: true })).toHaveValue("refund-stale");
-  await expect(page.locator("#history p")).toHaveCount(4);
+  await expect(page.locator("#history p")).toHaveCount(5);
   const retainedDownload = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export packet" }).click();
   const retainedPath = await (await retainedDownload).path();
-  expect(await readFile(retainedPath!, "utf8")).toBe(raw);
+  expect(await readFile(retainedPath!, "utf8")).toBe(resumedRaw);
   expect(requests).toEqual([]);
 });
 
